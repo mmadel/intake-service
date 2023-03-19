@@ -16,11 +16,11 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name="name")
+    @Column(name="patient_name")
     private String name;
 
     @Column(name = "date_of_birth")
-    private long dateOfBirth;
+    private Long dateOfBirth;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
@@ -33,9 +33,9 @@ public class Patient {
     private String phone;
 
     @Column(name = "id_effective_from")
-    private long idEffectiveFrom;
+    private Long idEffectiveFrom;
     @Column(name = "id_effective_to")
-    private long idEffectiveTo;
+    private Long idEffectiveTo;
     @Column(name="email")
     private String email;
     @Column(name="emergency_name")
