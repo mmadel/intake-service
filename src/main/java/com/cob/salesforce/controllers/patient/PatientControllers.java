@@ -18,4 +18,5 @@ public class PatientControllers {
     public ResponseEntity create(@RequestBody PatientDTO model) {
         return new ResponseEntity(patientCreatorService.create(model), HttpStatus.OK);
     }
+
 }

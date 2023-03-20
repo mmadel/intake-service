@@ -1,7 +1,13 @@
 package com.cob.salesforce.enums;
 
 public enum PhoneType {
-    Home,
-    Work,
-    Other
+    Home("Home"),
+    Work("Work"),
+    Other("Other");
+    public final String label;
+
+    private PhoneType(String label) {
+        this.label = label;
+    }
+
 }

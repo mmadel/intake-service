@@ -9,7 +9,7 @@ import lombok.Setter;
 public class PatientDTO {
 
 
-    private AddressInfoDTO addressInfoDTO;
+    private AddressInfoDTO addressInfo;
 
     private AgreementsDTO agreementsDTO;
 
@@ -20,5 +20,7 @@ public class PatientDTO {
     private MedicalHistroyInformationDTO medicalHistroyInformation;
 
     private MedicalQuestionnaireInfoDTO medicalQuestionnaireInfoDTO;
+
+
 
 }

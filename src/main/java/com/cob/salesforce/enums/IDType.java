@@ -1,8 +1,14 @@
 package com.cob.salesforce.enums;
 
 public enum IDType {
-    SSN,
-    Driving_Licence,
-    Other
+    SSN("SSN"),
+    Driving_Licence("Drive-licence"),
+    Other("Other");
+
+    public final String label;
+
+    private IDType(String label) {
+        this.label = label;
+    }
 
 }

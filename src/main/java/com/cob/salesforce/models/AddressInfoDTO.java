@@ -16,4 +16,14 @@ public class AddressInfoDTO {
 
     private String type;
     private String zipCode;
+
+
+    public String getFullAddress() {
+        return
+                "country='" + country + '\'' +
+                        ", first='" + first + '\'' +
+                        ", second='" + second + '\'' +
+                        ", type='" + type + '\'' +
+                        ", zipCode='" + zipCode + '\'';
+    }
 }
