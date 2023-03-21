@@ -51,16 +51,20 @@ public class BasicInfoDTO {
     public Gender getGenderEnum() {
         return Gender.valueOf(gender);
     }
-    public PhoneType getPhoneTypeEnum(){
+
+    public PhoneType getPhoneTypeEnum() {
         return PhoneType.valueOf(phoneType);
     }
-    public IDType getIDTypeEnum(){
+
+    public IDType getIDTypeEnum() {
         return IDType.valueOf(idType);
     }
-    public EmploymentStatus getEmploymentStatusEnum(){
+
+    public EmploymentStatus getEmploymentStatusEnum() {
         return EmploymentStatus.valueOf(employmentStatus);
     }
-    public MaritalStatus getMaritalStatusEnum(){
+
+    public MaritalStatus getMaritalStatusEnum() {
         return MaritalStatus.valueOf(maritalStatus);
     }
 }

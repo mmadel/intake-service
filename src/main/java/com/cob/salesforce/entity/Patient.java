@@ -67,6 +67,6 @@ public class Patient {
     @Column(name = "insurance_worker_type")
     private InsuranceWorkerType insuranceWorkerType;
 
-    @Column(name = "Physical_therapy")
+    @Column(name = "Physical_therapy",columnDefinition = "boolean default false")
     private Boolean PhysicalTherapy;
 }

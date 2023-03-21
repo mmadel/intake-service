@@ -1,23 +1,34 @@
 package com.cob.salesforce.services.patient;
 
+import com.cob.salesforce.dependency.creator.IPatientDependencyCreator;
+import com.cob.salesforce.dependency.creator.PatientCreator;
+import com.cob.salesforce.dependency.creator.PatientDependencyCreator;
 import com.cob.salesforce.entity.Patient;
-import com.cob.salesforce.mappers.patient.PatientMapper;
 import com.cob.salesforce.models.PatientDTO;
-import com.cob.salesforce.repositories.patient.PatientRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.List;
+
 @Service
+@Transactional
 public class PatientCreatorServiceImpl implements PatientCreatorService {
+
     @Autowired
-    PatientRepository patientRepository;
+    PatientCreator creator;
     @Autowired
-    PatientMapper patientMapper;
+    PatientDependencyCreator patientDependencyCreator;
 
     public PatientDTO create(PatientDTO model) {
-        Patient toBeCreated = patientMapper.map(model);
-        patientRepository.save(patientMapper.map(model));
+
+        Patient savedEntity = creator.create(model);
+        List<IPatientDependencyCreator> dependenciesToBeCreated = patientDependencyCreator.createPatientDependencies(model);
+
+        dependenciesToBeCreated
+                .forEach(creator -> creator.create(model, savedEntity));
+
+        creator.update(savedEntity);
         return model;
     }
 }

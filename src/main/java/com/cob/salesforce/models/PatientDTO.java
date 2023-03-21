@@ -15,11 +15,11 @@ public class PatientDTO {
 
     private BasicInfoDTO basicInfo;
 
-    private InsuranceQuestionnaireInfoDTO insuranceQuestionnaireInfoDTO;
+    private InsuranceQuestionnaireInfo insuranceQuestionnaireInfo;
 
-    private MedicalHistroyInformationDTO medicalHistroyInformation;
+    private MedicalHistoryInformationDTO medicalHistoryInformation;
 
-    private MedicalQuestionnaireInfoDTO medicalQuestionnaireInfoDTO;
+    private MedicalQuestionnaireInfoDTO medicalQuestionnaireInfo;
 
 
 
