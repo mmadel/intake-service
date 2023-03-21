@@ -11,7 +11,7 @@ import java.math.BigInteger;
 @Entity(name = "insurance_worker_comp_no_fault")
 @Getter
 @Setter
-public class InsuranceWorkerCompNoFault {
+public class InsuranceWorkerCompNoFault extends PatientDependencyEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

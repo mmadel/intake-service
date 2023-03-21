@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity(name = "insurance_worker_commercial")
 @Getter
 @Setter
-public class InsuranceWorkerCommercial {
+public class InsuranceWorkerCommercial extends PatientDependencyEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

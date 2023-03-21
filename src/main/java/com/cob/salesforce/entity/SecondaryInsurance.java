@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity(name = "secondary_insurance")
 @Getter
 @Setter
-public class SecondaryInsurance {
+public class SecondaryInsurance extends PatientDependencyEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
