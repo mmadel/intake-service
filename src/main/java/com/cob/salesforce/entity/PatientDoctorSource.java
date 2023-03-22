@@ -9,7 +9,7 @@ import java.math.BigInteger;
 @Entity(name = "patient_doctor_source")
 @Getter
 @Setter
-public class PatientDoctorSource {
+public class PatientDoctorSource extends PatientDependencyEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity(name = "Patient_medical_history")
 @Getter
 @Setter
-public class PatientMedicalHistory {
+public class PatientMedicalHistory extends PatientDependencyEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -37,6 +37,8 @@ public class PatientMedicalHistory {
     @Column(name="pace_maker")
     private Boolean pacemaker;
 
+    @Column(name = "surgeries" , length = 1000)
+    private String surgeriesList;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private Patient patient;

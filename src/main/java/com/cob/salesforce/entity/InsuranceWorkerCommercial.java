@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity(name = "insurance_worker_commercial")
 @Getter
 @Setter
-public class InsuranceWorkerCommercial {
+public class InsuranceWorkerCommercial extends PatientDependencyEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -28,11 +28,13 @@ public class InsuranceWorkerCommercial {
     private Relationship relationship;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "secondary_insurance_id", referencedColumnName = "id")
-    private SecondaryInsurance secondaryInsurance;
-    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "patient_relationship_id", referencedColumnName = "id")
     private PatientRelationship patientRelationship;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "secondary_insurance_id", referencedColumnName = "id")
+    private SecondaryInsurance secondaryInsurance;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "medicare_coverage_id", referencedColumnName = "id")
     private MedicareCoverage medicareCoverage;

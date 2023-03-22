@@ -13,14 +13,16 @@ public class MedicalQuestionnaireInfoDTO {
     
     private Boolean familyResultSubmission;
     
-    private PhysicalTherapyDTO physicalTherapyDTO;
+    private PhysicalTherapyDTO physicalTherapy;
     
     private Boolean physicalTherapyReceiving;
+
+    private Boolean isDoctorRecommended;
     
     private String primaryDoctor;
     
-    private RecommendationDoctorDTO recommendationDoctorDTO;
+    private RecommendationDoctorDTO recommendationDoctor;
     
-    private RecommendationEntityDTO recommendationEntityDTO;
+    private RecommendationEntityDTO recommendationEntity;
 
 }

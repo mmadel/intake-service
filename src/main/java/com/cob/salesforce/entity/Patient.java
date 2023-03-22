@@ -1,6 +1,7 @@
 package com.cob.salesforce.entity;
 
 import com.cob.salesforce.enums.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,12 +33,23 @@ public class Patient {
     @Column(name="phone")
     private String phone;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "id_type")
+    private IDType idType;
+    @Column(name = "patient_id")
+    private String patientId;
     @Column(name = "id_effective_from")
     private Long idEffectiveFrom;
     @Column(name = "id_effective_to")
     private Long idEffectiveTo;
     @Column(name="email")
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="marital_status")
+    private MaritalStatus maritalStatus;
+    @Column(name = "address")
+    private  String address;
     @Column(name="emergency_name")
     private String emergencyName;
     @Column(name="emergency_phone")
@@ -55,8 +67,6 @@ public class Patient {
     @Column(name = "insurance_worker_type")
     private InsuranceWorkerType insuranceWorkerType;
 
-    @Column(name = "Physical_therapy")
+    @Column(name = "Physical_therapy",columnDefinition = "boolean default false")
     private Boolean PhysicalTherapy;
-
-
 }

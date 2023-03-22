@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity(name = "physical_therapy")
 @Getter
 @Setter
-public class PhysicalTherapy {
+public class PhysicalTherapy extends PatientDependencyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
