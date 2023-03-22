@@ -17,5 +17,8 @@ public class SecondaryInsurance extends PatientDependencyEntity{
     private String policyHolderName;
     @Column(name = "insurance_companyname")
     private String insuranceCompanyName;
+
+    @Column(name = "member_id")
+    private String memberId;
 }
 

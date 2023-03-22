@@ -47,15 +47,16 @@ public class PatientCommercialMapper implements PatientDependencyMapper {
                 });
         this.mapper.createTypeMap(PatientDTO.class, SecondaryInsurance.class).addMappings(mapper -> {
             mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial().getSecondaryInsuranceDTO().getInsuranceCompanyName(), SecondaryInsurance::setInsuranceCompanyName);
-            mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial().getSecondaryInsuranceDTO().getPolicyHolderName(), SecondaryInsurance::setPolicyHolderName);
+            mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial().getSecondaryInsuranceDTO().getFullName(), SecondaryInsurance::setPolicyHolderName);
+            mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial().getSecondaryInsuranceDTO().getMemberId(), SecondaryInsurance::setMemberId);
         });
         this.mapper.createTypeMap(PatientDTO.class, MedicareCoverage.class).addMappings(mapper -> {
-            mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial().getMedicareCoverageDTO().getEmployerName(), MedicareCoverage::setEmployerName);
+            mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial().getMedicareCoverageDTO().getFullName(), MedicareCoverage::setEmployerName);
             mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial().getMedicareCoverageDTO().getEmployerPhone(), MedicareCoverage::setEmployerPhone);
         });
 
         this.mapper.createTypeMap(PatientDTO.class, PatientRelationship.class).addMappings(mapper -> {
-            mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial().getPatientRelationshipDTO().getPatientRelationshipName(), PatientRelationship::setPatientRelationshipName);
+            mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial().getPatientRelationshipDTO().getFullName(), PatientRelationship::setPatientRelationshipName);
             mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial().getPatientRelationshipDTO().getPatientRelationshipPhone(), PatientRelationship::setPatientRelationshipPhone);
             mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial().getPatientRelationshipDTO().getEmployerName(), PatientRelationship::setEmployerName);
         });

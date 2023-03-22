@@ -10,7 +10,14 @@ import javax.persistence.Column;
 public class PatientRelationshipDTO {
 
     private String patientRelationshipName;
-
+    private String patientRelationshipFirstName;
+    private String patientRelationshipMeddileName;
+    private String patientRelationshipLastName;
     private String patientRelationshipPhone;
     private String employerName;
+
+    public String getFullName() {
+        return patientRelationshipFirstName + ',' + patientRelationshipMeddileName
+                + ',' + patientRelationshipLastName;
+    }
 }
