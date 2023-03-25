@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 @Transactional
 @Getter
 public class PatientCreator {
+    @Autowired
     @Qualifier("PatientMapper")
     PatientMapper mapper;
     @Autowired
