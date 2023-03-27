@@ -17,4 +17,12 @@ public class PatientFieldsEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "basie_info_id", referencedColumnName = "id")
     private BasicInfoEntity basicInfo;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_info_id", referencedColumnName = "id")
+    private AddressInfoRequiredEntity addressInfoRequired;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "medical_info_id", referencedColumnName = "id")
+    private MedicalInfoRequiredEntity medicalInfoRequired;
 }

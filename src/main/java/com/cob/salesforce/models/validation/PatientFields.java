@@ -8,4 +8,6 @@ import lombok.Setter;
 public class PatientFields {
     private Long id;
     BasicInfo basicInfo;
+    AddressInfoRequired addressInfoRequired;
+    MedicalInfoRequired medicalInfoRequired;
 }

@@ -19,10 +19,14 @@ public class PatientAdminController {
     public ResponseEntity changePatientValidationFields(@RequestBody PatientFields model) {
         return new ResponseEntity(patientValidationFieldService.change(model), HttpStatus.OK);
     }
-    @CrossOrigin
     @ResponseBody
     @GetMapping(path = "/retrieve/requires/fields")
-    public ResponseEntity getPatientValidationFields() {
+    public ResponseEntity getPatientRequiredFields() {
         return new ResponseEntity(patientValidationFieldService.get(), HttpStatus.OK);
+    }
+    @ResponseBody
+    @GetMapping(path = "/retrieve/requires/basic/fields")
+    public ResponseEntity getPatientRequiredBasicFields() {
+        return new ResponseEntity(patientValidationFieldService.getPateintBasicInfo(), HttpStatus.OK);
     }
 }
