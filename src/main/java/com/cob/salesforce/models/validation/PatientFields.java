@@ -1,5 +1,6 @@
 package com.cob.salesforce.models.validation;
 
+import com.cob.salesforce.entity.validation.MedicalHistoryInfoRequiredEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,4 +11,5 @@ public class PatientFields {
     BasicInfo basicInfo;
     AddressInfoRequired addressInfoRequired;
     MedicalInfoRequired medicalInfoRequired;
+    MedicalHistoryInfoRequiredEntity medicalHistoryInfoRequired;
 }
