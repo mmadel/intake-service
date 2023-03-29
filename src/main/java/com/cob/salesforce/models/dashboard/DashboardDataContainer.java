@@ -8,6 +8,9 @@ import lombok.Setter;
 @Getter
 @Builder
 public class DashboardDataContainer {
+    private int totalNumberOfPatient;
+    private int totalNumberOfCompensationNoFaultPatient;
+    private int totalNumberOfCommercialPatient;
     private GenderContainer genderContainer;
     private PatientSourceContainer patientSourceContainer;
 }

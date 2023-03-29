@@ -5,9 +5,7 @@ import com.cob.salesforce.enums.Gender;
 import com.cob.salesforce.models.dashboard.DashboardDataContainer;
 import com.cob.salesforce.models.dashboard.GenderContainer;
 import com.cob.salesforce.models.dashboard.PatientSourceContainer;
-import com.cob.salesforce.repositories.patient.PatientDoctorSourceRepository;
-import com.cob.salesforce.repositories.patient.PatientEntitySourceRepository;
-import com.cob.salesforce.repositories.patient.PatientRepository;
+import com.cob.salesforce.repositories.patient.*;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,13 +23,29 @@ public class DashboardServiceImpl implements DashboardService {
     @Autowired
     PatientEntitySourceRepository patientEntitySourceRepository;
 
+    @Autowired
+    InsuranceWorkerInsuranceWorkerCompNoFaultRepository insuranceWorkerInsuranceWorkerCompNoFaultRepository;
+    @Autowired
+    InsuranceWorkerCommercialRepository insuranceWorkerCommercialRepository;
+
     @Override
     public DashboardDataContainer getData() {
         totalNumberOfPatients = Lists.newArrayList(patientRepository.findAll().iterator()).size();
         return DashboardDataContainer.builder()
+                .totalNumberOfPatient(totalNumberOfPatients)
+                .totalNumberOfCompensationNoFaultPatient(getTotalNumberOfCompensationNoFaultPatient())
+                .totalNumberOfCommercialPatient(getTotalNumberOfCommercialPatient())
                 .genderContainer(getGenderData())
                 .patientSourceContainer(getPatientSourceData())
                 .build();
+    }
+
+    private int getTotalNumberOfCompensationNoFaultPatient() {
+        return Lists.newArrayList(insuranceWorkerInsuranceWorkerCompNoFaultRepository.findAll().iterator()).size();
+    }
+
+    private int getTotalNumberOfCommercialPatient() {
+        return Lists.newArrayList(insuranceWorkerCommercialRepository.findAll().iterator()).size();
     }
 
     private GenderContainer getGenderData() {
