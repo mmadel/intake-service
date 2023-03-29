@@ -12,4 +12,6 @@ public class PatientFields {
     AddressInfoRequired addressInfoRequired;
     MedicalInfoRequired medicalInfoRequired;
     MedicalHistoryInfoRequiredEntity medicalHistoryInfoRequired;
+    InsuranceCompInfoRequired insurnaceCompInfoRequired;
+    InsuranceCommercialInfoRequired insurnacecommerialInfoRequired;
 }
