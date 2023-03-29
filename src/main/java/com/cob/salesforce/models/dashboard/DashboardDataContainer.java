@@ -9,4 +9,5 @@ import lombok.Setter;
 @Builder
 public class DashboardDataContainer {
     private GenderContainer genderContainer;
+    private PatientSourceContainer patientSourceContainer;
 }
