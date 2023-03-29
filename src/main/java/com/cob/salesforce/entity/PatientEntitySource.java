@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity(name = "patient_entity_source")
 @Getter
@@ -15,8 +16,14 @@ public class PatientEntitySource extends PatientDependencyEntity{
     private Long id;
     @Column(name = "entity_name")
     private String name;
-
+    @Column
+    private Long created;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private Patient patient;
+
+    @PrePersist
+    private void beforeSaving() {
+        created = new Date().getTime();
+    }
 }
