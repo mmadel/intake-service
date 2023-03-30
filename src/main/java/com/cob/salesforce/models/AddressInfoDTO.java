@@ -26,7 +26,6 @@ public class AddressInfoDTO {
                         ", state=" + state +
                         ", province=" + province +
                         ", city=" + city +
-                        ", zipCode=" + zipCode +
-                        '}';
+                        ", zipCode=" + zipCode;
     }
 }

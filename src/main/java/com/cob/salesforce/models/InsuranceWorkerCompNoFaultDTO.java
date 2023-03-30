@@ -20,7 +20,7 @@ public class InsuranceWorkerCompNoFaultDTO {
     private String workerStatus;
 
 
-    private String address;
+    private AddressInfoDTO workerCompAddress;
 
 
     private String fax;
