@@ -42,6 +42,12 @@ public class PatientContainerMapper {
                 patientContainerDTO.setSecond(parts[1]);
             if (parts[0].equals("type"))
                 patientContainerDTO.setType(parts[1]);
+            if (parts[0].equals("state"))
+                patientContainerDTO.setType(parts[1]);
+            if (parts[0].equals("province"))
+                patientContainerDTO.setType(parts[1]);
+            if (parts[0].equals("city"))
+                patientContainerDTO.setType(parts[1]);
             if (parts[0].equals("zipCode"))
                 patientContainerDTO.setZipCode(parts[1]);
         }
