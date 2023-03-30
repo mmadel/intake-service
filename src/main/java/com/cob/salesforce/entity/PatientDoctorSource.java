@@ -19,7 +19,7 @@ public class PatientDoctorSource extends PatientDependencyEntity {
     @Column(name = "doctor_name")
     private String name;
     @Column(name = "npi")
-    private BigInteger npi;
+    private String npi;
 
     @Column(name = "fax")
     private Long fax;

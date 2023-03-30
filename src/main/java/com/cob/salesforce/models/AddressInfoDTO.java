@@ -7,9 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class AddressInfoDTO {
-
-    private String country;
-
+    private String type;
     private String first;
     private String second;
     private String country;
@@ -27,7 +25,6 @@ public class AddressInfoDTO {
                         ", state=" + state +
                         ", province=" + province +
                         ", city=" + city +
-                        ", zipCode=" + zipCode +
-                        '}';
+                        ", zipCode=" + zipCode;
     }
 }
