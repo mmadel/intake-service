@@ -8,22 +8,25 @@ import lombok.Setter;
 @Getter
 public class AddressInfoDTO {
 
-    private String country;
-
-    private String first;
-
-    private String second;
-
     private String type;
+    private String first;
+    private String second;
+    private String country;
+    private String state;
+    private String province;
+    private String city;
     private String zipCode;
-
 
     public String getFullAddress() {
         return
-                "country='" + country + '\'' +
-                        ", first='" + first + '\'' +
-                        ", second='" + second + '\'' +
-                        ", type='" + type + '\'' +
-                        ", zipCode='" + zipCode + '\'';
+                "type=" + type +
+                        ", first=" + first +
+                        ", second=" + second +
+                        ", country=" + country +
+                        ", state=" + state +
+                        ", province=" + province +
+                        ", city=" + city +
+                        ", zipCode=" + zipCode +
+                        '}';
     }
 }

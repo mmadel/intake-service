@@ -43,7 +43,9 @@ public class PatientContainerDTO {
     private String first;
 
     private String second;
-
+    private String state;
+    private String province;
+    private String city;
     private String type;
     private String zipCode;
 }
