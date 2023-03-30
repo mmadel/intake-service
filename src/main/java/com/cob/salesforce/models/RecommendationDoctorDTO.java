@@ -8,13 +8,13 @@ import lombok.Setter;
 @Getter
 public class RecommendationDoctorDTO {
 
-    
-    private String address;
-    
+
+    private AddressInfoDTO doctorAddress;
+
     private String fax;
-    
+
     private String name;
-    
+
     private String npi;
 
 }
