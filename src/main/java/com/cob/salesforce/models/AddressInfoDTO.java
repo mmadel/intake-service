@@ -19,12 +19,12 @@ public class AddressInfoDTO {
     public String getFullAddress() {
         return
                 "type=" + type +
-                        ", first=" + first +
-                        ", second=" + second +
-                        ", country=" + country +
-                        ", state=" + state +
-                        ", province=" + province +
-                        ", city=" + city +
-                        ", zipCode=" + zipCode;
+                        ",first=" + first +
+                        ",second=" + second +
+                        ",country=" + country +
+                        ",state=" + state +
+                        ",province=" + province +
+                        ",city=" + city +
+                        ",zipCode=" + zipCode;
     }
 }
