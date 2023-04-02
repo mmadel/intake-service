@@ -29,7 +29,7 @@ public class PatientCompNoFaultMapper implements PatientDependencyMapper {
                     mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getInjuryType(), InsuranceWorkerCompNoFault::setInjuryType);
                     mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getAccidentDate(), InsuranceWorkerCompNoFault::setAccidentDate);
                     mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getWorkerStatusEnum(), InsuranceWorkerCompNoFault::setWorkerStatus);
-                    mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getAddress(), InsuranceWorkerCompNoFault::setAddress);
+                    mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getWorkerCompAddress().getFullAddress(), InsuranceWorkerCompNoFault::setAddress);
                     mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getFax(), InsuranceWorkerCompNoFault::setFax);
                     mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getInsuranceName(), InsuranceWorkerCompNoFault::setInsuranceName);
                     mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getClaimNumber(), InsuranceWorkerCompNoFault::setClaimNumber);

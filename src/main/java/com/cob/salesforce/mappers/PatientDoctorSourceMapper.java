@@ -27,7 +27,7 @@ public class PatientDoctorSourceMapper implements PatientDependencyMapper {
                 .addMappings(mapper -> {
                     mapper.map(src -> src.getMedicalQuestionnaireInfo().getRecommendationDoctor().getName(), PatientDoctorSource::setName);
                     mapper.map(src -> src.getMedicalQuestionnaireInfo().getRecommendationDoctor().getNpi(), PatientDoctorSource::setNpi);
-                    mapper.map(src -> src.getMedicalQuestionnaireInfo().getRecommendationDoctor().getAddress(), PatientDoctorSource::setAddress);
+                    mapper.map(src -> src.getMedicalQuestionnaireInfo().getRecommendationDoctor().getDoctorAddress().getFullAddress(), PatientDoctorSource::setAddress);
                     mapper.map(src -> src.getMedicalQuestionnaireInfo().getRecommendationDoctor().getFax(), PatientDoctorSource::setFax);
                 });
     }
