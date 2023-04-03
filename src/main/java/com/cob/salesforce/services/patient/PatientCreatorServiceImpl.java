@@ -20,7 +20,7 @@ public class PatientCreatorServiceImpl implements PatientCreatorService {
     @Autowired
     PatientDependencyCreator patientDependencyCreator;
 
-    public PatientDTO create(PatientDTO model) {
+    public Long create(PatientDTO model) {
 
         Patient savedEntity = creator.create(model);
         List<IPatientDependencyCreator> dependenciesToBeCreated = patientDependencyCreator.createPatientDependencies(model);
@@ -29,6 +29,6 @@ public class PatientCreatorServiceImpl implements PatientCreatorService {
                 .forEach(creator -> creator.create(model, savedEntity));
 
         creator.update(savedEntity);
-        return model;
+        return savedEntity.getId();
     }
 }
