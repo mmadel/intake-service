@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 
 @Entity(name = "patient")
@@ -67,6 +68,13 @@ public class Patient {
     @Column(name = "insurance_worker_type")
     private InsuranceWorkerType insuranceWorkerType;
 
+    @Column
+    private Long createdAt;
+
     @Column(name = "Physical_therapy",columnDefinition = "boolean default false")
     private Boolean PhysicalTherapy;
+
+    private void beforeSaving() {
+        createdAt = new Date().getTime();
+    }
 }

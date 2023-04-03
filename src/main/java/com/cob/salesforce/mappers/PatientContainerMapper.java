@@ -12,21 +12,22 @@ import org.springframework.stereotype.Component;
 public class PatientContainerMapper {
     @Autowired
     ModelMapper mapper;
-    public PatientContainerDTO map(Patient entity){
+
+    public PatientContainerDTO map(Patient entity) {
         PatientContainerDTO patientContainerDTO = new PatientContainerDTO();
         patientContainerDTO.setBirthDate(entity.getDateOfBirth());
         patientContainerDTO.setEmail(entity.getEmail());
-        patientContainerDTO.setGender(entity.getGender().label);
-        patientContainerDTO.setPhoneType(entity.getPhoneType().label);
+        patientContainerDTO.setGender(entity.getGender() != null ? entity.getGender().label : "");
+        patientContainerDTO.setPhoneType(entity.getPhoneType() != null ? entity.getPhoneType().label : "");
         patientContainerDTO.setPhoneNumber(entity.getPhone());
-        patientContainerDTO.setIdType(entity.getIdType().label);
+        patientContainerDTO.setIdType(entity.getIdType() != null ? entity.getIdType().label : "");
         patientContainerDTO.setIdEffectiveFrom(entity.getIdEffectiveFrom());
         patientContainerDTO.setIdEffectiveTo(entity.getIdEffectiveTo());
         patientContainerDTO.setPatientId(entity.getPatientId());
-        patientContainerDTO.setMaritalStatus(entity.getMaritalStatus().label);
+        patientContainerDTO.setMaritalStatus(entity.getMaritalStatus() != null ? entity.getMaritalStatus().label : "");
         patientContainerDTO.setEmergencyName(entity.getEmergencyName());
         patientContainerDTO.setEmergencyPhone(entity.getEmergencyPhone());
-        patientContainerDTO.setEmploymentStatus(entity.getEmploymentStatus().label);
+        patientContainerDTO.setEmploymentStatus(entity.getEmploymentStatus() != null ? entity.getEmploymentStatus().label : "");
         String[] name = entity.getName().split(",");
         patientContainerDTO.setFirstName(name[0]);
         patientContainerDTO.setMiddleName(name[1]);
