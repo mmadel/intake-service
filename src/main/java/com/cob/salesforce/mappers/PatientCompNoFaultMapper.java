@@ -33,10 +33,10 @@ public class PatientCompNoFaultMapper implements PatientDependencyMapper {
                     mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getFax(), InsuranceWorkerCompNoFault::setFax);
                     mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getInsuranceName(), InsuranceWorkerCompNoFault::setInsuranceName);
                     mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getClaimNumber(), InsuranceWorkerCompNoFault::setClaimNumber);
-                    mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getAdjusterName(), InsuranceWorkerCompNoFault::setAdjusterName);
-                    mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getAdjusterPhone(), InsuranceWorkerCompNoFault::setAdjusterPhone);
-                    mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getAttorneyName(), InsuranceWorkerCompNoFault::setAttorneyName);
-                    mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getAttorneyPhone(), InsuranceWorkerCompNoFault::setAttorneyPhone);
+                    mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getAdjusterInfoName(), InsuranceWorkerCompNoFault::setAdjusterName);
+                    mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getAdjusterInfoPhone(), InsuranceWorkerCompNoFault::setAdjusterPhone);
+                    mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getAttorneyInfoName(), InsuranceWorkerCompNoFault::setAttorneyName);
+                    mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getAttorneyInfoPhone(), InsuranceWorkerCompNoFault::setAttorneyPhone);
                     mapper.map(src -> src.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault().getCaseStatusEnum(), InsuranceWorkerCompNoFault::setCaseStatus);
                 });
     }

@@ -1,6 +1,7 @@
 package com.cob.salesforce.services.patient.export;
 
 import com.cob.salesforce.models.PatientContainerDTO;
+import com.cob.salesforce.utils.DateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class ExcelReportGenerator {
@@ -43,6 +47,8 @@ public class ExcelReportGenerator {
         createCell(row, 4, "Patient Id-Type", style);
         createCell(row, 5, "Patient Id", style);
         createCell(row, 6, "Phone", style);
+        createCell(row, 7, "Created", style);
+        createCell(row, 8, "Source", style);
     }
 
     private void createCell(Row row, int columnCount, Object value, CellStyle style) {
@@ -77,6 +83,17 @@ public class ExcelReportGenerator {
             createCell(row, columnCount++, patient.getIdType(), style);
             createCell(row, columnCount++, patient.getPatientId(), style);
             createCell(row, columnCount++, patient.getPhoneNumber(), style);
+            DateFormat formatter = new SimpleDateFormat("MMM dd yyyy");
+            Date createdDate = new Date(patient.getCreatedAt());
+            createCell(row, columnCount++, formatter.format(createdDate), style);
+            switch (patient.getPatientSourceType()) {
+                case Doctor:
+                    createCell(row, columnCount++, "Doctor:" + patient.getDoctorSourceData(), style);
+                    break;
+                case Entity:
+                    createCell(row, columnCount++, patient.getEntitySourceData(), style);
+                    break;
+            }
 
         }
     }

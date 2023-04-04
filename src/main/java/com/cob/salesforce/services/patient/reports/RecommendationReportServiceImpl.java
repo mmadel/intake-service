@@ -1,11 +1,14 @@
 package com.cob.salesforce.services.patient.reports;
 
+import com.cob.salesforce.BeanFactory;
+import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.mappers.PatientContainerMapper;
 import com.cob.salesforce.models.PatientContainerDTO;
 import com.cob.salesforce.models.reporting.PatientSearchCriteria;
 import com.cob.salesforce.models.reporting.PatientSearchResult;
 import com.cob.salesforce.repositories.patient.PatientDoctorSourceRepository;
 import com.cob.salesforce.repositories.patient.PatientEntitySourceRepository;
+import com.cob.salesforce.repositories.patient.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -25,31 +28,65 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
 
     @Override
     public PatientSearchResult getReportData(PatientSearchCriteria patientSearchCriteria) {
-
-        List<PatientContainerDTO> patients = null;
-        switch (patientSearchCriteria.getType()) {
-            case Doctor:
-                patients = patientDoctorSourceRepository.findDoctor(patientSearchCriteria.getDoctorName()
-                                , patientSearchCriteria.getDoctorNPI()
-                                , patientSearchCriteria.getStartDate()
-                                , patientSearchCriteria.getEndDate())
-                        .stream().map(patientDoctorSource -> {
-                            return mapper.map(patientDoctorSource.getPatient());
-                        }).collect(Collectors.toList());
-                break;
-            case Entity:
-                patients = patientEntitySourceRepository.findByEntityName(patientSearchCriteria.getEntityNames(),
-                                patientSearchCriteria.getStartDate(),
-                                patientSearchCriteria.getEndDate())
-                        .stream().map(patientEntitySource -> {
-                            return mapper.map(patientEntitySource.getPatient());
-                        }).collect(Collectors.toList());
-                break;
-        }
+        List<PatientContainerDTO> patients =
+                patientSearchCriteria.getType() != null ?
+                        getDataByPatientSourceType(patientSearchCriteria) :
+                        getDataByDateRange(patientSearchCriteria.getStartDate(), patientSearchCriteria.getEndDate());
 
         return PatientSearchResult.builder()
                 .resultCount(patients.size())
                 .result(patients)
                 .build();
+    }
+
+    private List<PatientContainerDTO> getDataByPatientSourceType(PatientSearchCriteria patientSearchCriteria) {
+        List<PatientContainerDTO> patients = null;
+        switch (patientSearchCriteria.getType()) {
+            case Doctor:
+                PatientDoctorSourceRepository patientDoctorSourceRepository = BeanFactory.getBean(PatientDoctorSourceRepository.class);
+                patients = patientDoctorSourceRepository.findDoctor(patientSearchCriteria.getDoctorName()
+                                , patientSearchCriteria.getDoctorNPI()
+                                , patientSearchCriteria.getStartDate()
+                                , patientSearchCriteria.getEndDate())
+                        .stream().map(patientDoctorSource -> {
+                            PatientContainerDTO dto = mapper.map(patientDoctorSource.getPatient());
+                            dto.setPatientSourceType(PatientSourceType.Doctor);
+                            dto.setDoctorSourceData(patientDoctorSource.getName() + '-' + patientDoctorSource.getNpi());
+                            return dto;
+                        }).collect(Collectors.toList());
+                break;
+            case Entity:
+                PatientEntitySourceRepository patientEntitySourceRepository = BeanFactory.getBean(PatientEntitySourceRepository.class);
+                patients = patientEntitySourceRepository.findByEntityName(patientSearchCriteria.getEntityNames(),
+                                patientSearchCriteria.getStartDate(),
+                                patientSearchCriteria.getEndDate())
+                        .stream()
+                        .map(patientEntitySource -> {
+                            PatientContainerDTO dto = mapper.map(patientEntitySource.getPatient());
+                            dto.setPatientSourceType(PatientSourceType.Entity);
+                            dto.setEntitySourceData(patientEntitySource.getName());
+                            return dto;
+                        }).collect(Collectors.toList());
+                break;
+        }
+
+        return patients;
+    }
+
+    private List<PatientContainerDTO> getDataByDateRange(Long dateFrom, Long dateTo) {
+        List<PatientContainerDTO> patients = null;
+        PatientRepository patientRepository = BeanFactory.getBean(PatientRepository.class);
+        if (!dateFrom.equals(dateTo))
+            return patientRepository.getByCreatedDateRange(dateFrom, dateTo)
+                    .stream()
+                    .map(patientEntitySource -> {
+                        return mapper.map(patientEntitySource);
+                    }).collect(Collectors.toList());
+        else
+            return patientRepository.getByCreatedDate(dateFrom)
+                    .stream()
+                    .map(patientEntitySource -> {
+                        return mapper.map(patientEntitySource);
+                    }).collect(Collectors.toList());
     }
 }

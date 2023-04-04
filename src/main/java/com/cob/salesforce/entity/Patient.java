@@ -1,11 +1,13 @@
 package com.cob.salesforce.entity;
 
 import com.cob.salesforce.enums.*;
+import com.cob.salesforce.utils.DateUtil;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 
 @Entity(name = "patient")
@@ -67,6 +69,13 @@ public class Patient {
     @Column(name = "insurance_worker_type")
     private InsuranceWorkerType insuranceWorkerType;
 
+    @Column
+    private Long createdAt;
+
     @Column(name = "Physical_therapy",columnDefinition = "boolean default false")
     private Boolean PhysicalTherapy;
+    @PrePersist
+    private void beforeSaving() {
+        createdAt = DateUtil.removeTime(new Date()).getTime();
+    }
 }

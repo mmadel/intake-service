@@ -54,7 +54,9 @@ public class DashboardServiceImpl implements DashboardService {
         return GenderContainer
                 .builder()
                 .malePercentage(calculatePercentage(numberOfMale))
+                .maleNumber(numberOfMale)
                 .femalePercentage(calculatePercentage(numberOfFemale))
+                .femaleNumber(numberOfFemale)
                 .build();
 
     }
@@ -78,10 +80,15 @@ public class DashboardServiceImpl implements DashboardService {
                 numberOfSocialMedia.getAndIncrement();
         });
         return PatientSourceContainer.builder()
+                .zocdocNumber(numberOfZocdoc.get())
                 .zocdocPercentage(calculatePercentage(numberOfZocdoc.get()))
+                .tvNumber(numberOfTV.get())
                 .tvPercentage(calculatePercentage(numberOfTV.get()))
+                .websiteNumber(numberOfWebsite.get())
                 .websitePercentage(calculatePercentage(numberOfWebsite.get()))
+                .socialMediaNumber(numberOfSocialMedia.get())
                 .socialMediaPercentage(calculatePercentage(numberOfSocialMedia.get()))
+                .doctorNumber(numberOfDoctorSource)
                 .doctorPercentage(numberOfDoctorSource)
                 .build();
     }
