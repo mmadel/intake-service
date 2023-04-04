@@ -1,6 +1,7 @@
 package com.cob.salesforce.entity;
 
 import com.cob.salesforce.enums.*;
+import com.cob.salesforce.utils.DateUtil;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -73,8 +74,8 @@ public class Patient {
 
     @Column(name = "Physical_therapy",columnDefinition = "boolean default false")
     private Boolean PhysicalTherapy;
-
+    @PrePersist
     private void beforeSaving() {
-        createdAt = new Date().getTime();
+        createdAt = DateUtil.removeTime(new Date()).getTime();
     }
 }

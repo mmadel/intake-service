@@ -69,10 +69,17 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
     private List<PatientContainerDTO> getDataByDateRange(Long dateFrom, Long dateTo) {
         List<PatientContainerDTO> patients = null;
         PatientRepository patientRepository = BeanFactory.getBean(PatientRepository.class);
-        return patientRepository.getByCreatedDateRange(dateFrom, dateTo)
-                .stream()
-                .map(patientEntitySource -> {
-                    return mapper.map(patientEntitySource);
-                }).collect(Collectors.toList());
+        if (!dateFrom.equals(dateTo))
+            return patientRepository.getByCreatedDateRange(dateFrom, dateTo)
+                    .stream()
+                    .map(patientEntitySource -> {
+                        return mapper.map(patientEntitySource);
+                    }).collect(Collectors.toList());
+        else
+            return patientRepository.getByCreatedDate(dateFrom)
+                    .stream()
+                    .map(patientEntitySource -> {
+                        return mapper.map(patientEntitySource);
+                    }).collect(Collectors.toList());
     }
 }
