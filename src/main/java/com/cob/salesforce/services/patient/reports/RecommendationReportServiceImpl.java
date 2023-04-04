@@ -1,6 +1,7 @@
 package com.cob.salesforce.services.patient.reports;
 
 import com.cob.salesforce.BeanFactory;
+import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.mappers.PatientContainerMapper;
 import com.cob.salesforce.models.PatientContainerDTO;
 import com.cob.salesforce.models.reporting.PatientSearchCriteria;
@@ -48,7 +49,10 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
                                 , patientSearchCriteria.getStartDate()
                                 , patientSearchCriteria.getEndDate())
                         .stream().map(patientDoctorSource -> {
-                            return mapper.map(patientDoctorSource.getPatient());
+                            PatientContainerDTO dto = mapper.map(patientDoctorSource.getPatient());
+                            dto.setPatientSourceType(PatientSourceType.Doctor);
+                            dto.setDoctorSourceData(patientDoctorSource.getName() + '-' + patientDoctorSource.getNpi());
+                            return dto;
                         }).collect(Collectors.toList());
                 break;
             case Entity:
@@ -58,7 +62,10 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
                                 patientSearchCriteria.getEndDate())
                         .stream()
                         .map(patientEntitySource -> {
-                            return mapper.map(patientEntitySource.getPatient());
+                            PatientContainerDTO dto = mapper.map(patientEntitySource.getPatient());
+                            dto.setPatientSourceType(PatientSourceType.Entity);
+                            dto.setEntitySourceData(patientEntitySource.getName());
+                            return dto;
                         }).collect(Collectors.toList());
                 break;
         }

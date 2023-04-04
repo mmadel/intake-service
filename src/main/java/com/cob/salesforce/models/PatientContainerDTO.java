@@ -1,5 +1,6 @@
 package com.cob.salesforce.models;
 
+import com.cob.salesforce.enums.PatientSourceType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -50,4 +51,9 @@ public class PatientContainerDTO {
     private String zipCode;
 
     private Long createdAt;
+
+    private PatientSourceType patientSourceType;
+
+    private String doctorSourceData;
+    private String entitySourceData;
 }
