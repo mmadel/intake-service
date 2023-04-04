@@ -30,14 +30,14 @@ public class InsuranceWorkerCompNoFaultDTO {
 
     private BigInteger claimNumber;
 
-    private String adjusterName;
+    private String adjusterInfoName;
 
-    private String adjusterPhone;
+    private String adjusterInfoPhone;
 
-    private String attorneyName;
+    private String attorneyInfoName;
 
 
-    private String attorneyPhone;
+    private String attorneyInfoPhone;
 
 
     private String caseStatus;
