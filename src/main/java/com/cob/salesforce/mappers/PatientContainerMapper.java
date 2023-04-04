@@ -28,6 +28,7 @@ public class PatientContainerMapper {
         patientContainerDTO.setEmergencyName(entity.getEmergencyName());
         patientContainerDTO.setEmergencyPhone(entity.getEmergencyPhone());
         patientContainerDTO.setEmploymentStatus(entity.getEmploymentStatus() != null ? entity.getEmploymentStatus().label : "");
+        patientContainerDTO.setCreatedAt(entity.getCreatedAt());
         String[] name = entity.getName().split(",");
         patientContainerDTO.setFirstName(name[0]);
         patientContainerDTO.setMiddleName(name[1]);

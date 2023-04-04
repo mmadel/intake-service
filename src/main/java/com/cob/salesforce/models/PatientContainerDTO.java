@@ -48,4 +48,6 @@ public class PatientContainerDTO {
     private String city;
     private String type;
     private String zipCode;
+
+    private Long createdAt;
 }
