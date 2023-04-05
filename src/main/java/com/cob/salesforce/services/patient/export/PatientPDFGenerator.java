@@ -1,5 +1,6 @@
 package com.cob.salesforce.services.patient.export;
 
+import com.cob.salesforce.models.pdf.PatientData;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -10,10 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class PatientPDFGenerator {
+    PatientData source;
+
+    public void setData(PatientData source) {
+        this.source = source;
+    }
+
     public void generate(HttpServletResponse response) throws DocumentException, IOException {
         Document document = new Document(PageSize.A4);
 
-        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+        PdfWriter.getInstance(document, response.getOutputStream());
         document.open();
         createRightCornerParagraph(document);
         createTitle(document);
@@ -36,10 +43,11 @@ public class PatientPDFGenerator {
     }
 
     private void createRightCornerParagraph(Document document) throws DocumentException {
+        String value = "";
         Font fontTitle = FontFactory.getFont(FontFactory.TIMES_ROMAN, 10);
-        String value = "Ahmed Farghal\n" +
-                "ID: 3939393 \n" +
-                "DOB: 05/08/1981";
+        value += source.getFirstName() + "," + source.getLastName() + "\n";
+        value += "ID: " + source.getPatientId() + "\n";
+        value += "DOB: " + source.getDateOfBirth() + "\n";
         Paragraph paragraph = new Paragraph(value, fontTitle);
         paragraph.setAlignment(Paragraph.ALIGN_RIGHT);
         document.add(paragraph);
@@ -52,25 +60,37 @@ public class PatientPDFGenerator {
     private void createPatientPersonalInfo(Document document) throws DocumentException {
         createHeader(document, "Personal Info");
 
-        createTable(document, new String[]{"User Type", "First Name", "Last Name"});
-        createTable(document, new String[]{"Social Security ID", "Gender", "Home Phone Number"});
-        createTable(document, new String[]{"Mobile Phone Number", "Email", "Address"});
-        createTable(document, new String[]{"Marital Status", "Injury Cause", "Emergency Contact First Name"});
-        createTable(document, new String[]{"Emergency Contact Last Name", "Emergency Contact Phone Number", "Relationship"});
+        createTable(document, new String[]{"User Type", "First Name", "Last Name"},
+                new String[]{"userType", source.getFirstName(), source.getLastName()});
+        createTable(document, new String[]{"Social Security ID", "Gender", "Home Phone Number"},
+                new String[]{source.getPatientId(), source.getGender().label, source.getPhone()});
+        createTable(document, new String[]{"Mobile Phone Number", "Email", "Address"},
+                new String[]{source.getPhone(), source.getEmail(), source.getAddress()});
+        createTable(document, new String[]{"Marital Status", "Injury Cause", "Emergency Contact First Name"},
+                new String[]{source.getMaritalStatus().label, "Injury Cause", source.getEmergencyFirstName()});
+        createTable(document, new String[]{"Emergency Contact Last Name", "Emergency Contact Phone Number", "Relationship"},
+                new String[]{source.getEmergencyLastName(), source.getEmergencyPhone(), "Relationship"});
+        createTable(document, new String[]{"Referral Source"},
+                new String[]{source.getPatientSourceData().getEntityName()});
 
     }
 
     private void createPatientInsurance(Document document) throws DocumentException {
         createHeader(document, "Insurance ");
-        createTable(document, new String[]{"Medicare Patient", "Secondary Insurance Policy", "Insurance Plan Name"});
-        createTable(document, new String[]{"Policy ID", "Phone Number", "Secondary Policy Holder"});
+        createTable(document, new String[]{"Medicare Patient", "Secondary Insurance Policy", "Insurance Plan Name"},
+                new String[]{source.getInsuranceData().getMedicare() ? "yes" : "No", source.getInsuranceData().getSecondaryInsurancePolicy() ? "Yes" : "No", source.getInsuranceData().getInsurancePlanName()});
+        createTable(document, new String[]{"Policy ID", "Phone Number", "Secondary Policy Holder"},
+                new String[]{source.getInsuranceData().getPolicyId(), "Phone Number", source.getInsuranceData().getSecondaryPolicyHolder() ? "Yes" : "No"});
     }
 
     private void createPatientMedical(Document document) throws DocumentException {
         createHeader(document, "Medical");
-        createTable(document, new String[]{"Height", "Recent Falls", "Feel unsteady"});
-        createTable(document, new String[]{"Worry about falling", "No Referring Doctor", "Medical Conditions"});
-        createTable(document, new String[]{"Current Medications", "Therapy Goal", "Medical History"});
+        createTable(document, new String[]{"Height", "Recent Falls", "Feel unsteady"},
+                new String[]{source.getMedicalData().getHeight().toString(), "Recent Falls", "Feel unsteady"});
+        createTable(document, new String[]{"Worry about falling", "No Referring Doctor", "Medical Conditions"},
+                new String[]{"Worry about falling", source.getPatientSourceData().getDoctorName() == null ? "Yes" : "No", source.getMedicalData().getPatientCondition().toString()});
+        createTable(document, new String[]{"Current Medications", "Therapy Goal", "Medical History"},
+                new String[]{"Current Medications", "Therapy Goal", "Medical History"});
     }
 
     private void createHeader(Document document, String title) throws DocumentException {
@@ -92,7 +112,7 @@ public class PatientPDFGenerator {
         document.add(header);
     }
 
-    private void createTable(Document document, String[] columns) throws DocumentException {
+    private PdfPTable createTable(Document document, String[] columns, String[] data) throws DocumentException {
         PdfPTable table = new PdfPTable(3);
         table.setTotalWidth(527);
         table.setLockedWidth(true);
@@ -100,14 +120,24 @@ public class PatientPDFGenerator {
         table.getDefaultCell().setBorder(Rectangle.BOTTOM);
         table.getDefaultCell().setBorderColor(BaseColor.LIGHT_GRAY);
         for (String column : columns) {
-            PdfPCell userType = new PdfPCell();
-            userType.setPaddingBottom(15);
-            userType.setPaddingLeft(10);
-            userType.setBorder(Rectangle.NO_BORDER);
-            userType.addElement(new Phrase(column, new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD)));
-            table.addCell(userType);
+            PdfPCell tableHeader = new PdfPCell();
+            tableHeader.setPaddingBottom(15);
+            tableHeader.setPaddingLeft(10);
+            tableHeader.setBorder(Rectangle.NO_BORDER);
+            tableHeader.addElement(new Phrase(column, new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD)));
+            table.addCell(tableHeader);
         }
+        if (data != null)
+            for (String value : data) {
+                PdfPCell tableData = new PdfPCell();
+                tableData.setPaddingBottom(15);
+                tableData.setPaddingLeft(10);
+                tableData.setBorder(Rectangle.NO_BORDER);
+                tableData.addElement(new Phrase(value, new Font(Font.FontFamily.HELVETICA, 10)));
+                table.addCell(tableData);
+            }
         document.add(table);
+        return table;
     }
 }
 

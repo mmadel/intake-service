@@ -1,9 +1,14 @@
 package com.cob.salesforce.controllers.patient;
 
+import com.cob.salesforce.enums.InsuranceWorkerType;
+import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.models.PatientContainerDTO;
+import com.cob.salesforce.models.pdf.PatientData;
+import com.cob.salesforce.services.patient.PatientFinderService;
 import com.cob.salesforce.services.patient.export.ExcelReportGenerator;
 import com.cob.salesforce.services.patient.export.PatientPDFGenerator;
 import com.itextpdf.text.DocumentException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +23,10 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/reports/generator")
 public class ReportGeneratorController {
+
+    @Autowired
+    PatientFinderService patientFinderService;
+
     @PostMapping("/excel")
     public void generateExcel(@RequestBody List<PatientContainerDTO> patients, HttpServletResponse response) throws IOException {
         ExcelReportGenerator excelReportGenerator = new ExcelReportGenerator();
@@ -33,8 +42,18 @@ public class ReportGeneratorController {
     }
 
     @GetMapping(value = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public void generatePDF(HttpServletResponse response) throws DocumentException, IOException {
-        PatientPDFGenerator  pdfGenerator = new PatientPDFGenerator();
+    public void generatePDF(@RequestParam(name = "insuranceWorkerType") String insuranceWorkerType,
+                            @RequestParam(name = "patientSourceType") String patientSourceType,
+                            @RequestParam(name = "hasPhysicalTherapy") Boolean hasPhysicalTherapy,
+                            @RequestParam(name = "patientId") Long patientId,
+                            HttpServletResponse response) throws DocumentException, IOException {
+        PatientData patientData = patientFinderService.getPDFPatientData(
+                InsuranceWorkerType.valueOf(insuranceWorkerType),
+                PatientSourceType.valueOf(patientSourceType),
+                hasPhysicalTherapy,
+                patientId);
+        PatientPDFGenerator pdfGenerator = new PatientPDFGenerator();
+        pdfGenerator.setData(patientData);
         pdfGenerator.generate(response);
     }
 }
