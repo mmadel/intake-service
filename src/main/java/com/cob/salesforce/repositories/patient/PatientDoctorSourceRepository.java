@@ -16,4 +16,6 @@ public interface PatientDoctorSourceRepository extends PagingAndSortingRepositor
             , @Param("npi") String npi
             , @Param("dateFrom") Long dateFrom
             , @Param("dateTo") Long dateTo);
+
+    public PatientDoctorSource findByPatient_Id(Long id);
 }
