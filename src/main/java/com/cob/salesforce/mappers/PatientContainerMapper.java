@@ -15,6 +15,7 @@ public class PatientContainerMapper {
 
     public PatientContainerDTO map(Patient entity) {
         PatientContainerDTO patientContainerDTO = new PatientContainerDTO();
+        patientContainerDTO.setTableId(entity.getId());
         patientContainerDTO.setBirthDate(entity.getDateOfBirth());
         patientContainerDTO.setEmail(entity.getEmail());
         patientContainerDTO.setGender(entity.getGender() != null ? entity.getGender().label : "");
@@ -28,6 +29,9 @@ public class PatientContainerMapper {
         patientContainerDTO.setEmergencyName(entity.getEmergencyName());
         patientContainerDTO.setEmergencyPhone(entity.getEmergencyPhone());
         patientContainerDTO.setEmploymentStatus(entity.getEmploymentStatus() != null ? entity.getEmploymentStatus().label : "");
+        patientContainerDTO.setInsuranceWorkerType(entity.getInsuranceWorkerType());
+        patientContainerDTO.setPatientSourceType(entity.getPatientSourceType());
+        patientContainerDTO.setHasPhysicalTherapy(entity.getPhysicalTherapy());
         patientContainerDTO.setCreatedAt(entity.getCreatedAt());
         String[] name = entity.getName().split(",");
         patientContainerDTO.setFirstName(name[0]);

@@ -7,8 +7,12 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PatientPDFGenerator {
     PatientData source;
@@ -19,7 +23,6 @@ public class PatientPDFGenerator {
 
     public void generate(HttpServletResponse response) throws DocumentException, IOException {
         Document document = new Document(PageSize.A4);
-
         PdfWriter.getInstance(document, response.getOutputStream());
         document.open();
         createRightCornerParagraph(document);

@@ -1,5 +1,6 @@
 package com.cob.salesforce.models;
 
+import com.cob.salesforce.enums.InsuranceWorkerType;
 import com.cob.salesforce.enums.PatientSourceType;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,6 +8,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PatientContainerDTO {
+
+    private  Long tableId;
     private Long birthDate;
     private String birthDateDate;
 
@@ -53,6 +56,10 @@ public class PatientContainerDTO {
     private Long createdAt;
 
     private PatientSourceType patientSourceType;
+
+    private InsuranceWorkerType insuranceWorkerType;
+
+    private Boolean hasPhysicalTherapy;
 
     private String doctorSourceData;
     private String entitySourceData;

@@ -9,7 +9,10 @@ import com.cob.salesforce.services.patient.export.ExcelReportGenerator;
 import com.cob.salesforce.services.patient.export.PatientPDFGenerator;
 import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +44,7 @@ public class ReportGeneratorController {
         excelReportGenerator.export(response);
     }
 
-    @GetMapping(value = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    @PostMapping(value = "/pdf")
     public void generatePDF(@RequestParam(name = "insuranceWorkerType") String insuranceWorkerType,
                             @RequestParam(name = "patientSourceType") String patientSourceType,
                             @RequestParam(name = "hasPhysicalTherapy") Boolean hasPhysicalTherapy,
@@ -52,6 +55,8 @@ public class ReportGeneratorController {
                 PatientSourceType.valueOf(patientSourceType),
                 hasPhysicalTherapy,
                 patientId);
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition","inline");
         PatientPDFGenerator pdfGenerator = new PatientPDFGenerator();
         pdfGenerator.setData(patientData);
         pdfGenerator.generate(response);
