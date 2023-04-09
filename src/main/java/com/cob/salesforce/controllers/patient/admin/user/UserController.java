@@ -1,4 +1,4 @@
-package com.cob.salesforce.controllers.patient.admin.clinic;
+package com.cob.salesforce.controllers.patient.admin.user;
 
 import com.cob.salesforce.models.admin.ClinicModel;
 import com.cob.salesforce.models.admin.user.UserModel;
