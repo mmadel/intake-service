@@ -2,8 +2,8 @@ package com.cob.salesforce.enums.admin;
 
 public enum UserRole {
 
-    Admin("admin"),
-    Normal("Normal");
+    ADMIN("ADMIN"),
+    USER("USER");
     public final String label;
 
     private UserRole(String label) {
