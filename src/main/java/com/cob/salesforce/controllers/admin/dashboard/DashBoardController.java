@@ -1,4 +1,4 @@
-package com.cob.salesforce.controllers;
+package com.cob.salesforce.controllers.admin.dashboard;
 
 import com.cob.salesforce.services.dashboard.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;

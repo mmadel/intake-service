@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/admin/user")
+@RequestMapping(value = "/user")
 public class UserController {
     @Autowired
     UserCreatorService creator;

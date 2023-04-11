@@ -1,4 +1,4 @@
-package com.cob.salesforce.controllers;
+package com.cob.salesforce.controllers.admin.reports;
 
 import com.cob.salesforce.enums.InsuranceWorkerType;
 import com.cob.salesforce.enums.PatientSourceType;

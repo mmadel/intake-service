@@ -1,4 +1,4 @@
-package com.cob.salesforce.controllers;
+package com.cob.salesforce.controllers.admin;
 
 import com.cob.salesforce.models.validation.PatientFields;
 import com.cob.salesforce.services.admin.validation.PatientValidationFieldService;
@@ -9,23 +9,23 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/patient/admin")
-public class PatientAdminController {
+@RequestMapping(value = "/requires/fields")
+public class PatientInputsRequirementController {
 
     @Autowired
     PatientValidationFieldService patientValidationFieldService;
 
-    @PostMapping(path = "/change/requires/fields")
+    @PostMapping(path = "/change")
     public ResponseEntity changePatientValidationFields(@RequestBody PatientFields model) {
         return new ResponseEntity(patientValidationFieldService.change(model), HttpStatus.OK);
     }
     @ResponseBody
-    @GetMapping(path = "/retrieve/requires/fields")
+    @GetMapping(path = "/retrieve")
     public ResponseEntity getPatientRequiredFields() {
         return new ResponseEntity(patientValidationFieldService.get(), HttpStatus.OK);
     }
     @ResponseBody
-    @GetMapping(path = "/retrieve/requires/basic/fields")
+    @GetMapping(path = "/retrieve/basic")
     public ResponseEntity getPatientRequiredBasicFields() {
         return new ResponseEntity(patientValidationFieldService.getPateintBasicInfo(), HttpStatus.OK);
     }

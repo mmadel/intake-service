@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/admin/clinic")
+@RequestMapping(value = "/clinic")
 public class ClinicController {
 
     @Autowired

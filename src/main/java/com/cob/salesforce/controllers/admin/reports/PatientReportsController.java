@@ -1,4 +1,4 @@
-package com.cob.salesforce.controllers;
+package com.cob.salesforce.controllers.admin.reports;
 
 import com.cob.salesforce.models.reporting.PatientSearchCriteria;
 import com.cob.salesforce.services.reports.RecommendationReportService;

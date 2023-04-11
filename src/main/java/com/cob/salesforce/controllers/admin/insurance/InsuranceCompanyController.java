@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/admin/insurance/company")
+@RequestMapping(value = "/insurance/company")
 public class InsuranceCompanyController {
     @Autowired
     InsuranceCompanyCreatorService insuranceCompanyCreatorService;

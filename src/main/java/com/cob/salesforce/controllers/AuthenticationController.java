@@ -1,4 +1,4 @@
-package com.cob.salesforce.configuration;
+package com.cob.salesforce.controllers;
 
 import com.cob.salesforce.models.admin.security.LoginRequest;
 import com.cob.salesforce.services.security.JWTGeneratorService;
@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/auth")
-public class AuthController {
+@RequestMapping("/auth")
+public class AuthenticationController {
     @Autowired
     JWTGeneratorService jwtGeneratorService;
     @Autowired
     AuthenticationManager authenticationManager;
 
 
-    @PostMapping("/token")
+    @PostMapping("/login")
     public String generateToken(@RequestBody LoginRequest model) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
