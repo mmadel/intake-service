@@ -5,7 +5,7 @@ import com.cob.salesforce.entity.PatientEntitySource;
 import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.mappers.PatientDependencyMapper;
 import com.cob.salesforce.models.PatientDTO;
-import com.cob.salesforce.repositories.patient.PatientEntitySourceRepository;
+import com.cob.salesforce.repositories.PatientEntitySourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

@@ -2,16 +2,12 @@ package com.cob.salesforce.dependency.creator;
 
 import com.cob.salesforce.entity.*;
 import com.cob.salesforce.enums.InsuranceWorkerType;
-import com.cob.salesforce.enums.Relationship;
 import com.cob.salesforce.mappers.PatientDependencyMapper;
 import com.cob.salesforce.models.PatientDTO;
-import com.cob.salesforce.repositories.patient.InsuranceWorkerCommercialRepository;
-import org.modelmapper.ModelMapper;
+import com.cob.salesforce.repositories.InsuranceWorkerCommercialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
 
 @Service
 public class PatientCommercialCreator implements IPatientDependencyCreator {
