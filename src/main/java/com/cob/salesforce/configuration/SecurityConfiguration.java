@@ -17,6 +17,7 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,11 +28,11 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.Arrays;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+    @Value("${server.servlet.context-path:''}")
+    private String contextPath;
     private static final String SCOPE = "SCOPE_";
     @Autowired
     JpaUserDetailsService jpaUserDetailsService;
@@ -46,11 +47,12 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .antMatchers("/auth/login").permitAll()
-                        .antMatchers("/patient").hasAuthority(SCOPE + UserRole.USER.label)
-                        .antMatchers("/clinic/**","/dashboard/**","/insurance/company/**","/reports/**","/requires/fields/**").hasAuthority(SCOPE + UserRole.ADMIN.label)
+                        .antMatchers("/user/find/loggedIn/**").permitAll()
+                        .antMatchers("/patient**").hasAnyAuthority(SCOPE + UserRole.USER.label,SCOPE + UserRole.ADMIN.label)
+                        .antMatchers("/clinic/**", "/dashboard/**", "/insurance/company/**", "/reports/**", "/requires/fields/**").hasAuthority(SCOPE + UserRole.ADMIN.label)
                         .anyRequest().authenticated()
 
                 )
@@ -79,6 +81,6 @@ public class SecurityConfiguration {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return  new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
 }
