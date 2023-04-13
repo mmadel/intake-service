@@ -21,6 +21,8 @@ public class UserEntity {
 
     @Column(name = "user_name")
     private String name;
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "user_address")
     private String address;

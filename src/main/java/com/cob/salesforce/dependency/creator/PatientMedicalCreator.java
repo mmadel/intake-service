@@ -4,7 +4,7 @@ import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.entity.PatientMedical;
 import com.cob.salesforce.mappers.PatientDependencyMapper;
 import com.cob.salesforce.models.PatientDTO;
-import com.cob.salesforce.repositories.patient.PatientMedicalRepository;
+import com.cob.salesforce.repositories.PatientMedicalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

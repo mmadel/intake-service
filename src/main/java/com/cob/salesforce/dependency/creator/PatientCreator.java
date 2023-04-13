@@ -1,20 +1,14 @@
 package com.cob.salesforce.dependency.creator;
 
 import com.cob.salesforce.entity.Patient;
-import com.cob.salesforce.mappers.PatientDependencyMapper;
 import com.cob.salesforce.mappers.PatientMapper;
-import com.cob.salesforce.models.AddressInfoDTO;
-import com.cob.salesforce.models.BasicInfoDTO;
 import com.cob.salesforce.models.PatientDTO;
-import com.cob.salesforce.repositories.patient.PatientRepository;
+import com.cob.salesforce.repositories.PatientRepository;
 import lombok.Getter;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
 @Service
