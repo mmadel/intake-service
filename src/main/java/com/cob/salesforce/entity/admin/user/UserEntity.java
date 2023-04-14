@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -31,9 +32,12 @@ public class UserEntity {
     @Column(name = "user_role")
     private UserRole userRole;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private List<ClinicEntity> clinics;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_clinic",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "clinic_id"))
+    private Set<ClinicEntity> clinics;
     @Column
     private Long createdAt;
 

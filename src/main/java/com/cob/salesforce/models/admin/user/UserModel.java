@@ -21,7 +21,6 @@ public class UserModel {
 
 
     private UserRole userRole;
-
     private List<ClinicModel> clinics;
     @Column
     private Long createdAt;
