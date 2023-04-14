@@ -7,7 +7,7 @@ import com.cob.salesforce.models.pdf.PatientData;
 import org.springframework.data.domain.Pageable;
 
 public interface PatientFinderService {
-    PatientListData list(Pageable pageable);
+    PatientListData list(Pageable pageable , Long clinicId);
 
     PatientData getPDFPatientData(InsuranceWorkerType insuranceWorkerType, PatientSourceType patientSourceType, Boolean hasPhysicalTherapy, Long patientId);
 }
