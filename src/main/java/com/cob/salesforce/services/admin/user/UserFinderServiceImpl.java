@@ -1,5 +1,6 @@
 package com.cob.salesforce.services.admin.user;
 
+import com.cob.salesforce.entity.admin.ClinicEntity;
 import com.cob.salesforce.entity.admin.user.UserEntity;
 import com.cob.salesforce.models.admin.ClinicModel;
 import com.cob.salesforce.models.admin.user.UserModel;
@@ -34,6 +35,13 @@ public class UserFinderServiceImpl implements UserFinderService {
     public UserModel getById(Long Id) {
         UserEntity entity = repository.findById(Id).get();
         return mapUserModel(entity);
+    }
+
+    @Override
+    public List<ClinicModel> findByUserId(Long userId) {
+        return repository.findUserClinics(userId).stream()
+                .map(clinicEntity -> mapper.map(clinicEntity, ClinicModel.class))
+                .collect(Collectors.toList());
     }
 
     private UserModel mapUserModel(UserEntity entity){
