@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 @Setter
 @Getter
 @Builder
@@ -13,4 +15,6 @@ public class DashboardDataContainer {
     private int totalNumberOfCommercialPatient;
     private GenderContainer genderContainer;
     private PatientSourceContainer patientSourceContainer;
+
+    private Map clinicsData;
 }

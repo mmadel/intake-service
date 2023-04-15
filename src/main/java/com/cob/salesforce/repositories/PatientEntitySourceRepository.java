@@ -1,5 +1,6 @@
 package com.cob.salesforce.repositories;
 
+import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.entity.PatientEntitySource;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -15,5 +16,7 @@ public interface PatientEntitySourceRepository extends PagingAndSortingRepositor
             , @Param("dateFrom") Long dateFrom
             , @Param("dateTo") Long dateTo);
 
-    public PatientEntitySource findByPatient_Id(Long id);
+    PatientEntitySource findByPatient_Id(Long id);
+
+    List<PatientEntitySource> findByPatientIn(List<Patient> patients);
 }

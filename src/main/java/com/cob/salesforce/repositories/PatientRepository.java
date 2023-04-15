@@ -14,9 +14,6 @@ import java.util.List;
 public interface PatientRepository extends PagingAndSortingRepository<Patient, Long> {
 
 
-    @Query("Select count(p.id)  from patient  p where p.gender = :gender")
-    public Integer getPatientByGender(@Param("gender") Gender gender);
-
     @Query("Select count(p.id)  from patient  p where p.insuranceWorkerType = :insuranceWorkerType")
     public Integer getPatientWorkerType(@Param("insuranceWorkerType") InsuranceWorkerType insuranceWorkerType);
 
@@ -32,4 +29,5 @@ public interface PatientRepository extends PagingAndSortingRepository<Patient, L
     List<Patient> getByCreatedDate(@Param("sameDate") Long sameDate);
 
     Page<Patient> findByClinicId(Pageable pageable, Long clinicId);
+
 }

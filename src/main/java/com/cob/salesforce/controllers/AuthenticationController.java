@@ -33,6 +33,7 @@ public class AuthenticationController {
         return new ResponseEntity(LoginResponse.builder()
                 .accessToken(jwtGeneratorService.generateToken(authentication))
                 .userId(((SecurityUser) authentication.getPrincipal()).user.getId())
+                .userRole(((SecurityUser) authentication.getPrincipal()).user.getUserRole().label)
                 .build(), HttpStatus.OK);
     }
 }

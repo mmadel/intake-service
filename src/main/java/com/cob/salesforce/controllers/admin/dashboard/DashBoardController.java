@@ -14,8 +14,8 @@ public class DashBoardController {
     DashboardService dashboardService;
 
     @ResponseBody
-    @GetMapping(path = "/data")
-    public ResponseEntity getDashBoardData() {
-        return new ResponseEntity(dashboardService.getData(), HttpStatus.OK);
+    @GetMapping(path = "/data/clinicId/{clinicId}/userId/{userId}")
+    public ResponseEntity getDashBoardData(@PathVariable("clinicId") Long clinicId,@PathVariable("userId") Long userId) {
+        return new ResponseEntity(dashboardService.getData(clinicId,userId), HttpStatus.OK);
     }
 }
