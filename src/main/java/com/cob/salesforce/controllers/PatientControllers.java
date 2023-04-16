@@ -35,11 +35,12 @@ public class PatientControllers {
     }
 
     @ResponseBody
-    @GetMapping()
+    @GetMapping("/{clinicId}")
     public ResponseEntity<com.cob.salesforce.models.PatientListData> list(@RequestParam(name = "offset") String offset,
-                                                                          @RequestParam(name = "limit") String limit) {
+                                                                          @RequestParam(name = "limit") String limit,
+                                                                          @PathVariable(name = "clinicId") Long clinicId) {
         Pageable paging = PageRequest.of(Integer.parseInt(offset), Integer.parseInt(limit));
-        return new ResponseEntity<>(patientFinderService.list(paging), HttpStatus.OK);
+        return new ResponseEntity<>(patientFinderService.list(paging,clinicId), HttpStatus.OK);
     }
 
     @ResponseBody

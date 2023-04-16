@@ -36,8 +36,8 @@ public class PatientFinderServiceImpl implements PatientFinderService {
     PatientContainerMapper mapper;
 
     @Override
-    public PatientListData list(Pageable pageable) {
-        Page<Patient> pages = patientRepository.findAll(pageable);
+    public PatientListData list(Pageable pageable ,Long clinicId) {
+        Page<Patient> pages = patientRepository.findByClinicId(pageable,clinicId);
         long total = (pages).getTotalElements();
         List<PatientContainerDTO> records = pages.stream().map(patient -> mapper.map(patient))
                 .collect(Collectors.toList());

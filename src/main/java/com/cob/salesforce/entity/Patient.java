@@ -1,5 +1,6 @@
 package com.cob.salesforce.entity;
 
+import com.cob.salesforce.entity.admin.ClinicEntity;
 import com.cob.salesforce.enums.*;
 import com.cob.salesforce.utils.DateUtil;
 import lombok.Builder;
@@ -78,4 +79,8 @@ public class Patient {
     private void beforeSaving() {
         createdAt = DateUtil.removeTime(new Date()).getTime();
     }
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "clinic_id", referencedColumnName = "id")
+    private ClinicEntity clinic;
 }

@@ -23,6 +23,8 @@ public class PatientDTO {
 
     private MedicalQuestionnaireInfoDTO medicalQuestionnaireInfo;
 
+    private Long clinicId;
+
 
 
 }

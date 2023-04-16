@@ -44,4 +44,11 @@ public class UserController {
     public ResponseEntity getLoggedIn(@PathVariable String userId) {
         return new ResponseEntity(mapper.map(finder.getById(Long.valueOf(userId)), CurrentLoggInUser.class), HttpStatus.OK);
     }
+
+    @GetMapping(path = "/find/clinics/{userId}")
+    @ResponseBody
+    public ResponseEntity getUserClinics(@PathVariable Long userId) {
+        return new ResponseEntity(finder.findByUserId(userId), HttpStatus.OK);
+    }
+
 }
