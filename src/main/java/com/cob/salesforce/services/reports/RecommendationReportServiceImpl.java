@@ -47,7 +47,8 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
                 patients = patientDoctorSourceRepository.findDoctor(patientSearchCriteria.getDoctorName()
                                 , patientSearchCriteria.getDoctorNPI()
                                 , patientSearchCriteria.getStartDate()
-                                , patientSearchCriteria.getEndDate())
+                                , patientSearchCriteria.getEndDate()
+                                , patientSearchCriteria.getClinicId())
                         .stream().map(patientDoctorSource -> {
                             PatientContainerDTO dto = mapper.map(patientDoctorSource.getPatient());
                             dto.setPatientSourceType(PatientSourceType.Doctor);
@@ -59,7 +60,8 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
                 PatientEntitySourceRepository patientEntitySourceRepository = BeanFactory.getBean(PatientEntitySourceRepository.class);
                 patients = patientEntitySourceRepository.findByEntityName(patientSearchCriteria.getEntityNames(),
                                 patientSearchCriteria.getStartDate(),
-                                patientSearchCriteria.getEndDate())
+                                patientSearchCriteria.getEndDate(),
+                                patientSearchCriteria.getClinicId())
                         .stream()
                         .map(patientEntitySource -> {
                             PatientContainerDTO dto = mapper.map(patientEntitySource.getPatient());

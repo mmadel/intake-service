@@ -17,4 +17,6 @@ public class PatientSearchCriteria {
 
     private Long startDate;
     private Long endDate;
+
+    private Long clinicId;
 }
