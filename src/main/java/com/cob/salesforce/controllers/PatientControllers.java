@@ -28,14 +28,14 @@ public class PatientControllers {
     private PatientPhotoUploaderService patientPhotoUploaderService;
 
 
-    @PostMapping
+    @PostMapping("/create")
     @ResponseBody
     public ResponseEntity<Long> create(@RequestBody PatientDTO model) {
         return new ResponseEntity<>(patientCreatorService.create(model), HttpStatus.OK);
     }
 
     @ResponseBody
-    @GetMapping("/{clinicId}")
+    @GetMapping("/find/clinic/{clinicId}")
     public ResponseEntity<com.cob.salesforce.models.PatientListData> list(@RequestParam(name = "offset") String offset,
                                                                           @RequestParam(name = "limit") String limit,
                                                                           @PathVariable(name = "clinicId") Long clinicId) {
