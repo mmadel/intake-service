@@ -11,11 +11,13 @@ public interface PatientDoctorSourceRepository extends PagingAndSortingRepositor
 
     @Query("SELECT ds FROM patient_doctor_source ds   WHERE (:name is null or ds.name  =:name)" +
             "AND (:npi is null or ds.npi  =:npi) " +
-            "AND ((:dateFrom is null or ds.createdAt >= :dateFrom) AND (:dateTo is null or ds.createdAt < :dateTo) )")
+            "AND ((:dateFrom is null or ds.createdAt >= :dateFrom) AND (:dateTo is null or ds.createdAt < :dateTo) )" +
+            "AND ds.patient.clinic.id =:clinicId")
     List<PatientDoctorSource> findDoctor(@Param("name") String name
             , @Param("npi") String npi
             , @Param("dateFrom") Long dateFrom
-            , @Param("dateTo") Long dateTo);
+            , @Param("dateTo") Long dateTo
+            , @Param("clinicId") Long clinicId);
 
     public PatientDoctorSource findByPatient_Id(Long id);
 }
