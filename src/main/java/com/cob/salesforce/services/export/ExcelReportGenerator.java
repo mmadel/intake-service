@@ -1,5 +1,6 @@
 package com.cob.salesforce.services.export;
 
+import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.models.PatientContainerDTO;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -46,6 +47,8 @@ public class ExcelReportGenerator {
         createCell(row, 6, "Phone", style);
         createCell(row, 7, "Created", style);
         createCell(row, 8, "Source", style);
+        createCell(row, 9, "Doctor-Name", style);
+        createCell(row, 10, "Doctor-NPI", style);
     }
 
     private void createCell(Row row, int columnCount, Object value, CellStyle style) {
@@ -85,7 +88,9 @@ public class ExcelReportGenerator {
             createCell(row, columnCount++, formatter.format(createdDate), style);
             switch (patient.getPatientSourceType()) {
                 case Doctor:
-                    createCell(row, columnCount++, "Doctor:" + patient.getDoctorSourceData(), style);
+                    createCell(row, columnCount++, PatientSourceType.Doctor.label, style);
+                    createCell(row, columnCount++, patient.getDoctorName(), style);
+                    createCell(row, columnCount++, patient.getDoctorNPI(), style);
                     break;
                 case Entity:
                     createCell(row, columnCount++, patient.getEntitySourceData(), style);

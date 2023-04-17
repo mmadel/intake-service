@@ -61,6 +61,7 @@ public class PatientContainerDTO {
 
     private Boolean hasPhysicalTherapy;
 
-    private String doctorSourceData;
+    private String doctorName;
+    private String doctorNPI;
     private String entitySourceData;
 }
