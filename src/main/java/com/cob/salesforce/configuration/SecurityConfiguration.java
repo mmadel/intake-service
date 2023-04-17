@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -51,8 +52,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .antMatchers("/auth/login").permitAll()
                         .antMatchers("/user/find/loggedIn/**").permitAll()
+                        .antMatchers("/requires/fields/**").permitAll()
+                        .antMatchers("/questionnaire/**").permitAll()
+                        .antMatchers(HttpMethod.POST,"/patient**").permitAll()
                         .antMatchers("/patient**").hasAnyAuthority(SCOPE + UserRole.USER.label,SCOPE + UserRole.ADMIN.label)
-                        .antMatchers("/clinic/**", "/dashboard/**", "/insurance/company/**", "/reports/**", "/requires/fields/**").hasAuthority(SCOPE + UserRole.ADMIN.label)
+                        .antMatchers("/clinic/**", "/dashboard/**", "/insurance/company/**", "/reports/**").hasAuthority(SCOPE + UserRole.ADMIN.label)
                         .anyRequest().authenticated()
 
                 )
