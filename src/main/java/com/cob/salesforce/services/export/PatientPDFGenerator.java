@@ -9,6 +9,8 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PatientPDFGenerator {
     PatientData source;
@@ -183,6 +185,17 @@ public class PatientPDFGenerator {
                 + source.getLastName().substring(0, 1).toUpperCase() + source.getLastName().substring(1);
         patientNameCell.addElement(new Phrase("Patient Signature: " + patientName, new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLDITALIC)));
         table.addCell(patientNameCell);
+
+        PdfPCell patientDateOfSign = new PdfPCell();
+        patientDateOfSign.setPaddingBottom(15);
+        patientDateOfSign.setPaddingLeft(10);
+        patientDateOfSign.setBorder(Rectangle.NO_BORDER);
+        Date dateOfSign=new Date(source.getCreatedAt());
+        String pattern = "MM-dd-yyyy";
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(pattern);
+        String dateOfSignStr = dateFormatter.format(dateOfSign);
+        patientDateOfSign.addElement(new Phrase("Date: " + dateOfSignStr, new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLDITALIC)));
+        table.addCell(patientDateOfSign);
         document.add(table);
         return table;
     }

@@ -45,4 +45,7 @@ public class PatientData {
 
     private Map<String,String> agreements;
 
+    private Long createdAt;
+
+
 }

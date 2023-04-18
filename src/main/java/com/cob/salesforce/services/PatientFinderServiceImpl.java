@@ -146,6 +146,7 @@ public class PatientFinderServiceImpl implements PatientFinderService {
                 .emergencyMiddleName(source.getEmergencyName())
                 .emergencyLastName(source.getEmergencyName())
                 .emergencyPhone(source.getEmergencyPhone())
+                .createdAt(source.getCreatedAt())
                 .build();
     }
 }
