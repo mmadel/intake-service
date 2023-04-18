@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 
 @Entity(name = "patient")
@@ -83,4 +84,7 @@ public class Patient {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "clinic_id", referencedColumnName = "id")
     private ClinicEntity clinic;
+
+    @Column(name="agreement")
+    private String agreement;
 }
