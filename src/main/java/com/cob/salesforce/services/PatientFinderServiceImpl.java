@@ -8,6 +8,8 @@ import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.mappers.PatientContainerMapper;
 import com.cob.salesforce.mappers.pdf.InsuranceDataMapper;
 import com.cob.salesforce.mappers.pdf.PatientSourceMapper;
+import com.cob.salesforce.models.AgreementDTO;
+import com.cob.salesforce.models.AgreementsDTO;
 import com.cob.salesforce.models.PatientContainerDTO;
 import com.cob.salesforce.models.PatientListData;
 import com.cob.salesforce.models.pdf.InsuranceData;
@@ -16,6 +18,7 @@ import com.cob.salesforce.models.pdf.PatientData;
 import com.cob.salesforce.models.pdf.PatientSourceData;
 import com.cob.salesforce.repositories.*;
 import com.cob.salesforce.utils.AddressBuilder;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -23,8 +26,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,8 +38,8 @@ public class PatientFinderServiceImpl implements PatientFinderService {
     PatientContainerMapper mapper;
 
     @Override
-    public PatientListData list(Pageable pageable ,Long clinicId) {
-        Page<Patient> pages = patientRepository.findByClinicId(pageable,clinicId);
+    public PatientListData list(Pageable pageable, Long clinicId) {
+        Page<Patient> pages = patientRepository.findByClinicId(pageable, clinicId);
         long total = (pages).getTotalElements();
         List<PatientContainerDTO> records = pages.stream().map(patient -> mapper.map(patient))
                 .collect(Collectors.toList());
@@ -52,15 +54,41 @@ public class PatientFinderServiceImpl implements PatientFinderService {
     @Override
     public PatientData getPDFPatientData(InsuranceWorkerType insuranceWorkerType,
                                          PatientSourceType patientSourceType, Boolean hasPhysicalTherapy, Long patientId) {
-        PatientData patientData ;
-        InsuranceData insuranceData = getInsuranceData(insuranceWorkerType, patientId);
-        PatientSourceData patientSourceData = getPatientSourceData(patientSourceType, patientId);
+        PatientData patientData;
+
         MedicalData medicalData = getPatientMedical(patientId);
         patientData = getPersonalData(medicalData.getPatient());
-        patientData.setInsuranceData(insuranceData);
-        patientData.setPatientSourceData(patientSourceData);
+        patientData.setInsuranceData(getInsuranceData(insuranceWorkerType, patientId));
+        patientData.setPatientSourceData(getPatientSourceData(patientSourceType, patientId));
         patientData.setMedicalData(medicalData);
+        patientData.setAgreements(getAgreementData(medicalData.getPatient().getAgreement()));
         return patientData;
+    }
+
+    private Map<String,String> getAgreementData(String agreementStr) {
+        Map<String,String> patientAgreement = new LinkedHashMap<>();
+        Gson gson = new Gson();
+        AgreementsDTO agreementsDTO = gson.fromJson(agreementStr, AgreementsDTO.class);
+        AgreementRepository agreementRepository = BeanFactory.getBean(AgreementRepository.class);
+        agreementRepository.findAll().forEach(agreement -> {
+            if(agreement.getAgreementName().equals("ReleaseInformation"))
+                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
+            if(agreement.getAgreementName().equals("FinancialResponsibility"))
+                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
+            if(agreement.getAgreementName().equals("FinancialAgreement"))
+                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
+            if(agreement.getAgreementName().equals("Insurance"))
+                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
+            if(agreementsDTO.getAcceptHIPAAAgreements() && agreement.getAgreementName().equals("HIPAAAcknowledgement"))
+                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
+            if(agreementsDTO.getAcceptCuppingAgreements() && agreement.getAgreementName().equals("Cupping"))
+                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
+            if(agreementsDTO.getAcceptPelvicAgreements() && agreement.getAgreementName().equals("Pelvic"))
+                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
+            if(agreementsDTO.getAcceptPhotoVideoAgreements() && agreement.getAgreementName().equals("PhotoVideo"))
+                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
+        });
+        return patientAgreement;
     }
 
     private InsuranceData getInsuranceData(InsuranceWorkerType type, Long patientId) {

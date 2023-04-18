@@ -26,8 +26,9 @@ public class PatientPDFGenerator {
         Chunk linebreak = new Chunk(new LineSeparator(10, 100, BaseColor.BLACK, 0, 0));
         document.add(linebreak);
         createPatientPersonalInfo(document);
-        createPatientInsurance(document);
+        //createPatientInsurance(document);
         createPatientMedical(document);
+        createPatientAgreement(document);
         document.close();
     }
 
@@ -92,6 +93,17 @@ public class PatientPDFGenerator {
                 new String[]{"Current Medications", "Therapy Goal", "Medical History"});
     }
 
+    private void createPatientAgreement(Document document) throws DocumentException {
+        createHeader(document, "Agreements");
+        this.source.getAgreements().forEach((agreementName, agreementValue) -> {
+            try {
+                createAgreement(document, agreementName, agreementValue);
+            } catch (DocumentException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
     private void createHeader(Document document, String title) throws DocumentException {
         //https://memorynotfound.com/adding-header-footer-pdf-using-itext-java/
         PdfPTable header = new PdfPTable(1);
@@ -138,5 +150,42 @@ public class PatientPDFGenerator {
         document.add(table);
         return table;
     }
+
+    private PdfPTable createAgreement(Document document, String column, String data) throws DocumentException {
+        PdfPTable table = new PdfPTable(1);
+        table.setTotalWidth(527);
+        table.setLockedWidth(true);
+        table.getDefaultCell().setFixedHeight(40);
+        table.getDefaultCell().setBorder(Rectangle.BOTTOM);
+        table.getDefaultCell().setBorderColor(BaseColor.LIGHT_GRAY);
+
+        PdfPCell tableHeader = new PdfPCell();
+        tableHeader.setPaddingBottom(15);
+        tableHeader.setPaddingLeft(10);
+        tableHeader.setBorder(Rectangle.NO_BORDER);
+        tableHeader.addElement(new Phrase(column, new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD)));
+        table.addCell(tableHeader);
+
+        PdfPCell tableData = new PdfPCell();
+        tableData.setPaddingBottom(15);
+        tableData.setPaddingLeft(10);
+        tableData.setBorder(Rectangle.NO_BORDER);
+
+        tableData.addElement(new Phrase(data, new Font(Font.FontFamily.HELVETICA, 12)));
+        table.addCell(tableData);
+
+        PdfPCell patientNameCell = new PdfPCell();
+        patientNameCell.setPaddingBottom(15);
+        patientNameCell.setPaddingLeft(10);
+        patientNameCell.setBorder(Rectangle.NO_BORDER);
+        String patientName = source.getFirstName().substring(0, 1).toUpperCase() + source.getFirstName().substring(1) + ","
+                + source.getMiddleName().substring(0, 1).toUpperCase() + ".,"
+                + source.getLastName().substring(0, 1).toUpperCase() + source.getLastName().substring(1);
+        patientNameCell.addElement(new Phrase("Patient Signature: " + patientName, new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLDITALIC)));
+        table.addCell(patientNameCell);
+        document.add(table);
+        return table;
+    }
+
 }
 
