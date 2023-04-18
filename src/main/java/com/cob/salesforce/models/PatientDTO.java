@@ -1,10 +1,12 @@
 
 package com.cob.salesforce.models;
 
+import com.cob.salesforce.entity.Agreement;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -25,6 +27,7 @@ public class PatientDTO {
 
     private Long clinicId;
 
+    AgreementsDTO agreements;
 
 
 }

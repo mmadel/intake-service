@@ -6,6 +6,7 @@ import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.repositories.PatientRepository;
 import com.cob.salesforce.repositories.admin.clinic.ClinicRepository;
 import com.cob.salesforce.services.admin.clinic.ClinicFinderService;
+import com.google.gson.Gson;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,8 +27,11 @@ public class PatientCreator {
     @Autowired
     ClinicRepository clinicRepository;
 
-    public Patient create(PatientDTO model) {
+    public Patient create(PatientDTO model)
+    {
         Patient toBeSaved = mapper.map(model);
+        Gson gson = new Gson();
+        toBeSaved.setAgreement(gson.toJson(model.getAgreements()));
         toBeSaved.setClinic(clinicRepository.findById(model.getClinicId()).get());
         return patientRepository.save(toBeSaved);
     }
