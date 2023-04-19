@@ -1,4 +1,4 @@
-package com.cob.salesforce.services.export;
+package com.cob.salesforce.services.export.pdf;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -13,7 +13,7 @@ public class PDFPageCreator {
         paragraph.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(paragraph);
     }
-    private void createHeader(Document document, String title) throws DocumentException {
+    public static void createHeader(Document document, String title) throws DocumentException {
         //https://memorynotfound.com/adding-header-footer-pdf-using-itext-java/
         PdfPTable header = new PdfPTable(1);
         header.setTotalWidth(527);
@@ -31,8 +31,26 @@ public class PDFPageCreator {
         header.addCell(text);
         document.add(header);
     }
+    public static void createSubHeader(Document document, String title) throws DocumentException {
+        //https://memorynotfound.com/adding-header-footer-pdf-using-itext-java/
+        PdfPTable subHeader = new PdfPTable(1);
+        subHeader.setTotalWidth(527);
+        subHeader.setLockedWidth(true);
+        subHeader.getDefaultCell().setFixedHeight(40);
+        subHeader.getDefaultCell().setBorder(Rectangle.BOTTOM);
+        subHeader.getDefaultCell().setBorderColor(BaseColor.LIGHT_GRAY);
 
-    private PdfPTable createTable(Document document, String[] columns, String[] data ,int numberOfColumns) throws DocumentException {
+        PdfPCell text = new PdfPCell();
+        text.setPaddingBottom(15);
+        text.setPaddingLeft(10);
+        text.setBorder(Rectangle.BOTTOM);
+        text.setBorderColor(BaseColor.LIGHT_GRAY);
+        text.addElement(new Phrase(title, new Font(Font.FontFamily.HELVETICA, 10)));
+        subHeader.addCell(text);
+        document.add(subHeader);
+    }
+
+    public static PdfPTable createTable(Document document, String[] columns, String[] data ,int numberOfColumns) throws DocumentException {
         PdfPTable table = new PdfPTable(numberOfColumns);
         table.setTotalWidth(527);
         table.setLockedWidth(true);
@@ -44,7 +62,7 @@ public class PDFPageCreator {
             tableHeader.setPaddingBottom(15);
             tableHeader.setPaddingLeft(10);
             tableHeader.setBorder(Rectangle.NO_BORDER);
-            tableHeader.addElement(new Phrase(column, new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD)));
+            tableHeader.addElement(new Phrase(column, new Font(Font.FontFamily.HELVETICA, 10, Font.BOLDITALIC)));
             table.addCell(tableHeader);
         }
         if (data != null)

@@ -1,17 +1,12 @@
-package com.cob.salesforce.services.export;
+package com.cob.salesforce.services.export.pdf;
 
 import com.cob.salesforce.models.PatientDTO;
-import com.cob.salesforce.models.pdf.PatientData;
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class PatientPDFGenerator {
     PatientDTO source;
@@ -28,6 +23,10 @@ public class PatientPDFGenerator {
         PDFPageCreator.createTitle(document);
         Chunk linebreak = new Chunk(new LineSeparator(10, 100, BaseColor.BLACK, 0, 0));
         document.add(linebreak);
+        PatientPersonalInfoPDFCreator.create(document, source.getBasicInfo());
+        PatientMedicalPDFCreator.create(document, source);
+        PatientInsurancePDFCreator.create(document, source);
+        PatientAgreementPDFGenerator.create(document, source);
         document.close();
     }
 
