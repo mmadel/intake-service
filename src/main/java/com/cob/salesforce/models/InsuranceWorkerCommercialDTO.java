@@ -2,11 +2,13 @@
 package com.cob.salesforce.models;
 
 import com.cob.salesforce.enums.Relationship;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
+@Builder
 public class InsuranceWorkerCommercialDTO {
 
     private Long insuranceCompanyId;

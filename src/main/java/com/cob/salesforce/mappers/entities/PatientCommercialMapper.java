@@ -1,4 +1,4 @@
-package com.cob.salesforce.mappers;
+package com.cob.salesforce.mappers.entities;
 
 import com.cob.salesforce.entity.*;
 import com.cob.salesforce.models.PatientDTO;

@@ -1,4 +1,4 @@
-package com.cob.salesforce.mappers;
+package com.cob.salesforce.mappers.entities;
 
 import com.cob.salesforce.entity.InsuranceWorkerCompNoFault;
 import com.cob.salesforce.entity.PatientDependencyEntity;

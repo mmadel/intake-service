@@ -3,7 +3,7 @@ package com.cob.salesforce.dependency.creator;
 import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.entity.PatientEntitySource;
 import com.cob.salesforce.enums.PatientSourceType;
-import com.cob.salesforce.mappers.PatientDependencyMapper;
+import com.cob.salesforce.mappers.entities.PatientDependencyMapper;
 import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.repositories.PatientEntitySourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;

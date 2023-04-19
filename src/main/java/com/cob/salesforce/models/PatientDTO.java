@@ -5,7 +5,9 @@ import com.cob.salesforce.entity.Agreement;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Setter
@@ -14,8 +16,6 @@ public class PatientDTO {
 
     private Long Id;
     private AddressInfoDTO addressInfo;
-
-    private AgreementsDTO agreementsDTO;
 
     private BasicInfoDTO basicInfo;
 
@@ -28,6 +28,8 @@ public class PatientDTO {
     private Long clinicId;
 
     AgreementsDTO agreements;
+
+    Map<String, String> patientAgreement = new LinkedHashMap<>();
 
     Long createdAt;
 

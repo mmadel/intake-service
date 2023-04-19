@@ -1,12 +1,10 @@
 package com.cob.salesforce.controllers.admin.reports;
 
-import com.cob.salesforce.enums.InsuranceWorkerType;
-import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.models.PatientContainerDTO;
-import com.cob.salesforce.models.pdf.PatientData;
+import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.services.PatientFinderService;
-import com.cob.salesforce.services.export.ExcelReportGenerator;
-import com.cob.salesforce.services.export.PatientPDFGenerator;
+import com.cob.salesforce.services.export.excel.ExcelReportGenerator;
+import com.cob.salesforce.services.export.pdf.PatientPDFGenerator;
 import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,17 +38,10 @@ public class ReportGeneratorController {
         excelReportGenerator.export(response);
     }
 
-    @PostMapping(value = "/pdf")
-    public void generatePDF(@RequestParam(name = "insuranceWorkerType") String insuranceWorkerType,
-                            @RequestParam(name = "patientSourceType") String patientSourceType,
-                            @RequestParam(name = "hasPhysicalTherapy") Boolean hasPhysicalTherapy,
-                            @RequestParam(name = "patientId") Long patientId,
+    @PostMapping(value = "/pdf/patientId/{patientId}")
+    public void generatePDF(@PathVariable("patientId") Long patientId,
                             HttpServletResponse response) throws DocumentException, IOException {
-        PatientData patientData = patientFinderService.getPDFPatientData(
-                InsuranceWorkerType.valueOf(insuranceWorkerType),
-                PatientSourceType.valueOf(patientSourceType),
-                hasPhysicalTherapy,
-                patientId);
+        PatientDTO patientData = patientFinderService.getPatient(patientId);
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition","inline");
         PatientPDFGenerator pdfGenerator = new PatientPDFGenerator();
