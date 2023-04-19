@@ -1,5 +1,6 @@
 package com.cob.salesforce.services.export;
 
+import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.models.pdf.PatientData;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -13,9 +14,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PatientPDFGenerator {
-    PatientData source;
+    PatientDTO source;
 
-    public void setData(PatientData source) {
+    public void setData(PatientDTO source) {
         this.source = source;
     }
 
@@ -24,32 +25,18 @@ public class PatientPDFGenerator {
         PdfWriter.getInstance(document, response.getOutputStream());
         document.open();
         createRightCornerParagraph(document);
-        createTitle(document);
+        PDFPageCreator.createTitle(document);
         Chunk linebreak = new Chunk(new LineSeparator(10, 100, BaseColor.BLACK, 0, 0));
         document.add(linebreak);
-        createPatientPersonalInfo(document);
-        //createPatientInsurance(document);
-        createPatientMedical(document);
-        createPatientAgreement(document);
         document.close();
-    }
-
-    private void createTitle(Document document) throws DocumentException {
-        Font fontTitle = FontFactory.getFont(FontFactory.TIMES_ROMAN, 21, Font.BOLD);
-
-        Paragraph paragraph = new Paragraph("Patient Information Form", fontTitle);
-
-        paragraph.setAlignment(Paragraph.ALIGN_CENTER);
-        document.add(paragraph);
-
     }
 
     private void createRightCornerParagraph(Document document) throws DocumentException {
         String value = "";
         Font fontTitle = FontFactory.getFont(FontFactory.TIMES_ROMAN, 10);
-        value += source.getFirstName() + "," + source.getLastName() + "\n";
-        value += "ID: " + source.getPatientId() + "\n";
-        value += "DOB: " + source.getDateOfBirth() + "\n";
+        value += source.getBasicInfo().getFirstName() + "," + source.getBasicInfo().getLastName() + "\n";
+        value += "ID: " + source.getBasicInfo().getPatientId() + "\n";
+        value += "DOB: " + source.getBasicInfo().getBirthDate() + "\n";
         Paragraph paragraph = new Paragraph(value, fontTitle);
         paragraph.setAlignment(Paragraph.ALIGN_RIGHT);
         document.add(paragraph);
@@ -58,147 +45,5 @@ public class PatientPDFGenerator {
     private void createLeftCornerParagraph() {
 
     }
-
-    private void createPatientPersonalInfo(Document document) throws DocumentException {
-        createHeader(document, "Personal Info");
-
-        createTable(document, new String[]{"User Type", "First Name", "Last Name"},
-                new String[]{"userType", source.getFirstName(), source.getLastName()});
-        createTable(document, new String[]{"Social Security ID", "Gender", "Home Phone Number"},
-                new String[]{source.getPatientId(), source.getGender().label, source.getPhone()});
-        createTable(document, new String[]{"Mobile Phone Number", "Email", "Address"},
-                new String[]{source.getPhone(), source.getEmail(), source.getAddress()});
-        createTable(document, new String[]{"Marital Status", "Injury Cause", "Emergency Contact First Name"},
-                new String[]{source.getMaritalStatus().label, "Injury Cause", source.getEmergencyFirstName()});
-        createTable(document, new String[]{"Emergency Contact Last Name", "Emergency Contact Phone Number", "Relationship"},
-                new String[]{source.getEmergencyLastName(), source.getEmergencyPhone(), "Relationship"});
-        createTable(document, new String[]{"Referral Source"},
-                new String[]{source.getPatientSourceData().getEntityName()});
-
-    }
-
-    private void createPatientInsurance(Document document) throws DocumentException {
-        createHeader(document, "Insurance ");
-        createTable(document, new String[]{"Medicare Patient", "Secondary Insurance Policy", "Insurance Plan Name"},
-                new String[]{source.getInsuranceData().getMedicare() ? "yes" : "No", source.getInsuranceData().getSecondaryInsurancePolicy() ? "Yes" : "No", source.getInsuranceData().getInsurancePlanName()});
-        createTable(document, new String[]{"Policy ID", "Phone Number", "Secondary Policy Holder"},
-                new String[]{source.getInsuranceData().getPolicyId(), "Phone Number", source.getInsuranceData().getSecondaryPolicyHolder() ? "Yes" : "No"});
-    }
-
-    private void createPatientMedical(Document document) throws DocumentException {
-        createHeader(document, "Medical");
-        createTable(document, new String[]{"Height", "Recent Falls", "Feel unsteady"},
-                new String[]{source.getMedicalData().getHeight().toString(), "Recent Falls", "Feel unsteady"});
-        createTable(document, new String[]{"Worry about falling", "No Referring Doctor", "Medical Conditions"},
-                new String[]{"Worry about falling", source.getPatientSourceData().getDoctorName() == null ? "Yes" : "No", source.getMedicalData().getPatientCondition().toString()});
-        createTable(document, new String[]{"Current Medications", "Therapy Goal", "Medical History"},
-                new String[]{"Current Medications", "Therapy Goal", "Medical History"});
-    }
-
-    private void createPatientAgreement(Document document) throws DocumentException {
-        createHeader(document, "Agreements");
-        this.source.getAgreements().forEach((agreementName, agreementValue) -> {
-            try {
-                createAgreement(document, agreementName, agreementValue);
-            } catch (DocumentException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    private void createHeader(Document document, String title) throws DocumentException {
-        //https://memorynotfound.com/adding-header-footer-pdf-using-itext-java/
-        PdfPTable header = new PdfPTable(1);
-        header.setTotalWidth(527);
-        header.setLockedWidth(true);
-        header.getDefaultCell().setFixedHeight(40);
-        header.getDefaultCell().setBorder(Rectangle.BOTTOM);
-        header.getDefaultCell().setBorderColor(BaseColor.LIGHT_GRAY);
-
-        PdfPCell text = new PdfPCell();
-        text.setPaddingBottom(15);
-        text.setPaddingLeft(10);
-        text.setBorder(Rectangle.BOTTOM);
-        text.setBorderColor(BaseColor.LIGHT_GRAY);
-        text.addElement(new Phrase(title, new Font(Font.FontFamily.HELVETICA, 16)));
-        header.addCell(text);
-        document.add(header);
-    }
-
-    private PdfPTable createTable(Document document, String[] columns, String[] data) throws DocumentException {
-        PdfPTable table = new PdfPTable(3);
-        table.setTotalWidth(527);
-        table.setLockedWidth(true);
-        table.getDefaultCell().setFixedHeight(40);
-        table.getDefaultCell().setBorder(Rectangle.BOTTOM);
-        table.getDefaultCell().setBorderColor(BaseColor.LIGHT_GRAY);
-        for (String column : columns) {
-            PdfPCell tableHeader = new PdfPCell();
-            tableHeader.setPaddingBottom(15);
-            tableHeader.setPaddingLeft(10);
-            tableHeader.setBorder(Rectangle.NO_BORDER);
-            tableHeader.addElement(new Phrase(column, new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD)));
-            table.addCell(tableHeader);
-        }
-        if (data != null)
-            for (String value : data) {
-                PdfPCell tableData = new PdfPCell();
-                tableData.setPaddingBottom(15);
-                tableData.setPaddingLeft(10);
-                tableData.setBorder(Rectangle.NO_BORDER);
-                tableData.addElement(new Phrase(value, new Font(Font.FontFamily.HELVETICA, 10)));
-                table.addCell(tableData);
-            }
-        document.add(table);
-        return table;
-    }
-
-    private PdfPTable createAgreement(Document document, String column, String data) throws DocumentException {
-        PdfPTable table = new PdfPTable(1);
-        table.setTotalWidth(527);
-        table.setLockedWidth(true);
-        table.getDefaultCell().setFixedHeight(40);
-        table.getDefaultCell().setBorder(Rectangle.BOTTOM);
-        table.getDefaultCell().setBorderColor(BaseColor.LIGHT_GRAY);
-
-        PdfPCell tableHeader = new PdfPCell();
-        tableHeader.setPaddingBottom(15);
-        tableHeader.setPaddingLeft(10);
-        tableHeader.setBorder(Rectangle.NO_BORDER);
-        tableHeader.addElement(new Phrase(column, new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD)));
-        table.addCell(tableHeader);
-
-        PdfPCell tableData = new PdfPCell();
-        tableData.setPaddingBottom(15);
-        tableData.setPaddingLeft(10);
-        tableData.setBorder(Rectangle.NO_BORDER);
-
-        tableData.addElement(new Phrase(data, new Font(Font.FontFamily.HELVETICA, 12)));
-        table.addCell(tableData);
-
-        PdfPCell patientNameCell = new PdfPCell();
-        patientNameCell.setPaddingBottom(15);
-        patientNameCell.setPaddingLeft(10);
-        patientNameCell.setBorder(Rectangle.NO_BORDER);
-        String patientName = source.getFirstName().substring(0, 1).toUpperCase() + source.getFirstName().substring(1) + ","
-                + source.getMiddleName().substring(0, 1).toUpperCase() + ".,"
-                + source.getLastName().substring(0, 1).toUpperCase() + source.getLastName().substring(1);
-        patientNameCell.addElement(new Phrase("Patient Signature: " + patientName, new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLDITALIC)));
-        table.addCell(patientNameCell);
-
-        PdfPCell patientDateOfSign = new PdfPCell();
-        patientDateOfSign.setPaddingBottom(15);
-        patientDateOfSign.setPaddingLeft(10);
-        patientDateOfSign.setBorder(Rectangle.NO_BORDER);
-        Date dateOfSign=new Date(source.getCreatedAt());
-        String pattern = "MM-dd-yyyy";
-        SimpleDateFormat dateFormatter = new SimpleDateFormat(pattern);
-        String dateOfSignStr = dateFormatter.format(dateOfSign);
-        patientDateOfSign.addElement(new Phrase("Date: " + dateOfSignStr, new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLDITALIC)));
-        table.addCell(patientDateOfSign);
-        document.add(table);
-        return table;
-    }
-
 }
 

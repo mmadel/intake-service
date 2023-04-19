@@ -3,6 +3,7 @@ package com.cob.salesforce.controllers.admin.reports;
 import com.cob.salesforce.enums.InsuranceWorkerType;
 import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.models.PatientContainerDTO;
+import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.models.pdf.PatientData;
 import com.cob.salesforce.services.PatientFinderService;
 import com.cob.salesforce.services.export.ExcelReportGenerator;
@@ -41,20 +42,14 @@ public class ReportGeneratorController {
     }
 
     @PostMapping(value = "/pdf")
-    public void generatePDF(@RequestParam(name = "insuranceWorkerType") String insuranceWorkerType,
-                            @RequestParam(name = "patientSourceType") String patientSourceType,
-                            @RequestParam(name = "hasPhysicalTherapy") Boolean hasPhysicalTherapy,
-                            @RequestParam(name = "patientId") Long patientId,
+    public void generatePDF(@RequestParam(name = "patientId") Long patientId,
                             HttpServletResponse response) throws DocumentException, IOException {
-        PatientData patientData = patientFinderService.getPDFPatientData(
-                InsuranceWorkerType.valueOf(insuranceWorkerType),
-                PatientSourceType.valueOf(patientSourceType),
-                hasPhysicalTherapy,
-                patientId);
+        PatientDTO patientData = patientFinderService.getPatient(patientId);
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition","inline");
         PatientPDFGenerator pdfGenerator = new PatientPDFGenerator();
         pdfGenerator.setData(patientData);
         pdfGenerator.generate(response);
+        System.out.println();
     }
 }

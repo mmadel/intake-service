@@ -3,30 +3,21 @@ package com.cob.salesforce.services;
 import com.cob.salesforce.BeanFactory;
 import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.entity.PatientMedicalHistory;
-import com.cob.salesforce.enums.InsuranceWorkerType;
-import com.cob.salesforce.enums.PatientSourceType;
-import com.cob.salesforce.mappers.PatientContainerMapper;
-import com.cob.salesforce.mappers.pdf.InsuranceDataMapper;
-import com.cob.salesforce.mappers.pdf.PatientSourceMapper;
-import com.cob.salesforce.models.AgreementDTO;
-import com.cob.salesforce.models.AgreementsDTO;
-import com.cob.salesforce.models.PatientContainerDTO;
-import com.cob.salesforce.models.PatientListData;
-import com.cob.salesforce.models.pdf.InsuranceData;
+import com.cob.salesforce.mappers.dtos.*;
+import com.cob.salesforce.mappers.entities.PatientContainerMapper;
+import com.cob.salesforce.models.*;
 import com.cob.salesforce.models.pdf.MedicalData;
 import com.cob.salesforce.models.pdf.PatientData;
-import com.cob.salesforce.models.pdf.PatientSourceData;
 import com.cob.salesforce.repositories.*;
 import com.cob.salesforce.utils.AddressBuilder;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,11 +25,20 @@ public class PatientFinderServiceImpl implements PatientFinderService {
     @Autowired
     PatientRepository patientRepository;
     @Autowired
+    PatientMedicalRepository patientMedicalRepository;
+
+    @Autowired
+    PatientMedicalHistoryRepository patientMedicalHistoryRepository;
+
+    @Autowired
+    AgreementRepository agreementRepository;
+    @Autowired
     @Qualifier("PatientContainerMapper")
     PatientContainerMapper mapper;
 
+
     @Override
-    public PatientListData list(Pageable pageable, Long clinicId) {
+    public PatientListData getPatients(Pageable pageable, Long clinicId) {
         Page<Patient> pages = patientRepository.findByClinicId(pageable, clinicId);
         long total = (pages).getTotalElements();
         List<PatientContainerDTO> records = pages.stream().map(patient -> mapper.map(patient))
@@ -52,101 +52,77 @@ public class PatientFinderServiceImpl implements PatientFinderService {
     }
 
     @Override
-    public PatientData getPDFPatientData(InsuranceWorkerType insuranceWorkerType,
-                                         PatientSourceType patientSourceType, Boolean hasPhysicalTherapy, Long patientId) {
-        PatientData patientData;
-
-        MedicalData medicalData = getPatientMedical(patientId);
-        patientData = getPersonalData(medicalData.getPatient());
-        patientData.setInsuranceData(getInsuranceData(insuranceWorkerType, patientId));
-        patientData.setPatientSourceData(getPatientSourceData(patientSourceType, patientId));
-        patientData.setMedicalData(medicalData);
-        patientData.setAgreements(getAgreementData(medicalData.getPatient().getAgreement()));
-        return patientData;
+    public PatientDTO getPatient(Long patientId) {
+        PatientDTO dto = new PatientDTO();
+        Patient patient = patientRepository.findById(patientId).get();
+        dto.setBasicInfo(PatientBasicInfoDTOMapper.map(patient));
+        dto.setAddressInfo(AddressInfoDTOMapper.map(patient.getAddress()));
+        dto.setMedicalHistoryInformation(getMedicalHistoryInformation(patientId));
+        dto.setMedicalQuestionnaireInfo(getMedicalQuestionnaireInfo(patient));
+        setPatientInsuranceInfo(dto, patient);
+        setAgreements(dto, patient.getAgreement());
+        return dto;
     }
 
-    private Map<String,String> getAgreementData(String agreementStr) {
-        Map<String,String> patientAgreement = new LinkedHashMap<>();
-        Gson gson = new Gson();
-        AgreementsDTO agreementsDTO = gson.fromJson(agreementStr, AgreementsDTO.class);
-        AgreementRepository agreementRepository = BeanFactory.getBean(AgreementRepository.class);
-        agreementRepository.findAll().forEach(agreement -> {
-            if(agreement.getAgreementName().equals("ReleaseInformation"))
-                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
-            if(agreement.getAgreementName().equals("FinancialResponsibility"))
-                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
-            if(agreement.getAgreementName().equals("FinancialAgreement"))
-                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
-            if(agreement.getAgreementName().equals("Insurance"))
-                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
-            if(agreementsDTO.getAcceptHIPAAAgreements() && agreement.getAgreementName().equals("HIPAAAcknowledgement"))
-                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
-            if(agreementsDTO.getAcceptCuppingAgreements() && agreement.getAgreementName().equals("Cupping"))
-                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
-            if(agreementsDTO.getAcceptPelvicAgreements() && agreement.getAgreementName().equals("Pelvic"))
-                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
-            if(agreementsDTO.getAcceptPhotoVideoAgreements() && agreement.getAgreementName().equals("PhotoVideo"))
-                patientAgreement.put(agreement.getAgreementName() , agreement.getAgreementText());
-        });
-        return patientAgreement;
+    private MedicalHistoryInformationDTO getMedicalHistoryInformation(Long patientId) {
+        MedicalHistoryInformationDTO medicalHistoryInformationDTO =
+                MedicalHistoryInformationDTOMapper.map(patientMedicalHistoryRepository.findByPatient_Id(patientId));
+        return medicalHistoryInformationDTO;
     }
 
-    private InsuranceData getInsuranceData(InsuranceWorkerType type, Long patientId) {
-        InsuranceData data = null;
-        switch (type) {
-            case Commercial:
-                InsuranceWorkerCommercialRepository commercialRepository = BeanFactory.getBean(InsuranceWorkerCommercialRepository.class);
-                data = InsuranceDataMapper.map(commercialRepository.findByPatient_Id(patientId));
-                break;
+    private MedicalQuestionnaireInfoDTO getMedicalQuestionnaireInfo(Patient patient) {
+        MedicalQuestionnaireInfoDTO medicalQuestionnaireInfoDTO =
+                MedicalQuestionnaireInfoDTOMapper.map(patientMedicalRepository.findByPatient_Id(patient.getId()));
+        setPatientSource(medicalQuestionnaireInfoDTO, patient);
+        return medicalQuestionnaireInfoDTO;
+    }
+
+    private void setPatientInsuranceInfo(PatientDTO dto, Patient patient) {
+        InsuranceQuestionnaireInfo insuranceQuestionnaireInfo = new InsuranceQuestionnaireInfo();
+        switch (patient.getInsuranceWorkerType()) {
             case Comp_NoFault:
+                InsuranceWorkerInsuranceWorkerCompNoFaultRepository insuranceWorkerInsuranceWorkerCompNoFaultRepository = BeanFactory
+                        .getBean(InsuranceWorkerInsuranceWorkerCompNoFaultRepository.class);
+                insuranceQuestionnaireInfo.setInsuranceWorkerCompNoFault(InsuranceWorkerCompNoFaultDTOMapper
+                        .map(insuranceWorkerInsuranceWorkerCompNoFaultRepository
+                                .findByPatient_Id(patient.getId())));
+
+                insuranceQuestionnaireInfo.setIsCompNoFault(true);
+                break;
+
+            case Commercial:
+                InsuranceWorkerCommercialRepository commercialRepository = BeanFactory
+                        .getBean(InsuranceWorkerCommercialRepository.class);
+                insuranceQuestionnaireInfo.setInsuranceWorkerCommercial(InsuranceWorkerCommercialDTOMapper
+                        .map(commercialRepository
+                                .findByPatient_Id(patient.getId())));
+                insuranceQuestionnaireInfo.setIsCompNoFault(false);
                 break;
         }
-        return data;
+        dto.setInsuranceQuestionnaireInfo(insuranceQuestionnaireInfo);
     }
 
-    private PatientSourceData getPatientSourceData(PatientSourceType type, Long patientId) {
-        PatientSourceData data = null;
-        switch (type) {
+
+    private void setPatientSource(MedicalQuestionnaireInfoDTO dto, Patient patient) {
+        switch (patient.getPatientSourceType()) {
             case Doctor:
-                PatientDoctorSourceRepository doctorSourceRepository = BeanFactory.getBean(PatientDoctorSourceRepository.class);
-                data = PatientSourceMapper.map(doctorSourceRepository.findByPatient_Id(patientId));
+                PatientDoctorSourceRepository doctorSourceRepository = BeanFactory
+                        .getBean(PatientDoctorSourceRepository.class);
+                dto.setRecommendationDoctor(RecommendationDoctorDTOMapper
+                        .map(doctorSourceRepository
+                                .findByPatient_Id(patient.getId())));
                 break;
             case Entity:
-                PatientEntitySourceRepository patientEntitySourceRepository = BeanFactory.getBean(PatientEntitySourceRepository.class);
-                data = PatientSourceMapper.map(patientEntitySourceRepository.findByPatient_Id(patientId));
+                PatientEntitySourceRepository patientEntitySourceRepository = BeanFactory
+                        .getBean(PatientEntitySourceRepository.class);
+                dto.setRecommendationEntity(RecommendationEntityDTOMapper
+                        .map(patientEntitySourceRepository
+                                .findByPatient_Id(patient.getId())));
                 break;
         }
-        return data;
     }
 
-    private MedicalData getPatientMedical(Long patientId) {
-        PatientMedicalHistoryRepository patientMedicalHistoryRepository = BeanFactory.getBean(PatientMedicalHistoryRepository.class);
-        PatientMedicalHistory source = patientMedicalHistoryRepository.findByPatient_Id(patientId);
-        return MedicalData.builder()
-                .height(source.getHeight())
-                .weight(source.getWeight())
-                .patientCondition(Arrays.asList(source.getPatientCondition().split(",")))
-                .patient(source.getPatient())
-                .build();
-    }
-
-    private PatientData getPersonalData(Patient source) {
-        return PatientData.builder()
-                .firstName(source.getName().split(",")[0])
-                .middleName(source.getName().split(",")[1])
-                .lastName(source.getName().split(",")[2])
-                .gender(source.getGender())
-                .phone(source.getPhone())
-                .email(source.getEmail())
-                .dateOfBirth(source.getDateOfBirth().toString())
-                .patientId(source.getPatientId())
-                .address(AddressBuilder.build(source.getAddress()))
-                .maritalStatus(source.getMaritalStatus())
-                .emergencyFirstName(source.getEmergencyName())
-                .emergencyMiddleName(source.getEmergencyName())
-                .emergencyLastName(source.getEmergencyName())
-                .emergencyPhone(source.getEmergencyPhone())
-                .createdAt(source.getCreatedAt())
-                .build();
+    private void setAgreements(PatientDTO dto, String agreementStr) {
+        dto.setPatientAgreement(AgreementsDTOMapper.map(agreementStr, agreementRepository.findAll()));
     }
 }

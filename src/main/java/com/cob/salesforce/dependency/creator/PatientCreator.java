@@ -1,11 +1,10 @@
 package com.cob.salesforce.dependency.creator;
 
 import com.cob.salesforce.entity.Patient;
-import com.cob.salesforce.mappers.PatientMapper;
+import com.cob.salesforce.mappers.entities.PatientMapper;
 import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.repositories.PatientRepository;
 import com.cob.salesforce.repositories.admin.clinic.ClinicRepository;
-import com.cob.salesforce.services.admin.clinic.ClinicFinderService;
 import com.google.gson.Gson;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;

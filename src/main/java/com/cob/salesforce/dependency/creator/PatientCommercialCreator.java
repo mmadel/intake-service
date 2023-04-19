@@ -2,7 +2,7 @@ package com.cob.salesforce.dependency.creator;
 
 import com.cob.salesforce.entity.*;
 import com.cob.salesforce.enums.InsuranceWorkerType;
-import com.cob.salesforce.mappers.PatientDependencyMapper;
+import com.cob.salesforce.mappers.entities.PatientDependencyMapper;
 import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.repositories.InsuranceWorkerCommercialRepository;
 import org.springframework.beans.factory.annotation.Autowired;

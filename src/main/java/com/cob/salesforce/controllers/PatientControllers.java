@@ -40,7 +40,7 @@ public class PatientControllers {
                                                                           @RequestParam(name = "limit") String limit,
                                                                           @PathVariable(name = "clinicId") Long clinicId) {
         Pageable paging = PageRequest.of(Integer.parseInt(offset), Integer.parseInt(limit));
-        return new ResponseEntity<>(patientFinderService.list(paging,clinicId), HttpStatus.OK);
+        return new ResponseEntity<>(patientFinderService.getPatients(paging,clinicId), HttpStatus.OK);
     }
 
     @ResponseBody

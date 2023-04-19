@@ -2,7 +2,7 @@ package com.cob.salesforce.services.reports;
 
 import com.cob.salesforce.BeanFactory;
 import com.cob.salesforce.enums.PatientSourceType;
-import com.cob.salesforce.mappers.PatientContainerMapper;
+import com.cob.salesforce.mappers.entities.PatientContainerMapper;
 import com.cob.salesforce.models.PatientContainerDTO;
 import com.cob.salesforce.models.reporting.PatientSearchCriteria;
 import com.cob.salesforce.models.reporting.PatientSearchResult;

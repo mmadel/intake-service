@@ -4,6 +4,7 @@ package com.cob.salesforce.models;
 import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.enums.CaseStatus;
 import com.cob.salesforce.enums.WorkerStatus;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.math.BigInteger;
 
 @Setter
 @Getter
+@Builder
 public class InsuranceWorkerCompNoFaultDTO {
     private String injuryType;
     private Long accidentDate;
