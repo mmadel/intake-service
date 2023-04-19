@@ -74,6 +74,7 @@ public class PatientFinderServiceImpl implements PatientFinderService {
         MedicalQuestionnaireInfoDTO medicalQuestionnaireInfoDTO =
                 MedicalQuestionnaireInfoDTOMapper.map(patientMedicalRepository.findByPatient_Id(patient.getId()));
         setPatientSource(medicalQuestionnaireInfoDTO, patient);
+        setPhysicalTherapy(medicalQuestionnaireInfoDTO, patient);
         return medicalQuestionnaireInfoDTO;
     }
 
@@ -108,18 +109,31 @@ public class PatientFinderServiceImpl implements PatientFinderService {
             case Doctor:
                 PatientDoctorSourceRepository doctorSourceRepository = BeanFactory
                         .getBean(PatientDoctorSourceRepository.class);
-                dto.setRecommendationDoctor(RecommendationDoctorDTOMapper
-                        .map(doctorSourceRepository
-                                .findByPatient_Id(patient.getId())));
+                dto.setRecommendationDoctor(
+                        RecommendationDoctorDTOMapper
+                                .map(doctorSourceRepository
+                                        .findByPatient_Id(patient.getId())));
                 break;
             case Entity:
                 PatientEntitySourceRepository patientEntitySourceRepository = BeanFactory
                         .getBean(PatientEntitySourceRepository.class);
-                dto.setRecommendationEntity(RecommendationEntityDTOMapper
-                        .map(patientEntitySourceRepository
-                                .findByPatient_Id(patient.getId())));
+                dto.setRecommendationEntity(
+                        RecommendationEntityDTOMapper
+                                .map(patientEntitySourceRepository
+                                        .findByPatient_Id(patient.getId())));
                 break;
         }
+    }
+
+    private void setPhysicalTherapy(MedicalQuestionnaireInfoDTO dto, Patient patient) {
+        if (patient.getPhysicalTherapy()) {
+            PatientPhysicalTherapyRepository patientPhysicalTherapyRepository = BeanFactory
+                    .getBean(PatientPhysicalTherapyRepository.class);
+            dto.setPhysicalTherapy(
+                    PhysicalTherapyDTOMapper.
+                            map(patientPhysicalTherapyRepository.findByPatient_Id(patient.getId())));
+        }
+
     }
 
     private void setAgreements(PatientDTO dto, String agreementStr) {

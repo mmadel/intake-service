@@ -5,7 +5,7 @@ import com.cob.salesforce.models.PhysicalTherapyDTO;
 
 public class PhysicalTherapyDTOMapper {
 
-    public PhysicalTherapyDTO map(PhysicalTherapy entity) {
+    public static PhysicalTherapyDTO map(PhysicalTherapy entity) {
         return PhysicalTherapyDTO.builder()
                 .location(entity.getLocation())
                 .numberOfVisit(entity.getNumberOfVisit().longValue())
