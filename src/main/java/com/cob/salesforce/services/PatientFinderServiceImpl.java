@@ -55,6 +55,7 @@ public class PatientFinderServiceImpl implements PatientFinderService {
     public PatientDTO getPatient(Long patientId) {
         PatientDTO dto = new PatientDTO();
         Patient patient = patientRepository.findById(patientId).get();
+        setPatientMetaData(dto, patient);
         dto.setBasicInfo(PatientBasicInfoDTOMapper.map(patient));
         dto.setAddressInfo(AddressInfoDTOMapper.map(patient.getAddress()));
         dto.setMedicalHistoryInformation(getMedicalHistoryInformation(patientId));
@@ -126,7 +127,7 @@ public class PatientFinderServiceImpl implements PatientFinderService {
     }
 
     private void setPhysicalTherapy(MedicalQuestionnaireInfoDTO dto, Patient patient) {
-        if (patient.getPhysicalTherapy()) {
+        if (patient.getPhysicalTherapy() != null && patient.getPhysicalTherapy() == true) {
             PatientPhysicalTherapyRepository patientPhysicalTherapyRepository = BeanFactory
                     .getBean(PatientPhysicalTherapyRepository.class);
             dto.setPhysicalTherapy(
@@ -138,5 +139,10 @@ public class PatientFinderServiceImpl implements PatientFinderService {
 
     private void setAgreements(PatientDTO dto, String agreementStr) {
         dto.setPatientAgreement(AgreementsDTOMapper.map(agreementStr, agreementRepository.findAll()));
+    }
+
+    private void setPatientMetaData(PatientDTO dto, Patient entity) {
+        dto.setCreatedAt(entity.getCreatedAt());
+        dto.setClinicId(entity.getClinic().getId());
     }
 }
