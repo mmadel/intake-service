@@ -11,12 +11,11 @@ public class PatientMedicalPDFCreator {
     public static void create(Document document, PatientDTO dto) throws DocumentException {
         PDFPageCreator.createHeader(document, "Medical Information");
         createMedicalHistoryInfo(document, dto.getMedicalHistoryInformation());
-        PDFPageCreator.createHeader(document, "");
         createMedicalInfo(document, dto.getMedicalQuestionnaireInfo());
     }
 
     private static void createMedicalInfo(Document document, MedicalQuestionnaireInfoDTO dto) throws DocumentException {
-
+        PDFPageCreator.createSubHeader(document, "Physical Therapy Receiving");
         if (dto.getPhysicalTherapyReceiving()) {
             String[] primaryDoctorRow = new String[]{"Location", "Number Of Visit"};
             PDFPageCreator.createTable(document, primaryDoctorRow, new String[]{

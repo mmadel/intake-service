@@ -55,6 +55,7 @@ public class PatientFinderServiceImpl implements PatientFinderService {
     public PatientDTO getPatient(Long patientId) {
         PatientDTO dto = new PatientDTO();
         Patient patient = patientRepository.findById(patientId).get();
+        setPatientMetaData(dto, patient);
         dto.setBasicInfo(PatientBasicInfoDTOMapper.map(patient));
         dto.setAddressInfo(AddressInfoDTOMapper.map(patient.getAddress()));
         dto.setMedicalHistoryInformation(getMedicalHistoryInformation(patientId));
@@ -74,6 +75,7 @@ public class PatientFinderServiceImpl implements PatientFinderService {
         MedicalQuestionnaireInfoDTO medicalQuestionnaireInfoDTO =
                 MedicalQuestionnaireInfoDTOMapper.map(patientMedicalRepository.findByPatient_Id(patient.getId()));
         setPatientSource(medicalQuestionnaireInfoDTO, patient);
+        setPhysicalTherapy(medicalQuestionnaireInfoDTO, patient);
         return medicalQuestionnaireInfoDTO;
     }
 
@@ -108,21 +110,39 @@ public class PatientFinderServiceImpl implements PatientFinderService {
             case Doctor:
                 PatientDoctorSourceRepository doctorSourceRepository = BeanFactory
                         .getBean(PatientDoctorSourceRepository.class);
-                dto.setRecommendationDoctor(RecommendationDoctorDTOMapper
-                        .map(doctorSourceRepository
-                                .findByPatient_Id(patient.getId())));
+                dto.setRecommendationDoctor(
+                        RecommendationDoctorDTOMapper
+                                .map(doctorSourceRepository
+                                        .findByPatient_Id(patient.getId())));
                 break;
             case Entity:
                 PatientEntitySourceRepository patientEntitySourceRepository = BeanFactory
                         .getBean(PatientEntitySourceRepository.class);
-                dto.setRecommendationEntity(RecommendationEntityDTOMapper
-                        .map(patientEntitySourceRepository
-                                .findByPatient_Id(patient.getId())));
+                dto.setRecommendationEntity(
+                        RecommendationEntityDTOMapper
+                                .map(patientEntitySourceRepository
+                                        .findByPatient_Id(patient.getId())));
                 break;
         }
     }
 
+    private void setPhysicalTherapy(MedicalQuestionnaireInfoDTO dto, Patient patient) {
+        if (patient.getPhysicalTherapy() != null && patient.getPhysicalTherapy() == true) {
+            PatientPhysicalTherapyRepository patientPhysicalTherapyRepository = BeanFactory
+                    .getBean(PatientPhysicalTherapyRepository.class);
+            dto.setPhysicalTherapy(
+                    PhysicalTherapyDTOMapper.
+                            map(patientPhysicalTherapyRepository.findByPatient_Id(patient.getId())));
+        }
+
+    }
+
     private void setAgreements(PatientDTO dto, String agreementStr) {
         dto.setPatientAgreement(AgreementsDTOMapper.map(agreementStr, agreementRepository.findAll()));
+    }
+
+    private void setPatientMetaData(PatientDTO dto, Patient entity) {
+        dto.setCreatedAt(entity.getCreatedAt());
+        dto.setClinicId(entity.getClinic().getId());
     }
 }

@@ -19,6 +19,7 @@ public class PatientBasicInfoDTOMapper {
                 .emergencyPhone(entity.getEmergencyPhone())
                 .employmentStatus(entity.getEmploymentStatus().label)
                 .gender(entity.getGender().label)
+                .idType(entity.getIdType().label)
                 .patientId(entity.getPatientId())
                 .phoneType(entity.getPhoneType().label)
                 .phoneNumber(entity.getPhone())
