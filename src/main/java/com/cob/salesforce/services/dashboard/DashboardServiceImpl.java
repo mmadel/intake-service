@@ -133,9 +133,10 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     private int calculatePercentage(int toBeCalculated) {
-        return (toBeCalculated * 100) / totalNumberOfPatients;
+        return totalNumberOfPatients == 0 ? 0 : (toBeCalculated * 100) / totalNumberOfPatients;
     }
-    private int calculatePercentage(int totalNumberOfPatients,int toBeCalculated) {
-        return (toBeCalculated * 100) / totalNumberOfPatients;
+
+    private int calculatePercentage(int totalNumberOfPatients, int toBeCalculated) {
+        return totalNumberOfPatients == 0 ? 0 : (toBeCalculated * 100) / totalNumberOfPatients;
     }
 }
