@@ -4,4 +4,5 @@ import com.cob.salesforce.models.PatientDTO;
 
 public interface PatientCreatorService {
     Long create(PatientDTO model);
+    void delete(Long patientId);
 }

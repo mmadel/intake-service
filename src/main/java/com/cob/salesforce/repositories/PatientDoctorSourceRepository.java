@@ -1,5 +1,6 @@
 package com.cob.salesforce.repositories;
 
+import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.entity.PatientDoctorSource;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -20,4 +21,6 @@ public interface PatientDoctorSourceRepository extends PagingAndSortingRepositor
             , @Param("clinicId") Long clinicId);
 
     public PatientDoctorSource findByPatient_Id(Long id);
+
+    Long deleteByPatient(Patient patient);
 }

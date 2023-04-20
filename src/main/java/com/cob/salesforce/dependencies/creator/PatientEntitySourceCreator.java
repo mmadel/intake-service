@@ -1,30 +1,28 @@
-package com.cob.salesforce.dependency.creator;
+package com.cob.salesforce.dependencies.creator;
 
 import com.cob.salesforce.entity.Patient;
-import com.cob.salesforce.entity.PatientDoctorSource;
+import com.cob.salesforce.entity.PatientEntitySource;
 import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.mappers.entities.PatientDependencyMapper;
 import com.cob.salesforce.models.PatientDTO;
-import com.cob.salesforce.repositories.PatientDoctorSourceRepository;
+import com.cob.salesforce.repositories.PatientEntitySourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PatientDoctorSourceCreator implements IPatientDependencyCreator {
+public class PatientEntitySourceCreator implements IPatientDependencyCreator {
     @Autowired
-    PatientDoctorSourceRepository repository;
+    PatientEntitySourceRepository repository;
     @Autowired
-    @Qualifier("PatientDoctorSourceMapper")
+    @Qualifier("PatientEntitySourceMapper")
     PatientDependencyMapper mapper;
 
     @Override
     public void create(PatientDTO dto, Patient entity) {
-        PatientDoctorSource toBeSaved = (PatientDoctorSource) mapper.map(dto);
+        PatientEntitySource toBeSaved = (PatientEntitySource) mapper.map(dto);
         toBeSaved.setPatient(entity);
         repository.save(toBeSaved);
-        entity.setPatientSourceType(PatientSourceType.Doctor);
+        entity.setPatientSourceType(PatientSourceType.Entity);
     }
-
-
 }
