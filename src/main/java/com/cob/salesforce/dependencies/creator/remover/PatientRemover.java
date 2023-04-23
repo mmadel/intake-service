@@ -38,7 +38,19 @@ public class PatientRemover {
         removeInsuranceWorker(patient);
 
         removePatientSource(patient);
+
+        removePhysicalTherapy(patient);
+
         patientRepository.delete(patient);
+    }
+
+    private void removePhysicalTherapy(Patient patient) {
+        if (patient.getPhysicalTherapy()) {
+            PatientPhysicalTherapyRepository patientPhysicalTherapyRepository = BeanFactory
+                    .getBean(PatientPhysicalTherapyRepository.class);
+            patientPhysicalTherapyRepository.deleteByPatient(patient);
+        }
+
     }
 
     private void removeInsuranceWorker(Patient patient) {
