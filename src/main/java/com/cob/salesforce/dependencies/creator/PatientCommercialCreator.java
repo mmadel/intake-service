@@ -1,4 +1,4 @@
-package com.cob.salesforce.dependency.creator;
+package com.cob.salesforce.dependencies.creator;
 
 import com.cob.salesforce.entity.*;
 import com.cob.salesforce.enums.InsuranceWorkerType;

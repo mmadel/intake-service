@@ -7,6 +7,8 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PatientPDFGenerator {
     PatientDTO source;
@@ -31,11 +33,14 @@ public class PatientPDFGenerator {
     }
 
     private void createRightCornerParagraph(Document document) throws DocumentException {
+        Date dobDate=new Date(source.getBasicInfo().getBirthDate());
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM dd yyyy");
+        String dobDateStr = formatter.format(dobDate);
         String value = "";
         Font fontTitle = FontFactory.getFont(FontFactory.TIMES_ROMAN, 10);
         value += source.getBasicInfo().getFirstName() + "," + source.getBasicInfo().getLastName() + "\n";
         value += "ID: " + source.getBasicInfo().getPatientId() + "\n";
-        value += "DOB: " + source.getBasicInfo().getBirthDate() + "\n";
+        value += "DOB: " + dobDateStr + "\n";
         Paragraph paragraph = new Paragraph(value, fontTitle);
         paragraph.setAlignment(Paragraph.ALIGN_RIGHT);
         document.add(paragraph);

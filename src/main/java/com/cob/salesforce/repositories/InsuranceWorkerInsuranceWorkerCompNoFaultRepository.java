@@ -12,4 +12,6 @@ public interface InsuranceWorkerInsuranceWorkerCompNoFaultRepository extends Pag
      InsuranceWorkerCompNoFault findByPatient_Id(Long Id);
 
      List<InsuranceWorkerCompNoFault> findByPatientIn(List<Patient> patients);
+     Long deleteByPatient(Patient patient);
+
 }

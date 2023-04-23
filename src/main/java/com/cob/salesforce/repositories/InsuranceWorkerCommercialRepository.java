@@ -10,4 +10,6 @@ public interface InsuranceWorkerCommercialRepository extends PagingAndSortingRep
 
     InsuranceWorkerCommercial findByPatient_Id(Long id);
     List<InsuranceWorkerCommercial> findByPatientIn(List<Patient> patients);
+
+    Long deleteByPatient(Patient patient);
 }

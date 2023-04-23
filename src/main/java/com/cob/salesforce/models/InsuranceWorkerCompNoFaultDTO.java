@@ -13,7 +13,6 @@ import java.math.BigInteger;
 
 @Setter
 @Getter
-@Builder
 public class InsuranceWorkerCompNoFaultDTO {
     private String injuryType;
     private Long accidentDate;

@@ -6,11 +6,11 @@ import com.cob.salesforce.models.RecommendationDoctorDTO;
 public class RecommendationDoctorDTOMapper {
 
     public static RecommendationDoctorDTO map(PatientDoctorSource entity) {
-        return RecommendationDoctorDTO.builder()
-                .name(entity.getName())
-                .npi(entity.getNpi())
-                .fax(entity.getFax().toString())
-                .doctorAddress(AddressInfoDTOMapper.map(entity.getAddress()))
-                .build();
+        RecommendationDoctorDTO dto = new RecommendationDoctorDTO();
+        dto.setName(entity.getName());
+        dto.setNpi(entity.getNpi());
+        dto.setFax(entity.getFax().toString());
+        dto.setDoctorAddress(AddressInfoDTOMapper.map(entity.getAddress()));
+        return dto;
     }
 }

@@ -9,7 +9,6 @@ import java.util.List;
 
 @Setter
 @Getter
-@Builder
 public class MedicalHistoryInformationDTO {
     private Double height;
     private Double weight;

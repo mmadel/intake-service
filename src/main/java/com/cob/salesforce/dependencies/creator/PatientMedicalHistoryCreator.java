@@ -1,31 +1,28 @@
-package com.cob.salesforce.dependency.creator;
+package com.cob.salesforce.dependencies.creator;
 
 import com.cob.salesforce.entity.Patient;
-import com.cob.salesforce.entity.PhysicalTherapy;
+import com.cob.salesforce.entity.PatientMedicalHistory;
 import com.cob.salesforce.mappers.entities.PatientDependencyMapper;
 import com.cob.salesforce.models.PatientDTO;
-import com.cob.salesforce.repositories.PatientPhysicalTherapyRepository;
+import com.cob.salesforce.repositories.PatientMedicalHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PatientPhysicalTherapyCreator implements IPatientDependencyCreator {
-
+public class PatientMedicalHistoryCreator implements IPatientDependencyCreator {
     @Autowired
-    PatientPhysicalTherapyRepository repository;
-    @Autowired
-    @Qualifier("PatientPhysicalTherapyMapper")
+    @Qualifier("PatientMedicalHistoryMapper")
     PatientDependencyMapper mapper;
+    @Autowired
+    PatientMedicalHistoryRepository repository;
 
     @Override
     public void create(PatientDTO dto, Patient entity) {
-        PhysicalTherapy toBeSaved = (PhysicalTherapy) mapper.map(dto);
+        PatientMedicalHistory toBeSaved = (PatientMedicalHistory) mapper.map(dto);
         toBeSaved.setPatient(entity);
         repository.save(toBeSaved);
-        entity.setPhysicalTherapy(true);
     }
-
 
 
 }

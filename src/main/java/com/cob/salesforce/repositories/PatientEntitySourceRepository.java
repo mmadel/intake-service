@@ -21,4 +21,6 @@ public interface PatientEntitySourceRepository extends PagingAndSortingRepositor
     PatientEntitySource findByPatient_Id(Long id);
 
     List<PatientEntitySource> findByPatientIn(List<Patient> patients);
+
+    Long deleteByPatient(Patient patient);
 }

@@ -57,7 +57,7 @@ public class SecurityConfiguration {
                         .antMatchers("/agreement").permitAll()
                         .antMatchers(HttpMethod.POST,"/patient/create").permitAll()
                         .antMatchers("/find/patient**").hasAnyAuthority(SCOPE + UserRole.USER.label,SCOPE + UserRole.ADMIN.label)
-                        .antMatchers("/clinic/**", "/dashboard/**", "/insurance/company/**", "/reports/**").hasAuthority(SCOPE + UserRole.ADMIN.label)
+                        .antMatchers("/clinic/**", "/dashboard/**", "/insurance/company/**", "/reports/**","/patient/upload","/patient/delete/**").hasAuthority(SCOPE + UserRole.ADMIN.label)
                         .anyRequest().authenticated()
 
                 )

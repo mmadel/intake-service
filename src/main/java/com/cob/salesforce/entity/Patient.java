@@ -81,7 +81,7 @@ public class Patient {
         createdAt = DateUtil.removeTime(new Date()).getTime();
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "clinic_id", referencedColumnName = "id")
     private ClinicEntity clinic;
 

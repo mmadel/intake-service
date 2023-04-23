@@ -51,8 +51,8 @@ public class PatientMedicalPDFCreator {
     private static void createMedicalHistoryInfo(Document document, MedicalHistoryInformationDTO dto) throws DocumentException {
         String[] firstHistoryRow = new String[]{"Height", "Weight", "Scanning test", "Metal Implantation", "Pacemaker"};
         PDFPageCreator.createTable(document, firstHistoryRow, new String[]{
-                dto.getHeight().toString(),
-                dto.getWeight().toString(),
+                dto.getHeight() != null ? dto.getHeight().toString() : "",
+                dto.getWeight() != null ? dto.getWeight().toString() : "",
                 dto.getScanningTestValue() == null ? "NO" : dto.getScanningTestValue(),
                 dto.getMetalImplantation() ? "Yes" : "No",
                 dto.getPacemaker() ? "Yes" : "No",

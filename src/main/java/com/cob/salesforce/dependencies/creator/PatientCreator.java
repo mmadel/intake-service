@@ -1,4 +1,4 @@
-package com.cob.salesforce.dependency.creator;
+package com.cob.salesforce.dependencies.creator;
 
 import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.mappers.entities.PatientMapper;
@@ -26,8 +26,7 @@ public class PatientCreator {
     @Autowired
     ClinicRepository clinicRepository;
 
-    public Patient create(PatientDTO model)
-    {
+    public Patient create(PatientDTO model) {
         Patient toBeSaved = mapper.map(model);
         Gson gson = new Gson();
         toBeSaved.setAgreement(gson.toJson(model.getAgreements()));
@@ -38,5 +37,6 @@ public class PatientCreator {
     public void update(Patient saved) {
         patientRepository.save(saved);
     }
+
 
 }

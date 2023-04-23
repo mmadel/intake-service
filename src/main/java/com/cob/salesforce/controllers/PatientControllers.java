@@ -1,6 +1,6 @@
 package com.cob.salesforce.controllers;
 
-import com.cob.salesforce.dependency.creator.PatientPhotoUploaderService;
+import com.cob.salesforce.dependencies.creator.PatientPhotoUploaderService;
 import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.services.PatientCreatorService;
 import com.cob.salesforce.services.PatientFinderService;
@@ -40,13 +40,20 @@ public class PatientControllers {
                                                                           @RequestParam(name = "limit") String limit,
                                                                           @PathVariable(name = "clinicId") Long clinicId) {
         Pageable paging = PageRequest.of(Integer.parseInt(offset), Integer.parseInt(limit));
-        return new ResponseEntity<>(patientFinderService.getPatients(paging,clinicId), HttpStatus.OK);
+        return new ResponseEntity<>(patientFinderService.getPatients(paging, clinicId), HttpStatus.OK);
     }
 
     @ResponseBody
     @PostMapping("/upload")
     public ResponseEntity uploadPhoto(@RequestParam("files") MultipartFile[] files, @RequestHeader("patientId") String patientId) throws IOException {
         patientPhotoUploaderService.upload(files, Long.parseLong(patientId));
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @DeleteMapping("/delete/{patientId}")
+    public ResponseEntity delete(@PathVariable(name = "patientId") Long patientId) {
+        patientCreatorService.delete(patientId);
         return new ResponseEntity(HttpStatus.OK);
     }
 }
