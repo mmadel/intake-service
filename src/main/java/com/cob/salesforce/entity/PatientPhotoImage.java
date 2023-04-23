@@ -23,7 +23,7 @@ public class PatientPhotoImage {
 
     @Column(name = "image", unique = false, nullable = false, length = 100000)
     private byte[] image;
-    @ManyToOne(cascade = CascadeType.REMOVE )
-    @JoinColumn(name="patient_id", referencedColumnName = "id" ,  nullable=false)
+    @ManyToOne(cascade = CascadeType.ALL )
+    @JoinColumn(name="patient_id", referencedColumnName = "id")
     private Patient patient;
 }

@@ -5,19 +5,19 @@ import com.cob.salesforce.models.InsuranceWorkerCompNoFaultDTO;
 
 public class InsuranceWorkerCompNoFaultDTOMapper {
 
-    public static  InsuranceWorkerCompNoFaultDTO map(InsuranceWorkerCompNoFault entity) {
-        return InsuranceWorkerCompNoFaultDTO.builder()
-                .injuryType(entity.getInjuryType())
-                .accidentDate(entity.getAccidentDate())
-                .workerStatus(entity.getWorkerStatus().label)
-                .workerCompAddress(AddressInfoDTOMapper.map(entity.getAddress()))
-                .fax(entity.getFax())
-                .insuranceName(entity.getInsuranceName())
-                .claimNumber(entity.getClaimNumber())
-                .adjusterInfoName(entity.getAdjusterName())
-                .adjusterInfoPhone(entity.getAdjusterPhone())
-                .attorneyInfoName(entity.getAttorneyName())
-                .attorneyInfoPhone(entity.getAttorneyPhone())
-                .build();
+    public static InsuranceWorkerCompNoFaultDTO map(InsuranceWorkerCompNoFault entity) {
+        InsuranceWorkerCompNoFaultDTO dto = new InsuranceWorkerCompNoFaultDTO();
+        dto.setInjuryType(entity.getInjuryType());
+        dto.setAccidentDate(entity.getAccidentDate());
+        dto.setWorkerStatus(entity.getWorkerStatus().label);
+        dto.setWorkerCompAddress(AddressInfoDTOMapper.map(entity.getAddress()));
+        dto.setFax(entity.getFax());
+        dto.setInsuranceName(entity.getInsuranceName());
+        dto.setClaimNumber(entity.getClaimNumber());
+        dto.setAdjusterInfoName(entity.getAdjusterName());
+        dto.setAdjusterInfoPhone(entity.getAdjusterPhone());
+        dto.setAttorneyInfoName(entity.getAttorneyName());
+        dto.setAttorneyInfoPhone(entity.getAttorneyPhone());
+        return dto;
     }
 }

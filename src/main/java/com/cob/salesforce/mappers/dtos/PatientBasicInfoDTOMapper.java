@@ -9,23 +9,24 @@ public class PatientBasicInfoDTOMapper {
         String fName = entity.getName().split(",")[0];
         String mName = entity.getName().split(",")[1];
         String lName = entity.getName().split(",")[2];
-        return BasicInfoDTO.builder()
-                .firstName(fName)
-                .middleName(mName)
-                .lastName(lName)
-                .birthDate(entity.getDateOfBirth())
-                .email(entity.getEmail())
-                .emergencyName(entity.getEmergencyName())
-                .emergencyPhone(entity.getEmergencyPhone())
-                .employmentStatus(entity.getEmploymentStatus().label)
-                .gender(entity.getGender().label)
-                .idType(entity.getIdType().label)
-                .patientId(entity.getPatientId())
-                .phoneType(entity.getPhoneType().label)
-                .phoneNumber(entity.getPhone())
-                .idEffectiveTo(entity.getIdEffectiveTo())
-                .idEffectiveFrom(entity.getIdEffectiveFrom())
-                .maritalStatus(entity.getMaritalStatus().label)
-                .build();
+        BasicInfoDTO dto = new BasicInfoDTO();
+        dto.setFirstName(fName);
+        dto.setMiddleName(mName);
+        dto.setLastName(lName);
+        dto.setBirthDate(entity.getDateOfBirth());
+        dto.setEmail(entity.getEmail());
+        dto.setEmergencyName(entity.getEmergencyName());
+        dto.setEmergencyPhone(entity.getEmergencyPhone());
+        dto.setEmploymentStatus(entity.getEmploymentStatus().label);
+        dto.setGender(entity.getGender().label);
+        dto.setIdType(entity.getIdType().label);
+        dto.setPatientId(entity.getPatientId());
+        dto.setPhoneType(entity.getPhoneType().label);
+        dto.setPhoneNumber(entity.getPhone());
+        dto.setIdEffectiveTo(entity.getIdEffectiveTo());
+        dto.setIdEffectiveFrom(entity.getIdEffectiveFrom());
+        dto.setMaritalStatus(entity.getMaritalStatus().label);
+        return dto;
+
     }
 }
