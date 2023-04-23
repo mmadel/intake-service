@@ -19,7 +19,10 @@ public class MedicalHistoryInformationDTOMapper {
         dto.setPacemaker(entity.getPacemaker());
         dto.setMetalImplantation(entity.getMetalImplantation());
         dto.setSurgeriesList(entity.getSurgeriesList());
-        dto.setPatientCondition(new ArrayList<>(Arrays.asList(entity.getPatientCondition().split(","))));
+        if(entity.getPatientCondition() != null)
+            dto.setPatientCondition(new ArrayList<>(Arrays.asList(entity.getPatientCondition().split(","))));
+        else
+            dto.setPatientCondition(new ArrayList<>());
         return dto;
     }
 }
