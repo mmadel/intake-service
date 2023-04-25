@@ -30,4 +30,10 @@ public interface PatientRepository extends PagingAndSortingRepository<Patient, L
 
     Page<Patient> findByClinicId(Pageable pageable, Long clinicId);
 
+    @Query("Select ps from patient ps" +
+            " where ( ps.createdAt >= :start) " +
+            "AND ( ps.createdAt <= :end)" +
+            "AND ps.clinic.id = :clinicId")
+    List<Patient> findInDateRange(@Param("start") Long start, @Param("end") Long end, Long clinicId);
+
 }

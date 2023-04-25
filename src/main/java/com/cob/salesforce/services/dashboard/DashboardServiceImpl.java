@@ -2,23 +2,21 @@ package com.cob.salesforce.services.dashboard;
 
 import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.entity.PatientEntitySource;
-import com.cob.salesforce.entity.admin.ClinicEntity;
 import com.cob.salesforce.enums.Gender;
 import com.cob.salesforce.enums.InsuranceWorkerType;
 import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.models.dashboard.DashboardDataContainer;
 import com.cob.salesforce.models.dashboard.GenderContainer;
 import com.cob.salesforce.models.dashboard.PatientSourceContainer;
+import com.cob.salesforce.models.dashboard.WeekCounterContainer;
 import com.cob.salesforce.repositories.*;
 import com.cob.salesforce.repositories.admin.user.UserRepository;
+import com.cob.salesforce.utils.DateUtil;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -44,6 +42,7 @@ public class DashboardServiceImpl implements DashboardService {
     public DashboardDataContainer getData(Long clinicId, Long userId) {
         List<Patient> patients = patientRepository.findByClinicId(null, clinicId).getContent();
         totalNumberOfPatients = patients.size();
+        getPatientAtWeek(clinicId);
         return DashboardDataContainer.builder()
                 .totalNumberOfPatient(totalNumberOfPatients)
                 .totalNumberOfCompensationNoFaultPatient(getTotalNumberOfCompensationNoFaultPatient(patients))
@@ -51,7 +50,18 @@ public class DashboardServiceImpl implements DashboardService {
                 .genderContainer(getGenderData(patients))
                 .patientSourceContainer(getPatientSourceData(patients))
                 .clinicsData(getClinicsData(userId))
+                .weekCounterContainer(getPatientAtWeek(clinicId))
                 .build();
+    }
+
+    private WeekCounterContainer getPatientAtWeek(Long clinicId) {
+        Long[] startEnd = DateUtil.startEndDatePeriod(7);
+        List<Patient> patients = patientRepository.findInDateRange(startEnd[0], startEnd[1], clinicId);
+        WeekCounterContainer weekCounterContainer = new WeekCounterContainer();
+        patients.stream().forEach(patient -> {
+            incrementDaysOfWeek(patient.getCreatedAt(), weekCounterContainer, patients.size());
+        });
+        return weekCounterContainer;
     }
 
     private Map getClinicsData(Long userId) {
@@ -136,7 +146,54 @@ public class DashboardServiceImpl implements DashboardService {
         return totalNumberOfPatients == 0 ? 0 : (toBeCalculated * 100) / totalNumberOfPatients;
     }
 
+    private int calculatePercentagePerWeek(int toBeCalculated, int totalNumberOfPatients) {
+        return totalNumberOfPatients == 0 ? 0 : (toBeCalculated * 100) / totalNumberOfPatients;
+    }
+
     private int calculatePercentage(int totalNumberOfPatients, int toBeCalculated) {
         return totalNumberOfPatients == 0 ? 0 : (toBeCalculated * 100) / totalNumberOfPatients;
+    }
+
+    private void incrementDaysOfWeek(Long createdDate, WeekCounterContainer weekCounterContainer, int totalNumberOfPatients) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.clear(Calendar.MINUTE);
+        cal.clear(Calendar.SECOND);
+        cal.clear(Calendar.MILLISECOND);
+        cal.setTime(new Date(createdDate));
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
+            weekCounterContainer.getNumberOfMonday().getAndIncrement();
+            weekCounterContainer.setNumberOfMondayPercentage(calculatePercentagePerWeek(weekCounterContainer.getNumberOfMonday().get(), totalNumberOfPatients));
+        }
+
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.TUESDAY) {
+            weekCounterContainer.getNumberOfTuesday().getAndIncrement();
+            weekCounterContainer.setNumberOfTuesdayPercentage(calculatePercentagePerWeek(weekCounterContainer.getNumberOfTuesday().get(), totalNumberOfPatients));
+        }
+
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY) {
+            weekCounterContainer.getNumberOfWednesday().getAndIncrement();
+            weekCounterContainer.setNumberOfWednesdayPercentage(calculatePercentagePerWeek(weekCounterContainer.getNumberOfWednesday().get(), totalNumberOfPatients));
+        }
+
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY) {
+            weekCounterContainer.getNumberOfThursday().getAndIncrement();
+            weekCounterContainer.setNumberOfThursdayPercentage(calculatePercentagePerWeek(weekCounterContainer.getNumberOfThursday().get(), totalNumberOfPatients));
+        }
+
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) {
+            weekCounterContainer.getNumberOfFriday().getAndIncrement();
+            weekCounterContainer.setNumberOfFridayPercentage(calculatePercentagePerWeek(weekCounterContainer.getNumberOfFriday().get(), totalNumberOfPatients));
+        }
+
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+            weekCounterContainer.getNumberOfSaturday().getAndIncrement();
+            weekCounterContainer.setNumberOfSaturdayPercentage(calculatePercentagePerWeek(weekCounterContainer.getNumberOfSaturday().get(), totalNumberOfPatients));
+        }
+
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+            weekCounterContainer.getNumberOfSunday().getAndIncrement();
+            weekCounterContainer.setNumberOfSundayPercentage(calculatePercentagePerWeek(weekCounterContainer.getNumberOfSunday().get(), totalNumberOfPatients));
+        }
     }
 }

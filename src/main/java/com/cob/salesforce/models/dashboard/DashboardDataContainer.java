@@ -16,5 +16,6 @@ public class DashboardDataContainer {
     private GenderContainer genderContainer;
     private PatientSourceContainer patientSourceContainer;
 
+    private WeekCounterContainer weekCounterContainer;
     private Map clinicsData;
 }
