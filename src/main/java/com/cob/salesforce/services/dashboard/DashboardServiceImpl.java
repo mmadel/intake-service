@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class DashboardServiceImpl implements DashboardService {
-    int totalNumberOfPatients = 0;
+    double totalNumberOfPatients = 0;
 
     @Autowired
     UserRepository userRepository;
@@ -70,10 +70,10 @@ public class DashboardServiceImpl implements DashboardService {
     private Map getClinicsData(Long userId) {
         log.info("DashboardService-Get Clinics Data {}" ,userId);
         Map clinicData = new HashMap<String, List<Integer>>();
-        int totalPatients = Lists.newArrayList(patientRepository.findAll().iterator()).size();
+        double totalPatients = Lists.newArrayList(patientRepository.findAll().iterator()).size();
         log.info("DashboardService-Get Clinics Data:totalPatients {}" ,totalPatients);
         userRepository.findUserClinics(userId).stream().forEach(clinicEntity -> {
-            int numberOfPatient = patientRepository.findByClinicId(null, clinicEntity.getId()).getContent().size();
+            double numberOfPatient = patientRepository.findByClinicId(null, clinicEntity.getId()).getContent().size();
             log.info("DashboardService-Get Clinics Data:Clinic  {} , numberOfPatient {} " ,clinicEntity.getName() , numberOfPatient);
             List<Double> numberPercentage = new ArrayList<>();
             numberPercentage.add(Double.valueOf(numberOfPatient));
@@ -150,16 +150,16 @@ public class DashboardServiceImpl implements DashboardService {
                 .build();
     }
 
-    private double calculatePercentage(int toBeCalculated) {
+    private double calculatePercentage(double toBeCalculated) {
 
         return totalNumberOfPatients == 0 ? 0 : NumberUtil.round((toBeCalculated * 100) / totalNumberOfPatients , 2);
     }
 
-    private double calculatePercentagePerWeek(int toBeCalculated, int totalNumberOfPatients) {
+    private double calculatePercentagePerWeek(double toBeCalculated, double totalNumberOfPatients) {
         return totalNumberOfPatients == 0 ? 0 : NumberUtil.round((toBeCalculated * 100) / totalNumberOfPatients,2);
     }
 
-    private double calculatePercentage(int totalNumberOfPatients, int toBeCalculated) {
+    private double calculatePercentage(double totalNumberOfPatients, double toBeCalculated) {
         return totalNumberOfPatients == 0 ? 0 : NumberUtil.round((toBeCalculated * 100) / totalNumberOfPatients,2);
     }
 

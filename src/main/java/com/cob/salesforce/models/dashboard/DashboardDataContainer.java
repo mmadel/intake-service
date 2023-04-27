@@ -10,7 +10,7 @@ import java.util.Map;
 @Getter
 @Builder
 public class DashboardDataContainer {
-    private int totalNumberOfPatient;
+    private double totalNumberOfPatient;
     private int totalNumberOfCompensationNoFaultPatient;
     private int totalNumberOfCommercialPatient;
     private GenderContainer genderContainer;
