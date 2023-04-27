@@ -9,19 +9,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Getter
 public class WeekCounterContainer {
     AtomicInteger numberOfMonday = new AtomicInteger();
-    int numberOfMondayPercentage;
+    double numberOfMondayPercentage;
     AtomicInteger numberOfTuesday = new AtomicInteger();
-    int numberOfTuesdayPercentage;
+    double numberOfTuesdayPercentage;
     AtomicInteger numberOfWednesday = new AtomicInteger();
-    int numberOfWednesdayPercentage;
+    double numberOfWednesdayPercentage;
     AtomicInteger numberOfThursday = new AtomicInteger();
-    int numberOfThursdayPercentage;
+    double numberOfThursdayPercentage;
     AtomicInteger numberOfFriday = new AtomicInteger();
-    int numberOfFridayPercentage;
+    double numberOfFridayPercentage;
     AtomicInteger numberOfSaturday = new AtomicInteger();
-    int numberOfSaturdayPercentage;
+    double numberOfSaturdayPercentage;
     AtomicInteger numberOfSunday = new AtomicInteger();
 
-    int numberOfSundayPercentage;
+    double numberOfSundayPercentage;
 
 }

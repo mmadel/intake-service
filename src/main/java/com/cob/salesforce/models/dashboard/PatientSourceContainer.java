@@ -8,14 +8,14 @@ import lombok.Setter;
 @Getter
 @Builder
 public class PatientSourceContainer {
-    int doctorPercentage;
+    double doctorPercentage;
     int doctorNumber;
-    int zocdocPercentage;
+    double zocdocPercentage;
     int zocdocNumber;
-    int websitePercentage;
+    double websitePercentage;
     int websiteNumber;
-    int socialMediaPercentage;
+    double socialMediaPercentage;
     int socialMediaNumber;
-    int tvPercentage;
+    double tvPercentage;
     int tvNumber;
 }

@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Builder
 public class GenderContainer {
-    int malePercentage;
+    double malePercentage;
     int maleNumber;
-    int femalePercentage;
+    double femalePercentage;
     int femaleNumber;
 }

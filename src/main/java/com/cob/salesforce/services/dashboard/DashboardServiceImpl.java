@@ -12,6 +12,7 @@ import com.cob.salesforce.models.dashboard.WeekCounterContainer;
 import com.cob.salesforce.repositories.*;
 import com.cob.salesforce.repositories.admin.user.UserRepository;
 import com.cob.salesforce.utils.DateUtil;
+import com.cob.salesforce.utils.NumberUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,14 +70,14 @@ public class DashboardServiceImpl implements DashboardService {
     private Map getClinicsData(Long userId) {
         log.info("DashboardService-Get Clinics Data {}" ,userId);
         Map clinicData = new HashMap<String, List<Integer>>();
-        int totalPatients = Lists.newArrayList(patientEntitySourceRepository.findAll().iterator()).size();
+        int totalPatients = Lists.newArrayList(patientRepository.findAll().iterator()).size();
         log.info("DashboardService-Get Clinics Data:totalPatients {}" ,totalPatients);
         userRepository.findUserClinics(userId).stream().forEach(clinicEntity -> {
             int numberOfPatient = patientRepository.findByClinicId(null, clinicEntity.getId()).getContent().size();
             log.info("DashboardService-Get Clinics Data:Clinic  {} , numberOfPatient {} " ,clinicEntity.getName() , numberOfPatient);
-            List<Integer> numberPercentage = new ArrayList<>();
-            numberPercentage.add(numberOfPatient);
-            int clinicPercentage = calculatePercentage(totalPatients, numberOfPatient);
+            List<Double> numberPercentage = new ArrayList<>();
+            numberPercentage.add(Double.valueOf(numberOfPatient));
+            double clinicPercentage = calculatePercentage(totalPatients, numberOfPatient);
             log.info("DashboardService-Get Clinics Data:Clinic  {} , Percentage {} " ,clinicEntity.getName() , clinicPercentage);
             numberPercentage.add(clinicPercentage);
             clinicData.put(clinicEntity.getName(), numberPercentage);
@@ -149,16 +150,17 @@ public class DashboardServiceImpl implements DashboardService {
                 .build();
     }
 
-    private int calculatePercentage(int toBeCalculated) {
-        return totalNumberOfPatients == 0 ? 0 : (toBeCalculated * 100) / totalNumberOfPatients;
+    private double calculatePercentage(int toBeCalculated) {
+
+        return totalNumberOfPatients == 0 ? 0 : NumberUtil.round((toBeCalculated * 100) / totalNumberOfPatients , 2);
     }
 
-    private int calculatePercentagePerWeek(int toBeCalculated, int totalNumberOfPatients) {
-        return totalNumberOfPatients == 0 ? 0 : (toBeCalculated * 100) / totalNumberOfPatients;
+    private double calculatePercentagePerWeek(int toBeCalculated, int totalNumberOfPatients) {
+        return totalNumberOfPatients == 0 ? 0 : NumberUtil.round((toBeCalculated * 100) / totalNumberOfPatients,2);
     }
 
-    private int calculatePercentage(int totalNumberOfPatients, int toBeCalculated) {
-        return totalNumberOfPatients == 0 ? 0 : (toBeCalculated * 100) / totalNumberOfPatients;
+    private double calculatePercentage(int totalNumberOfPatients, int toBeCalculated) {
+        return totalNumberOfPatients == 0 ? 0 : NumberUtil.round((toBeCalculated * 100) / totalNumberOfPatients,2);
     }
 
     private void incrementDaysOfWeek(Long createdDate, WeekCounterContainer weekCounterContainer, int totalNumberOfPatients) {
