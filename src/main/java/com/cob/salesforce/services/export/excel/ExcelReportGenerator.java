@@ -94,6 +94,7 @@ public class ExcelReportGenerator {
                     break;
                 case Entity:
                     createCell(row, columnCount++, patient.getEntitySourceData(), style);
+                    createCell(row, columnCount++, patient.getPrimaryDoctor(), style);
                     break;
             }
 

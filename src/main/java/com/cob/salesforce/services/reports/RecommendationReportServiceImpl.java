@@ -8,6 +8,7 @@ import com.cob.salesforce.models.reporting.PatientSearchCriteria;
 import com.cob.salesforce.models.reporting.PatientSearchResult;
 import com.cob.salesforce.repositories.PatientDoctorSourceRepository;
 import com.cob.salesforce.repositories.PatientEntitySourceRepository;
+import com.cob.salesforce.repositories.PatientMedicalRepository;
 import com.cob.salesforce.repositories.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -59,6 +60,7 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
                 break;
             case Entity:
                 PatientEntitySourceRepository patientEntitySourceRepository = BeanFactory.getBean(PatientEntitySourceRepository.class);
+                PatientMedicalRepository patientMedicalRepository = BeanFactory.getBean(PatientMedicalRepository.class);
                 patients = patientEntitySourceRepository.findByEntityName(patientSearchCriteria.getEntityNames(),
                                 patientSearchCriteria.getStartDate(),
                                 patientSearchCriteria.getEndDate()
@@ -68,6 +70,7 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
                             PatientContainerDTO dto = mapper.map(patientEntitySource.getPatient());
                             dto.setPatientSourceType(PatientSourceType.Entity);
                             dto.setEntitySourceData(patientEntitySource.getName());
+                            dto.setPrimaryDoctor(patientMedicalRepository.findByPatient_Id(patientEntitySource.getPatient().getId()).getPrimaryDoctor());
                             return dto;
                         }).collect(Collectors.toList());
                 break;
