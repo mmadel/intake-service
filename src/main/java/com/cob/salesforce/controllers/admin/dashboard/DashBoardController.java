@@ -14,8 +14,11 @@ public class DashBoardController {
     DashboardService dashboardService;
 
     @ResponseBody
-    @GetMapping(path = "/data/clinicId/{clinicId}/userId/{userId}")
-    public ResponseEntity getDashBoardData(@PathVariable("clinicId") Long clinicId,@PathVariable("userId") Long userId) {
-        return new ResponseEntity(dashboardService.getData(clinicId,userId), HttpStatus.OK);
+    @GetMapping(path = "/data/clinicId/{clinicId}/userId/{userId}/startDate/{startDate}/endDate/{endDate}")
+    public ResponseEntity getDashBoardData(@PathVariable("clinicId") Long clinicId,
+                                           @PathVariable("userId") Long userId,
+                                           @PathVariable("startDate") Long startDate,
+                                           @PathVariable("endDate") Long endDate) {
+        return new ResponseEntity(dashboardService.getData(clinicId, userId, startDate, endDate), HttpStatus.OK);
     }
 }

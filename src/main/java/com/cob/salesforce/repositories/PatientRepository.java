@@ -19,7 +19,7 @@ public interface PatientRepository extends PagingAndSortingRepository<Patient, L
 
     @Query("Select ps from patient ps" +
             " where (:dateFrom is null or ps.createdAt >= :dateFrom) " +
-            "AND (:dateTo is null or ps.createdAt < :dateTo)")
+            "AND (:dateTo is null or ps.createdAt <= :dateTo)")
     List<Patient> getByCreatedDateRange(@Param("dateFrom") Long dateFrom
             , @Param("dateTo") Long dateTo);
 

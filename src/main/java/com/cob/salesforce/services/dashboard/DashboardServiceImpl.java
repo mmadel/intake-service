@@ -42,8 +42,12 @@ public class DashboardServiceImpl implements DashboardService {
     InsuranceWorkerCommercialRepository insuranceWorkerCommercialRepository;
 
     @Override
-    public DashboardDataContainer getData(Long clinicId, Long userId) {
-        List<Patient> patients = patientRepository.findByClinicId(null, clinicId).getContent();
+    public DashboardDataContainer getData(Long clinicId, Long userId, Long startDate, Long endDate) {
+        List<Patient> patients = null;
+        if (startDate == 0 && endDate == 0)
+            patients = patientRepository.findByClinicId(null, clinicId).getContent();
+        else
+            patients = patientRepository.findInDateRange(startDate, endDate, clinicId);
         totalNumberOfPatients = patients.size();
         getPatientAtWeek(clinicId);
         return DashboardDataContainer.builder()
@@ -52,7 +56,7 @@ public class DashboardServiceImpl implements DashboardService {
                 .totalNumberOfCommercialPatient(getTotalNumberOfCommercialPatient(patients))
                 .genderContainer(getGenderData(patients))
                 .patientSourceContainer(getPatientSourceData(patients))
-                .clinicsData(getClinicsData(userId))
+                .clinicsData(getClinicsData(userId, startDate, endDate))
                 .weekCounterContainer(getPatientAtWeek(clinicId))
                 .build();
     }
@@ -67,18 +71,27 @@ public class DashboardServiceImpl implements DashboardService {
         return weekCounterContainer;
     }
 
-    private Map getClinicsData(Long userId) {
-        log.info("DashboardService-Get Clinics Data {}" ,userId);
+    private Map getClinicsData(Long userId, Long startDate, Long endDate) {
+        log.info("DashboardService-Get Clinics Data {}", userId);
         Map clinicData = new HashMap<String, List<Integer>>();
-        double totalPatients = Lists.newArrayList(patientRepository.findAll().iterator()).size();
-        log.info("DashboardService-Get Clinics Data:totalPatients {}" ,totalPatients);
+        double totalPatients = 0;
+        if (startDate == 0 && endDate == 0)
+            totalPatients = Lists.newArrayList(patientRepository.findAll().iterator()).size();
+        else
+            totalPatients = patientRepository.getByCreatedDateRange(startDate, endDate).size();
+        log.info("DashboardService-Get Clinics Data:totalPatients {}", totalPatients);
+        double finalTotalPatients = totalPatients;
         userRepository.findUserClinics(userId).stream().forEach(clinicEntity -> {
-            double numberOfPatient = patientRepository.findByClinicId(null, clinicEntity.getId()).getContent().size();
-            log.info("DashboardService-Get Clinics Data:Clinic  {} , numberOfPatient {} " ,clinicEntity.getName() , numberOfPatient);
+            double numberOfPatient = 0;
+            if (startDate == 0 && endDate == 0)
+                numberOfPatient = patientRepository.findByClinicId(null, clinicEntity.getId()).getContent().size();
+            else
+                numberOfPatient = patientRepository.findInDateRange(startDate, endDate, clinicEntity.getId()).size();
+            log.info("DashboardService-Get Clinics Data:Clinic  {} , numberOfPatient {} ", clinicEntity.getName(), numberOfPatient);
             List<Double> numberPercentage = new ArrayList<>();
             numberPercentage.add(Double.valueOf(numberOfPatient));
-            double clinicPercentage = calculatePercentage(totalPatients, numberOfPatient);
-            log.info("DashboardService-Get Clinics Data:Clinic  {} , Percentage {} " ,clinicEntity.getName() , clinicPercentage);
+            double clinicPercentage = calculatePercentage(finalTotalPatients, numberOfPatient);
+            log.info("DashboardService-Get Clinics Data:Clinic  {} , Percentage {} ", clinicEntity.getName(), clinicPercentage);
             numberPercentage.add(clinicPercentage);
             clinicData.put(clinicEntity.getName(), numberPercentage);
         });
@@ -152,15 +165,15 @@ public class DashboardServiceImpl implements DashboardService {
 
     private double calculatePercentage(double toBeCalculated) {
 
-        return totalNumberOfPatients == 0 ? 0 : NumberUtil.round((toBeCalculated * 100) / totalNumberOfPatients , 2);
+        return totalNumberOfPatients == 0 ? 0 : NumberUtil.round((toBeCalculated * 100) / totalNumberOfPatients, 2);
     }
 
     private double calculatePercentagePerWeek(double toBeCalculated, double totalNumberOfPatients) {
-        return totalNumberOfPatients == 0 ? 0 : NumberUtil.round((toBeCalculated * 100) / totalNumberOfPatients,2);
+        return totalNumberOfPatients == 0 ? 0 : NumberUtil.round((toBeCalculated * 100) / totalNumberOfPatients, 2);
     }
 
     private double calculatePercentage(double totalNumberOfPatients, double toBeCalculated) {
-        return totalNumberOfPatients == 0 ? 0 : NumberUtil.round((toBeCalculated * 100) / totalNumberOfPatients,2);
+        return totalNumberOfPatients == 0 ? 0 : NumberUtil.round((toBeCalculated * 100) / totalNumberOfPatients, 2);
     }
 
     private void incrementDaysOfWeek(Long createdDate, WeekCounterContainer weekCounterContainer, int totalNumberOfPatients) {

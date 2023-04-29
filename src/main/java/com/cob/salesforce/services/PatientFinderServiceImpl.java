@@ -2,21 +2,16 @@ package com.cob.salesforce.services;
 
 import com.cob.salesforce.BeanFactory;
 import com.cob.salesforce.entity.Patient;
-import com.cob.salesforce.entity.PatientMedicalHistory;
 import com.cob.salesforce.mappers.dtos.*;
 import com.cob.salesforce.mappers.entities.PatientContainerMapper;
 import com.cob.salesforce.models.*;
-import com.cob.salesforce.models.pdf.MedicalData;
-import com.cob.salesforce.models.pdf.PatientData;
 import com.cob.salesforce.repositories.*;
-import com.cob.salesforce.utils.AddressBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
