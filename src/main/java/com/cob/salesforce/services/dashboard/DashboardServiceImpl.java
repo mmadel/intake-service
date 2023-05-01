@@ -146,7 +146,7 @@ public class DashboardServiceImpl implements DashboardService {
                 numberOfTV.getAndIncrement();
             if (patientEntitySource.getName().equals("website"))
                 numberOfWebsite.getAndIncrement();
-            if (patientEntitySource.getName().equals("Social media"))
+            if (patientEntitySource.getName().equals("socialmedia"))
                 numberOfSocialMedia.getAndIncrement();
         });
         return PatientSourceContainer.builder()
