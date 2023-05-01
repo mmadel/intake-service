@@ -25,8 +25,8 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(cal.getTime());
         calendar.add(Calendar.DAY_OF_YEAR, noOfDays);
-        Date startOfPeriod = removeTime(cal.getTime());
-        Date endOfPeriod = removeTime(calendar.getTime());
+        Date startOfPeriod = cal.getTime();
+        Date endOfPeriod = calendar.getTime();
         return new Long[]{startOfPeriod.getTime(), endOfPeriod.getTime()};
     }
 }

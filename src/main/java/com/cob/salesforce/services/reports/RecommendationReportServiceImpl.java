@@ -32,7 +32,7 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
         List<PatientContainerDTO> patients =
                 patientSearchCriteria.getType() != null ?
                         getDataByPatientSourceType(patientSearchCriteria) :
-                        getDataByDateRange(patientSearchCriteria.getStartDate(), patientSearchCriteria.getEndDate());
+                        getDataByDateRange(patientSearchCriteria.getStartDate(), patientSearchCriteria.getEndDate(), patientSearchCriteria.getClinicId());
 
         return PatientSearchResult.builder()
                 .resultCount(patients.size())
@@ -79,14 +79,14 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
         return patients;
     }
 
-    private List<PatientContainerDTO> getDataByDateRange(Long dateFrom, Long dateTo) {
+    private List<PatientContainerDTO> getDataByDateRange(Long dateFrom, Long dateTo, Long clinicId) {
         PatientRepository patientRepository = BeanFactory.getBean(PatientRepository.class);
         if (!dateFrom.equals(dateTo))
-            return patientRepository.getByCreatedDateRange(dateFrom, dateTo)
+            return patientRepository.getByCreatedDateRangeAndClinicId(dateFrom, dateTo, clinicId)
                     .stream()
                     .map(patientEntitySource -> mapper.map(patientEntitySource)).collect(Collectors.toList());
         else
-            return patientRepository.getByCreatedDate(dateFrom)
+            return patientRepository.getByCreatedDateAndClinicId(dateFrom, clinicId)
                     .stream()
                     .map(patientEntitySource -> mapper.map(patientEntitySource)).collect(Collectors.toList());
     }

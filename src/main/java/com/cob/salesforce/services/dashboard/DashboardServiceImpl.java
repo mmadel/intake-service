@@ -43,8 +43,6 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public DashboardDataContainer getData(Long clinicId, Long userId, Long startDate, Long endDate) {
-        startDate = DateUtil.removeTime(new Date(startDate)).getTime();
-        endDate = DateUtil.removeTime(new Date(endDate)).getTime();
         List<Patient> patients = null;
         if (startDate == 0 && endDate == 0)
             patients = patientRepository.findByClinicId(null, clinicId).getContent();

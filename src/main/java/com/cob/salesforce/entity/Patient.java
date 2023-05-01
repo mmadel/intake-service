@@ -6,6 +6,7 @@ import com.cob.salesforce.utils.DateUtil;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -78,7 +79,7 @@ public class Patient {
     private Boolean PhysicalTherapy;
     @PrePersist
     private void beforeSaving() {
-        createdAt = DateUtil.removeTime(new Date()).getTime();
+        createdAt = new Date().getTime();
     }
 
     @OneToOne(cascade = CascadeType.PERSIST)

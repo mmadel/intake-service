@@ -43,7 +43,7 @@ public class UserEntity {
 
     @PrePersist
     private void beforeSaving() {
-        createdAt = DateUtil.removeTime(new Date()).getTime();
+        createdAt = new Date().getTime();
     }
 
 

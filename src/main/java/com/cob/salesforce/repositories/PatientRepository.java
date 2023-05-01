@@ -19,14 +19,25 @@ public interface PatientRepository extends PagingAndSortingRepository<Patient, L
 
     @Query("Select ps from patient ps" +
             " where (:dateFrom is null or ps.createdAt >= :dateFrom) " +
-            "AND (:dateTo is null or ps.createdAt <= :dateTo)")
+            "AND (:dateTo is null or ps.createdAt <= :dateTo) " +
+            "AND ps.clinic.id = :clinicId")
+    List<Patient> getByCreatedDateRangeAndClinicId(@Param("dateFrom") Long dateFrom
+            , @Param("dateTo") Long dateTo
+            , @Param("clinicId") Long clinicId);
+
+    @Query("Select ps from patient ps" +
+            " where (:dateFrom is null or ps.createdAt >= :dateFrom) " +
+            "AND (:dateTo is null or ps.createdAt <= :dateTo) ")
     List<Patient> getByCreatedDateRange(@Param("dateFrom") Long dateFrom
             , @Param("dateTo") Long dateTo);
 
     @Query("Select ps from patient ps" +
             " where ( ps.createdAt = :sameDate) " +
-            "AND ( ps.createdAt = :sameDate)")
-    List<Patient> getByCreatedDate(@Param("sameDate") Long sameDate);
+            "AND ( ps.createdAt = :sameDate)" +
+            "AND ps.clinic.id = :clinicId")
+    List<Patient> getByCreatedDateAndClinicId(@Param("sameDate") Long sameDate
+            , @Param("clinicId") Long clinicId);
+
 
     Page<Patient> findByClinicId(Pageable pageable, Long clinicId);
 

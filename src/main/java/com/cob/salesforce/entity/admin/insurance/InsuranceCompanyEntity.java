@@ -28,6 +28,6 @@ public class InsuranceCompanyEntity {
     private ClinicEntity clinic;
     @PrePersist
     private void beforeSaving() {
-        createdAt = DateUtil.removeTime(new Date()).getTime();
+        createdAt = new Date().getTime();
     }
 }

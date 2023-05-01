@@ -45,7 +45,8 @@ public class PatientRemover {
     }
 
     private void removePhysicalTherapy(Patient patient) {
-        if (patient.getPhysicalTherapy()) {
+        if (patient.getPhysicalTherapy() != null
+                && patient.getPhysicalTherapy()) {
             PatientPhysicalTherapyRepository patientPhysicalTherapyRepository = BeanFactory
                     .getBean(PatientPhysicalTherapyRepository.class);
             patientPhysicalTherapyRepository.deleteByPatient(patient);
