@@ -72,14 +72,14 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     private Map getClinicsData(Long userId, Long startDate, Long endDate) {
-        log.info("DashboardService-Get Clinics Data {}", userId);
+        log.debug("DashboardService-Get Clinics Data {}", userId);
         Map clinicData = new HashMap<String, List<Integer>>();
         double totalPatients = 0;
         if (startDate == 0 && endDate == 0)
             totalPatients = Lists.newArrayList(patientRepository.findAll().iterator()).size();
         else
             totalPatients = patientRepository.getByCreatedDateRange(startDate, endDate).size();
-        log.info("DashboardService-Get Clinics Data:totalPatients {}", totalPatients);
+        log.debug("DashboardService-Get Clinics Data:totalPatients {}", totalPatients);
         double finalTotalPatients = totalPatients;
         userRepository.findUserClinics(userId).stream().forEach(clinicEntity -> {
             double numberOfPatient = 0;
@@ -87,11 +87,11 @@ public class DashboardServiceImpl implements DashboardService {
                 numberOfPatient = patientRepository.findByClinicId(null, clinicEntity.getId()).getContent().size();
             else
                 numberOfPatient = patientRepository.findInDateRange(startDate, endDate, clinicEntity.getId()).size();
-            log.info("DashboardService-Get Clinics Data:Clinic  {} , numberOfPatient {} ", clinicEntity.getName(), numberOfPatient);
+            log.debug("DashboardService-Get Clinics Data:Clinic  {} , numberOfPatient {} ", clinicEntity.getName(), numberOfPatient);
             List<Double> numberPercentage = new ArrayList<>();
             numberPercentage.add(Double.valueOf(numberOfPatient));
             double clinicPercentage = calculatePercentage(finalTotalPatients, numberOfPatient);
-            log.info("DashboardService-Get Clinics Data:Clinic  {} , Percentage {} ", clinicEntity.getName(), clinicPercentage);
+            log.debug("DashboardService-Get Clinics Data:Clinic  {} , Percentage {} ", clinicEntity.getName(), clinicPercentage);
             numberPercentage.add(clinicPercentage);
             clinicData.put(clinicEntity.getName(), numberPercentage);
         });
