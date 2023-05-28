@@ -13,8 +13,13 @@ public class BasicInfoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "name_field_v")
-    Boolean name;
+    @Column(name = "first_name_field_v")
+    Boolean firstName;
+    @Column(name = "middle_name_field_v")
+    Boolean middleName;
+    @Column(name = "last_name_field_v")
+    Boolean lastName;
+
     @Column(name = "birth_date_field_v")
     Boolean birthDate;
     @Column(name = "gender_field_v")

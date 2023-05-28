@@ -7,7 +7,9 @@ import lombok.Setter;
 @Getter
 public class BasicInfo {
     Long id;
-    Boolean name;
+    Boolean firstName;
+    Boolean middleName;
+    Boolean lastName;
     Boolean birthDate;
     Boolean gender;
     Boolean  maritalStatus;
