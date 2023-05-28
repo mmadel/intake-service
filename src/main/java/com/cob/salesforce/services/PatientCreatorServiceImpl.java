@@ -5,8 +5,10 @@ import com.cob.salesforce.dependencies.creator.PatientCreator;
 import com.cob.salesforce.dependencies.creator.PatientDependencyCreator;
 import com.cob.salesforce.dependencies.creator.remover.PatientRemover;
 import com.cob.salesforce.entity.Patient;
+import com.cob.salesforce.exception.business.PatientException;
 import com.cob.salesforce.models.PatientDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,14 +28,16 @@ public class PatientCreatorServiceImpl implements PatientCreatorService {
     PatientDependencyCreator patientDependencyCreator;
 
 
-    public Long create(PatientDTO model) {
+    @Override
+    public Long create(PatientDTO model) throws PatientException {
+        Patient savedEntity = null;
 
-        Patient savedEntity = creator.create(model);
+        savedEntity = creator.create(model);
         List<IPatientDependencyCreator> dependenciesToBeCreated = patientDependencyCreator.createPatientDependencies(model);
 
+        Patient finalSavedEntity = savedEntity;
         dependenciesToBeCreated
-                .forEach(creator -> creator.create(model, savedEntity));
-
+                .forEach(creator -> creator.create(model, finalSavedEntity));
         creator.update(savedEntity);
         return savedEntity.getId();
     }

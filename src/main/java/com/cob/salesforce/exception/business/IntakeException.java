@@ -10,9 +10,9 @@ public class IntakeException extends Exception  {
     private HttpStatus status;
     private Object[] parameters;
     private String code;
+    private String message;
 
     public IntakeException(String message) {
-
         super(message);
     }
     public IntakeException(String code, Object[] parameters) {
