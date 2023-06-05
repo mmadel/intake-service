@@ -21,6 +21,7 @@ public class BasicInfoDTO {
     private String emergencyPhone;
 
     private String employmentStatus;
+    private EmergencyRelation emergencyRelation;
 
     private String firstName;
 

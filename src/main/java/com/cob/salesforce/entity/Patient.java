@@ -61,6 +61,9 @@ public class Patient {
     private String emergencyPhone;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "emergency_relation")
+    private EmergencyRelation emergencyRelation;
+    @Enumerated(EnumType.STRING)
     @Column(name = "employment_status")
     private EmploymentStatus employmentStatus;
 

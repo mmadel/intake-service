@@ -1,9 +1,6 @@
 package com.cob.salesforce.mappers.entities;
 
 import com.cob.salesforce.entity.Patient;
-import com.cob.salesforce.models.AddressInfoDTO;
-import com.cob.salesforce.models.BasicInfoDTO;
-import com.cob.salesforce.models.PatientContainerDTO;
 import com.cob.salesforce.models.PatientDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +28,7 @@ public class PatientMapper {
                     mapper.map(src -> src.getBasicInfo().getEmail(), Patient::setEmail);
                     mapper.map(src -> src.getBasicInfo().getEmergencyName(), Patient::setEmergencyName);
                     mapper.map(src -> src.getBasicInfo().getEmergencyPhone(), Patient::setEmergencyPhone);
+                    mapper.map(src -> src.getBasicInfo().getEmergencyRelation(), Patient::setEmergencyRelation);
                     mapper.map(src -> src.getBasicInfo().getEmploymentStatusEnum(), Patient::setEmploymentStatus);
                     mapper.map(src -> src.getBasicInfo().getFullName(), Patient::setName);
                     mapper.map(src -> src.getBasicInfo().getFullName(), Patient::setName);

@@ -1,5 +1,6 @@
 package com.cob.salesforce.models;
 
+import com.cob.salesforce.enums.EmergencyRelation;
 import com.cob.salesforce.enums.InsuranceWorkerType;
 import com.cob.salesforce.enums.PatientSourceType;
 import lombok.Getter;
@@ -18,6 +19,8 @@ public class PatientContainerDTO {
     private String emergencyName;
 
     private String emergencyPhone;
+
+    private EmergencyRelation emergencyRelation;
 
     private String employmentStatus;
 
