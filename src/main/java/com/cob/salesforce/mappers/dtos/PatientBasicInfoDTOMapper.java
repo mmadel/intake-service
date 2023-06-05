@@ -18,6 +18,7 @@ public class PatientBasicInfoDTOMapper {
         dto.setEmergencyName(entity.getEmergencyName());
         dto.setEmergencyPhone(entity.getEmergencyPhone());
         dto.setEmploymentStatus(entity.getEmploymentStatus().label);
+        dto.setEmploymentCompany(entity.getEmploymentCompany());
         dto.setGender(entity.getGender().label);
         dto.setIdType(entity.getIdType().label);
         dto.setPatientId(entity.getPatientId());

@@ -22,6 +22,9 @@ public class BasicInfoDTO {
 
     private String employmentStatus;
 
+    private String employmentCompany;
+    private EmergencyRelation emergencyRelation;
+
     private String firstName;
 
     private String gender = "";
