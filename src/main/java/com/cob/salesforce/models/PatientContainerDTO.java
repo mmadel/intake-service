@@ -23,6 +23,7 @@ public class PatientContainerDTO {
     private EmergencyRelation emergencyRelation;
 
     private String employmentStatus;
+    private String employmentCompany;
 
     private String firstName;
 

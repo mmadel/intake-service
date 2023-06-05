@@ -30,6 +30,7 @@ public class PatientMapper {
                     mapper.map(src -> src.getBasicInfo().getEmergencyPhone(), Patient::setEmergencyPhone);
                     mapper.map(src -> src.getBasicInfo().getEmergencyRelation(), Patient::setEmergencyRelation);
                     mapper.map(src -> src.getBasicInfo().getEmploymentStatusEnum(), Patient::setEmploymentStatus);
+                    mapper.map(src -> src.getBasicInfo().getEmploymentCompany(), Patient::setEmploymentCompany);
                     mapper.map(src -> src.getBasicInfo().getFullName(), Patient::setName);
                     mapper.map(src -> src.getBasicInfo().getFullName(), Patient::setName);
                     mapper.map(src -> src.getBasicInfo().getGenderEnum(), Patient::setGender);

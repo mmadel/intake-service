@@ -32,6 +32,7 @@ public class PatientContainerMapper {
         patientContainerDTO.setEmergencyPhone(entity.getEmergencyPhone());
         patientContainerDTO.setEmergencyRelation(entity.getEmergencyRelation());
         patientContainerDTO.setEmploymentStatus(entity.getEmploymentStatus() != null ? entity.getEmploymentStatus().label : "");
+        patientContainerDTO.setEmploymentCompany(entity.getEmploymentCompany());
         patientContainerDTO.setInsuranceWorkerType(entity.getInsuranceWorkerType());
         patientContainerDTO.setPatientSourceType(entity.getPatientSourceType());
         patientContainerDTO.setHasPhysicalTherapy(entity.getPhysicalTherapy());
