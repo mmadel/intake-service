@@ -1,7 +1,6 @@
 
 package com.cob.salesforce.models;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +10,7 @@ import java.util.List;
 @Getter
 public class MedicalHistoryInformationDTO {
     private Double height;
+    private String heightUnit;
     private Double weight;
     private String evaluationSubmission;
     private String medicationPrescription;

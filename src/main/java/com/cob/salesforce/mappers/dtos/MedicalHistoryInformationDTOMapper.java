@@ -11,6 +11,7 @@ public class MedicalHistoryInformationDTOMapper {
     public static MedicalHistoryInformationDTO map(PatientMedicalHistory entity) {
         MedicalHistoryInformationDTO dto = new MedicalHistoryInformationDTO();
         dto.setHeight(entity.getHeight());
+        dto.setHeightUnit(entity.getHeightUnit());
         dto.setWeight(entity.getWeight());
         dto.setEvaluationSubmission(entity.getMedicationPrescription());
         dto.setMedicationPrescription(entity.getMedicationPrescription());
