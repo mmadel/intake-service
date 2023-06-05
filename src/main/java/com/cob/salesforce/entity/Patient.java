@@ -66,6 +66,8 @@ public class Patient {
     @Enumerated(EnumType.STRING)
     @Column(name = "employment_status")
     private EmploymentStatus employmentStatus;
+    @Column(name = "employment_company")
+    private String employmentCompany;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "patient_source_type")
