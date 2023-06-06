@@ -2,6 +2,7 @@ package com.cob.salesforce.enums;
 
 public enum EmploymentStatus {
     Employed("Employed"),
+    Student("Student"),
     Retired("Retired"),
     Other("Other");
 

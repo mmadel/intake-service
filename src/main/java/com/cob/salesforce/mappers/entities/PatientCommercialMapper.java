@@ -18,9 +18,9 @@ public class PatientCommercialMapper implements PatientDependencyMapper {
     @Override
     public PatientDependencyEntity map(PatientDTO dto) {
         InsuranceWorkerCommercial toBeSaved = mapper.map(dto, InsuranceWorkerCommercial.class);
-        if (dto.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial().getIsSecondaryInsurance())
+        if (dto.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial().getIsSecondaryInsurance() != null)
             toBeSaved.setSecondaryInsurance(mapper.map(dto, SecondaryInsurance.class));
-        if (dto.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial().getIsMedicareCoverage())
+        if (dto.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial().getIsMedicareCoverage() != null)
             toBeSaved.setMedicareCoverage(mapper.map(dto, MedicareCoverage.class));
         switch (toBeSaved.getRelationship()) {
             case Spouse:
