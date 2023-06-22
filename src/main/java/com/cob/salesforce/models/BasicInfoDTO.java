@@ -53,22 +53,22 @@ public class BasicInfoDTO {
     }
 
     public Gender getGenderEnum() {
-        return Gender.valueOf(gender);
+        return gender =="" ? null :Gender.valueOf(gender);
     }
 
     public PhoneType getPhoneTypeEnum() {
-        return PhoneType.valueOf(phoneType);
+        return phoneType == "" ? null : PhoneType.valueOf(phoneType);
     }
 
     public IDType getIDTypeEnum() {
-        return IDType.valueOf(idType);
+        return idType == "" ? null : IDType.valueOf(idType);
     }
 
     public EmploymentStatus getEmploymentStatusEnum() {
-        return EmploymentStatus.valueOf(employmentStatus);
+        return employmentStatus == "" ? null : EmploymentStatus.valueOf(employmentStatus);
     }
 
     public MaritalStatus getMaritalStatusEnum() {
-        return MaritalStatus.valueOf(maritalStatus);
+        return maritalStatus == "" ? null : MaritalStatus.valueOf(maritalStatus);
     }
 }
