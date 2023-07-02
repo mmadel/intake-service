@@ -54,6 +54,7 @@ public class SecurityConfiguration {
                         .antMatchers("/user/find/loggedIn/**").permitAll()
                         .antMatchers("/requires/fields/**").permitAll()
                         .antMatchers("/questionnaire/**").permitAll()
+                        .antMatchers(HttpMethod.POST,"/patient/upload").permitAll()
                         .antMatchers("/agreement").permitAll()
                         .antMatchers(HttpMethod.POST,"/patient/create").permitAll()
                         .antMatchers("/find/patient**").hasAnyAuthority(SCOPE + UserRole.USER.label,SCOPE + UserRole.ADMIN.label)
