@@ -18,7 +18,7 @@ public class InsuranceCompanyController {
     @Autowired
     InsuranceCompanyFinderService insuranceCompanyFinderService;
 
-    @PostMapping
+    @PostMapping(path = "/create")
     @ResponseBody
     public ResponseEntity create(@RequestBody InsuranceCompanyModel model) {
         return new ResponseEntity(insuranceCompanyCreatorService.create(model), HttpStatus.OK);
