@@ -48,6 +48,7 @@ public class UserFinderServiceImpl implements UserFinderService {
         UserModel model = new UserModel();
         model.setId(entity.getId());
         model.setName(entity.getName());
+        model.setPassword(entity.getPassword());
         model.setAddress(entity.getAddress());
         model.setUserRole(entity.getUserRole());
         model.setClinics(entity.getClinics().stream().map(clinicEntity -> mapper.map(clinicEntity, ClinicModel.class)).collect(Collectors.toList()));
