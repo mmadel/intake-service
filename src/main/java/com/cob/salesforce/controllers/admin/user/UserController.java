@@ -1,5 +1,6 @@
 package com.cob.salesforce.controllers.admin.user;
 
+import com.cob.salesforce.exception.business.UserException;
 import com.cob.salesforce.models.admin.security.CurrentLoggInUser;
 import com.cob.salesforce.models.admin.user.UserModel;
 import com.cob.salesforce.services.admin.user.UserCreatorService;
@@ -49,6 +50,17 @@ public class UserController {
     @ResponseBody
     public ResponseEntity getUserClinics(@PathVariable Long userId) {
         return new ResponseEntity(finder.findByUserId(userId), HttpStatus.OK);
+    }
+    @ResponseBody
+    @PostMapping("/update")
+    public ResponseEntity update(@RequestBody UserModel model) throws UserException {
+        return new ResponseEntity(creator.update(model), HttpStatus.OK);
+    }
+    @ResponseBody
+    @DeleteMapping("/delete/userId/{userId}")
+    public ResponseEntity delete(@PathVariable long userId) throws UserException {
+        creator.delete(userId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }
