@@ -34,10 +34,10 @@ public class PatientMapper {
                     mapper.map(src -> src.getBasicInfo().getFullName(), Patient::setName);
                     mapper.map(src -> src.getBasicInfo().getFullName(), Patient::setName);
                     mapper.map(src -> src.getBasicInfo().getGenderEnum(), Patient::setGender);
-                    mapper.map(src -> src.getBasicInfo().getIDTypeEnum(), Patient::setIdType);
-                    mapper.map(src -> src.getBasicInfo().getPatientId(), Patient::setPatientId);
-                    mapper.map(src -> src.getBasicInfo().getIdEffectiveFrom(), Patient::setIdEffectiveFrom);
-                    mapper.map(src -> src.getBasicInfo().getIdEffectiveTo(), Patient::setIdEffectiveTo);
+//                    mapper.map(src -> src.getBasicInfo().getIDTypeEnum(), Patient::setIdType);
+//                    mapper.map(src -> src.getBasicInfo().getPatientId(), Patient::setPatientId);
+//                    mapper.map(src -> src.getBasicInfo().getIdEffectiveFrom(), Patient::setIdEffectiveFrom);
+//                    mapper.map(src -> src.getBasicInfo().getIdEffectiveTo(), Patient::setIdEffectiveTo);
                     mapper.map(src -> src.getBasicInfo().getMaritalStatusEnum(), Patient::setMaritalStatus);
                     mapper.map(src -> src.getBasicInfo().getPhoneType(), Patient::setPhoneType);
                     mapper.map(src -> src.getBasicInfo().getPhoneNumber(), Patient::setPhone);

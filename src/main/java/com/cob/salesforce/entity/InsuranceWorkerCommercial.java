@@ -18,10 +18,10 @@ public class InsuranceWorkerCommercial extends PatientDependencyEntity{
     @Column(name = "insurance_company_Id")
     private Long insuranceCompanyId;
     @Column(name = "member_id")
-    private Long memberId;
+    private String memberId;
 
     @Column(name = "policyId")
-    private Long policyId;
+    private String policyId;
 
     @Enumerated(EnumType.STRING)
     @Column(name="relationship")

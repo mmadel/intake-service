@@ -20,12 +20,12 @@ public class PatientBasicInfoDTOMapper {
         dto.setEmploymentStatus(entity.getEmploymentStatus().label);
         dto.setEmploymentCompany(entity.getEmploymentCompany());
         dto.setGender(entity.getGender().label);
-        dto.setIdType(entity.getIdType().label);
-        dto.setPatientId(entity.getPatientId());
+//        dto.setIdType(entity.getIdType().label);
+//        dto.setPatientId(entity.getPatientId());
         dto.setPhoneType(entity.getPhoneType().label);
         dto.setPhoneNumber(entity.getPhone());
-        dto.setIdEffectiveTo(entity.getIdEffectiveTo());
-        dto.setIdEffectiveFrom(entity.getIdEffectiveFrom());
+//        dto.setIdEffectiveTo(entity.getIdEffectiveTo());
+//        dto.setIdEffectiveFrom(entity.getIdEffectiveFrom());
         dto.setMaritalStatus(entity.getMaritalStatus().label);
         return dto;
 

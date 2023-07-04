@@ -38,15 +38,15 @@ public class Patient {
     @Column(name="phone")
     private String phone;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "id_type")
-    private IDType idType;
-    @Column(name = "patient_id")
-    private String patientId;
-    @Column(name = "id_effective_from")
-    private Long idEffectiveFrom;
-    @Column(name = "id_effective_to")
-    private Long idEffectiveTo;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "id_type")
+//    private IDType idType;
+//    @Column(name = "patient_id")
+//    private String patientId;
+//    @Column(name = "id_effective_from")
+//    private Long idEffectiveFrom;
+//    @Column(name = "id_effective_to")
+//    private Long idEffectiveTo;
     @Column(name="email")
     private String email;
 

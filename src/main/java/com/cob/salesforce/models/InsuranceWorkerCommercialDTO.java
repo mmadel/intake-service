@@ -1,6 +1,7 @@
 
 package com.cob.salesforce.models;
 
+import com.cob.salesforce.enums.PhoneType;
 import com.cob.salesforce.enums.Relationship;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,9 +12,9 @@ import lombok.Setter;
 public class InsuranceWorkerCommercialDTO {
 
     private Long insuranceCompanyId;
-    private Long memberId;
+    private String memberId;
 
-    private Long policyId;
+    private String policyId;
 
     private String relationship;
 
@@ -28,7 +29,7 @@ public class InsuranceWorkerCommercialDTO {
     private PatientRelationshipDTO patientRelationshipDTO;
 
     public Relationship getRelationshipEnum() {
-        return Relationship.valueOf(relationship);
+        return relationship == "" ? null : Relationship.valueOf(relationship);
     }
 
 }
