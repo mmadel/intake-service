@@ -13,4 +13,7 @@ public interface UserRepository extends PagingAndSortingRepository<UserEntity, L
     Optional<UserEntity> getByName(String name);
     @Query("Select u.clinics from UserEntity u where u.id = :userId" )
     List<ClinicEntity> findUserClinics(@Param("userId") Long userId);
+
+    @Query("Select u from UserEntity u where :clinic member  u.clinics" )
+    List<UserEntity> findByClinic(@Param("clinic") ClinicEntity clinic);
 }
