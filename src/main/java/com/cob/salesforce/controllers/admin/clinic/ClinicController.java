@@ -1,5 +1,6 @@
 package com.cob.salesforce.controllers.admin.clinic;
 
+import com.cob.salesforce.exception.business.ClinicException;
 import com.cob.salesforce.models.admin.ClinicModel;
 import com.cob.salesforce.services.admin.clinic.ClinicCreatorService;
 import com.cob.salesforce.services.admin.clinic.ClinicFinderService;
@@ -34,5 +35,17 @@ public class ClinicController {
     @ResponseBody
     public ResponseEntity getById(@PathVariable Long clinicId) {
         return new ResponseEntity(clinicFinderService.getById(clinicId), HttpStatus.OK);
+    }
+    @ResponseBody
+    @PostMapping("/update")
+    public ResponseEntity update(@RequestBody ClinicModel model) {
+        return new ResponseEntity(clinicCreatorService.create(model), HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @DeleteMapping("/delete/clinicId/{clinicId}")
+    public ResponseEntity delete(@PathVariable long clinicId) throws ClinicException {
+        clinicCreatorService.delete(clinicId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
