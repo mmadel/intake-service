@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Setter
@@ -23,9 +25,8 @@ public class InsuranceCompanyEntity {
     @Column
     private Long createdAt;
 
-    @ManyToOne
-    @JoinColumn(name="clinic_id", nullable=false)
-    private ClinicEntity clinic;
+    @OneToMany()
+    private List<ClinicEntity> clinics = new ArrayList<>();
     @PrePersist
     private void beforeSaving() {
         createdAt = new Date().getTime();
