@@ -3,6 +3,7 @@ package com.cob.salesforce.services;
 import com.cob.salesforce.dependencies.creator.IPatientDependencyCreator;
 import com.cob.salesforce.dependencies.creator.PatientCreator;
 import com.cob.salesforce.dependencies.creator.PatientDependencyCreator;
+import com.cob.salesforce.dependencies.creator.PatientGrantorCreatorService;
 import com.cob.salesforce.dependencies.creator.remover.PatientRemover;
 import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.exception.business.PatientException;
@@ -27,6 +28,8 @@ public class PatientCreatorServiceImpl implements PatientCreatorService {
     @Autowired
     PatientDependencyCreator patientDependencyCreator;
 
+    @Autowired
+    PatientGrantorCreatorService patientGrantorCreatorService;
 
     @Override
     public Long create(PatientDTO model) throws PatientException {
@@ -38,6 +41,9 @@ public class PatientCreatorServiceImpl implements PatientCreatorService {
         Patient finalSavedEntity = savedEntity;
         dependenciesToBeCreated
                 .forEach(creator -> creator.create(model, finalSavedEntity));
+
+        if (model.getPatientGrantor() != null)
+            patientGrantorCreatorService.create(savedEntity, model.getPatientGrantor());
         creator.update(savedEntity);
         return savedEntity.getId();
     }

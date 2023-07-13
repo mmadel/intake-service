@@ -33,5 +33,5 @@ public class PatientDTO {
 
     Long createdAt;
 
-
+    private PatientGrantorModel patientGrantor;
 }
