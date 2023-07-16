@@ -29,7 +29,7 @@ public class InsuranceWorkerCompNoFaultDTO {
 
     private String insuranceName;
 
-    private BigInteger claimNumber;
+    private String claimNumber;
 
     private String adjusterInfoName;
 
