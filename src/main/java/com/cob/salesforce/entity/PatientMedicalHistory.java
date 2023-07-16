@@ -20,6 +20,9 @@ public class PatientMedicalHistory extends PatientDependencyEntity{
     private String heightUnit;
     @Column(name = "weight")
     private Double weight;
+
+    @Column(name = "weight_unit")
+    private String weightUnit;
     @Column(name = "evaluation_submission", length = 1000)
     private String evaluationSubmission;
 

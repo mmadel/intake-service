@@ -28,6 +28,7 @@ public class PatientMedicalHistoryMapper implements PatientDependencyMapper {
                     mapper.map(src -> src.getMedicalHistoryInformation().getHeight(), PatientMedicalHistory::setHeight);
                     mapper.map(src -> src.getMedicalHistoryInformation().getHeightUnit(), PatientMedicalHistory::setHeightUnit);
                     mapper.map(src -> src.getMedicalHistoryInformation().getWeight(), PatientMedicalHistory::setWeight);
+                    mapper.map(src -> src.getMedicalHistoryInformation().getWeightUnit(), PatientMedicalHistory::setWeightUnit);
                     mapper.map(src -> src.getMedicalHistoryInformation().getEvaluationSubmission(), PatientMedicalHistory::setEvaluationSubmission);
                     mapper.map(src -> src.getMedicalHistoryInformation().getMedicationPrescription(), PatientMedicalHistory::setMedicationPrescription);
                     mapper.map(src -> src.getMedicalHistoryInformation().getScanningTest(), PatientMedicalHistory::setScanningTest);
