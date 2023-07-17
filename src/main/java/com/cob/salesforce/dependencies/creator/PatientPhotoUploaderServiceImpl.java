@@ -1,6 +1,8 @@
 package com.cob.salesforce.dependencies.creator;
 
+import com.cob.salesforce.entity.PatientGrantor;
 import com.cob.salesforce.entity.PatientPhotoImage;
+import com.cob.salesforce.repositories.PatientGrantorRepository;
 import com.cob.salesforce.repositories.PatientPhotoImageRepository;
 import com.cob.salesforce.repositories.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +21,39 @@ public class PatientPhotoUploaderServiceImpl implements PatientPhotoUploaderServ
     @Autowired
     PatientRepository patientRepository;
 
+    @Autowired
+    PatientGrantorRepository patientGrantorRepository;
+
     @Override
     public void upload(MultipartFile[] files, Long patientId) {
+
+
         Arrays.asList(files).stream().forEach(multipartFile -> {
             try {
-                repository.save(PatientPhotoImage.builder()
-                        .name(multipartFile.getOriginalFilename())
-                        .type(multipartFile.getContentType())
-                        .image(multipartFile.getBytes())
-                        .patient(patientRepository.findById(patientId).get())
-                        .build());
+
+                if (multipartFile.getOriginalFilename().contains("patient")) {
+                    repository.save(PatientPhotoImage.builder()
+                            .name(multipartFile.getOriginalFilename())
+                            .type(multipartFile.getContentType())
+                            .image(multipartFile.getBytes())
+                            .patient(patientRepository.findById(patientId).get())
+                            .build());
+                }
+                if (multipartFile.getOriginalFilename().contains("guarantor")) {
+                    PatientGrantor toBeUpdated = patientGrantorRepository.findByPatient_Id(patientId);
+                    if (multipartFile.getOriginalFilename().contains("Idfront")){
+                        toBeUpdated.setIdFront(multipartFile.getBytes());
+                        patientGrantorRepository.save(toBeUpdated);
+                    }
+                    if (multipartFile.getOriginalFilename().contains("Idback")){
+                        toBeUpdated.setIdBack(multipartFile.getBytes());
+                        patientGrantorRepository.save(toBeUpdated);
+                    }
+
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
-
     }
 }

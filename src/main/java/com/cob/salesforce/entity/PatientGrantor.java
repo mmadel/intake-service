@@ -27,10 +27,10 @@ public class PatientGrantor {
     @Column(name = "relation")
     private EmergencyRelation relation;
 
-    @Column(name = "id_front", unique = false, nullable = false, length = 100000)
+    @Column(name = "id_front", length = 100000)
     private byte[] idFront;
 
-    @Column(name = "id_back", unique = false, nullable = false, length = 100000)
+    @Column(name = "id_back", length = 100000)
     private byte[] idBack;
 
     @OneToOne(cascade = CascadeType.PERSIST)

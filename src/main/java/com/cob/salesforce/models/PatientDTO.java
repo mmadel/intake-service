@@ -1,14 +1,11 @@
 
 package com.cob.salesforce.models;
 
-import com.cob.salesforce.entity.Agreement;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -33,5 +30,4 @@ public class PatientDTO {
 
     Long createdAt;
 
-    private PatientGrantorModel patientGrantor;
 }

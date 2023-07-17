@@ -9,7 +9,6 @@ import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.exception.business.PatientException;
 import com.cob.salesforce.models.PatientDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -42,8 +41,8 @@ public class PatientCreatorServiceImpl implements PatientCreatorService {
         dependenciesToBeCreated
                 .forEach(creator -> creator.create(model, finalSavedEntity));
 
-        if (model.getPatientGrantor() != null)
-            patientGrantorCreatorService.create(savedEntity, model.getPatientGrantor());
+        if (model.getBasicInfo().getPateintGrantor() != null)
+            patientGrantorCreatorService.create(savedEntity, model.getBasicInfo().getPateintGrantor());
         creator.update(savedEntity);
         return savedEntity.getId();
     }

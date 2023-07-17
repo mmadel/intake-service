@@ -2,7 +2,6 @@
 package com.cob.salesforce.models;
 
 import com.cob.salesforce.enums.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -46,6 +45,9 @@ public class BasicInfoDTO {
     private String phoneNumber;
 
     private String phoneType;
+
+    private PatientGrantorModel pateintGrantor;
+
 
     public String getFullName() {
         return getFirstName() + ',' + getMiddleName()
