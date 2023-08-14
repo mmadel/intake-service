@@ -15,19 +15,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
-    @Autowired
-    UserCreatorService creator;
+
 
     @Autowired
     UserFinderService finder;
 
     @Autowired
     ModelMapper mapper;
-    @PostMapping
-    @ResponseBody
-    public ResponseEntity create(@RequestBody UserModel model) {
-        return new ResponseEntity(creator.create(model), HttpStatus.OK);
-    }
+
 
     @GetMapping(path = "/find")
     @ResponseBody
@@ -51,16 +46,6 @@ public class UserController {
     public ResponseEntity getUserClinics(@PathVariable Long userId) {
         return new ResponseEntity(finder.findByUserId(userId), HttpStatus.OK);
     }
-    @ResponseBody
-    @PostMapping("/update")
-    public ResponseEntity update(@RequestBody UserModel model) throws UserException {
-        return new ResponseEntity(creator.update(model), HttpStatus.OK);
-    }
-    @ResponseBody
-    @DeleteMapping("/delete/userId/{userId}")
-    public ResponseEntity delete(@PathVariable long userId) throws UserException {
-        creator.delete(userId);
-        return new ResponseEntity(HttpStatus.OK);
-    }
+
 
 }
