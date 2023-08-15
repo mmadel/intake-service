@@ -1,6 +1,6 @@
 package com.cob.salesforce.controllers.security;
 
-import com.cob.salesforce.services.security.KeyCloakUsersService;
+import com.cob.salesforce.services.security.KeyCloakUsersFinderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,15 +9,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
 @RestController
 @RequestMapping(value = "/kc/users")
 public class KeyCloakUserController {
     @Autowired
-    KeyCloakUsersService keyCloakUsersService;
+    KeyCloakUsersFinderService keyCloakUsersService;
 
     @GetMapping(path = "/find")
     @ResponseBody
-    public ResponseEntity getAll() {
+    public ResponseEntity getAll() throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         return new ResponseEntity(keyCloakUsersService.getAllUsers(), HttpStatus.OK);
     }
 }
