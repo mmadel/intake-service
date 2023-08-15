@@ -34,7 +34,7 @@ public class KeyCloakUsersCreatorService {
     @Autowired
     Encryption encryption;
 
-    public String create(KeyCloakUser keyCloakUser) throws NoSuchPaddingException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public UserRepresentation create(KeyCloakUser keyCloakUser) throws NoSuchPaddingException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         UserRepresentation user = new UserRepresentation();
         user.setEnabled(true);
         user.setUsername(keyCloakUser.getUsername());
@@ -55,6 +55,6 @@ public class KeyCloakUsersCreatorService {
         RoleRepresentation administratorClientRole = realmResource.clients().get(app1Client.getId()) //
                 .roles().get("administrator").toRepresentation();
         userResource.roles().clientLevel(app1Client.getId()).add(Arrays.asList(administratorClientRole));
-        return userId;
+        return userResource.toRepresentation();
     }
 }
