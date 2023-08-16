@@ -23,7 +23,7 @@ public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter 
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().cors().disable()
                 .authorizeRequests()
-                .antMatchers("/authentication/tokens","/user/**").permitAll()
+                .antMatchers("/authentication/tokens","/user/**","/dashboard/**").permitAll()
                 .anyRequest()
                 .authenticated();
 

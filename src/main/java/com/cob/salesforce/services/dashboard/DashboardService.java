@@ -4,5 +4,5 @@ import com.cob.salesforce.models.dashboard.DashboardDataContainer;
 
 public interface DashboardService  {
 
-     DashboardDataContainer getData(Long clinicId , Long userId,Long startDate , Long endDate);
+     DashboardDataContainer getData(Long clinicId , String userId,Long startDate , Long endDate);
 }
