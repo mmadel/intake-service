@@ -1,6 +1,7 @@
 package com.cob.salesforce.services.admin.clinic;
 
 import com.cob.salesforce.entity.admin.ClinicEntity;
+import com.cob.salesforce.entity.admin.UserClinicEntity;
 import com.cob.salesforce.exception.business.ClinicException;
 import com.cob.salesforce.models.admin.ClinicModel;
 import com.cob.salesforce.repositories.admin.clinic.ClinicRepository;
@@ -28,15 +29,5 @@ public class ClinicCreatorServiceImpl implements ClinicCreatorService {
         ClinicEntity createdEntity = repository.save(mapper.map(model, ClinicEntity.class));
         model.setId(createdEntity.getId());
         return model;
-    }
-
-    @Override
-    public void delete(long id) throws ClinicException {
-//        ClinicEntity tobeDeleted = repository.findById(id).get();
-//        List<UserEntity> users = userRepository.findByClinic(tobeDeleted);
-//        if(!users.isEmpty())
-//            throw new ClinicException(HttpStatus.INTERNAL_SERVER_ERROR, ClinicException.CLINIC_ASSIGN_TO_USER,
-//                    new Object[]{id});
-//        repository.delete(tobeDeleted);
     }
 }

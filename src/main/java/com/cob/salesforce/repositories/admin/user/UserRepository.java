@@ -11,6 +11,5 @@ import java.util.Optional;
 
 public interface UserRepository extends PagingAndSortingRepository<UserClinicEntity, Long> {
 
-    Optional<UserClinicEntity> findByClinicId(Long clinicId);
     Optional<List<UserClinicEntity>> findByUserId(String userId);
 }

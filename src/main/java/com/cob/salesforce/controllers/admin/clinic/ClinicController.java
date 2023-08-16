@@ -41,11 +41,4 @@ public class ClinicController {
     public ResponseEntity update(@RequestBody ClinicModel model) {
         return new ResponseEntity(clinicCreatorService.create(model), HttpStatus.OK);
     }
-
-    @ResponseBody
-    @DeleteMapping("/delete/clinicId/{clinicId}")
-    public ResponseEntity delete(@PathVariable long clinicId) throws ClinicException {
-        clinicCreatorService.delete(clinicId);
-        return new ResponseEntity(HttpStatus.OK);
-    }
 }
