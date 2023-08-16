@@ -1,6 +1,7 @@
 package com.cob.salesforce.services.admin.user;
 
 import com.cob.salesforce.entity.admin.UserClinicEntity;
+import com.cob.salesforce.models.admin.ClinicModel;
 import com.cob.salesforce.models.admin.user.UserModel;
 import com.cob.salesforce.models.security.KeyCloakUser;
 import com.cob.salesforce.repositories.admin.user.UserRepository;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -33,7 +35,7 @@ public class UserCreatorServiceImpl implements UserCreatorService {
     @Override
     public String create(UserModel userModel) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         String createdUserId = createKeyCloakUser(userModel);
-        assignUserToClinics(createdUserId, userModel.getClinics());
+        assignUserToClinics(createdUserId, userModel.getClinics().stream().map(ClinicModel::getId).collect(Collectors.toList()));
         return createdUserId;
     }
 

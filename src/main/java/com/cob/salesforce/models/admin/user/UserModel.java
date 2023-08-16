@@ -1,6 +1,7 @@
 package com.cob.salesforce.models.admin.user;
 
 import com.cob.salesforce.enums.admin.UserRole;
+import com.cob.salesforce.models.admin.ClinicModel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +19,7 @@ public class UserModel {
     private String address;
 
     private String userRole;
-    private List<Long> clinics;
+    private List<ClinicModel> clinics;
 
     private Long createdAt;
 }

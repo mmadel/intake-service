@@ -46,7 +46,11 @@ public class UserFinderServiceImpl implements UserFinderService {
             userRepository.findByUserId(userRepresentation.getId()).get().forEach(userClinicEntity -> {
                 clinicIds.add(userClinicEntity.getClinicId());
             });
-            userModel.setClinics(clinicIds);
+            List<ClinicModel> clinicModels = new ArrayList<>();
+            clinicRepository.findAllById(clinicIds).forEach(clinicEntity -> {
+                clinicModels.add(mapper.map(clinicEntity , ClinicModel.class));
+            });
+            userModel.setClinics(clinicModels);
             userModels.add(userModel);
         });
         return userModels;
