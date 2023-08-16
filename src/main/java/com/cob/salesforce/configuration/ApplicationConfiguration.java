@@ -5,6 +5,7 @@ import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -55,7 +56,7 @@ public class ApplicationConfiguration {
         return new KeycloakSpringBootConfigResolver();
     }
 
-    @Bean
+    @Bean()
     Keycloak keycloak() {
         return KeycloakBuilder.builder()
                 .serverUrl(keycloakBaseUrl)
