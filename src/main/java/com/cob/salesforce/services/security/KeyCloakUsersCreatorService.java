@@ -22,7 +22,9 @@ import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class KeyCloakUsersCreatorService {
@@ -52,9 +54,13 @@ public class KeyCloakUsersCreatorService {
         String userId = CreatedResponseUtil.getCreatedId(response);
         UserResource userResource = usersResource.get(userId);
         ClientRepresentation app1Client = realmResource.clients().findByClientId("intake-ui").get(0);
-        RoleRepresentation administratorClientRole = realmResource.clients().get(app1Client.getId()) //
-                .roles().get("administrator").toRepresentation();
-        userResource.roles().clientLevel(app1Client.getId()).add(Arrays.asList(administratorClientRole));
+        List<RoleRepresentation> roles = new ArrayList<>();
+        keyCloakUser.getRoles().forEach(role -> {
+            RoleRepresentation clientRole = realmResource.clients().get(app1Client.getId())
+                    .roles().get(role).toRepresentation();
+            roles.add(clientRole);
+        });
+        userResource.roles().clientLevel(app1Client.getId()).add(roles);
         return userResource.toRepresentation();
     }
 }

@@ -1,12 +1,9 @@
 package com.cob.salesforce.models.admin.user;
 
-import com.cob.salesforce.entity.admin.ClinicEntity;
 import com.cob.salesforce.enums.admin.UserRole;
-import com.cob.salesforce.models.admin.ClinicModel;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.util.List;
 
 @Setter
@@ -19,9 +16,8 @@ public class UserModel {
 
     private String address;
 
+    private String userRole;
+    private List<Long> clinics;
 
-    private UserRole userRole;
-    private List<ClinicModel> clinics;
-    @Column
     private Long createdAt;
 }

@@ -81,20 +81,20 @@ public class DashboardServiceImpl implements DashboardService {
             totalPatients = patientRepository.getByCreatedDateRange(startDate, endDate).size();
         log.debug("DashboardService-Get Clinics Data:totalPatients {}", totalPatients);
         double finalTotalPatients = totalPatients;
-        userRepository.findUserClinics(userId).stream().forEach(clinicEntity -> {
-            double numberOfPatient = 0;
-            if (startDate == 0 && endDate == 0)
-                numberOfPatient = patientRepository.findByClinicId(null, clinicEntity.getId()).getContent().size();
-            else
-                numberOfPatient = patientRepository.findInDateRange(startDate, endDate, clinicEntity.getId()).size();
-            log.debug("DashboardService-Get Clinics Data:Clinic  {} , numberOfPatient {} ", clinicEntity.getName(), numberOfPatient);
-            List<Double> numberPercentage = new ArrayList<>();
-            numberPercentage.add(Double.valueOf(numberOfPatient));
-            double clinicPercentage = calculatePercentage(finalTotalPatients, numberOfPatient);
-            log.debug("DashboardService-Get Clinics Data:Clinic  {} , Percentage {} ", clinicEntity.getName(), clinicPercentage);
-            numberPercentage.add(clinicPercentage);
-            clinicData.put(clinicEntity.getName(), numberPercentage);
-        });
+//        userRepository.findUserClinics(userId).stream().forEach(clinicEntity -> {
+//            double numberOfPatient = 0;
+//            if (startDate == 0 && endDate == 0)
+//                numberOfPatient = patientRepository.findByClinicId(null, clinicEntity.getId()).getContent().size();
+//            else
+//                numberOfPatient = patientRepository.findInDateRange(startDate, endDate, clinicEntity.getId()).size();
+//            log.debug("DashboardService-Get Clinics Data:Clinic  {} , numberOfPatient {} ", clinicEntity.getName(), numberOfPatient);
+//            List<Double> numberPercentage = new ArrayList<>();
+//            numberPercentage.add(Double.valueOf(numberOfPatient));
+//            double clinicPercentage = calculatePercentage(finalTotalPatients, numberOfPatient);
+//            log.debug("DashboardService-Get Clinics Data:Clinic  {} , Percentage {} ", clinicEntity.getName(), clinicPercentage);
+//            numberPercentage.add(clinicPercentage);
+//            clinicData.put(clinicEntity.getName(), numberPercentage);
+//        });
         return clinicData;
     }
 
