@@ -56,7 +56,7 @@ public class UserController {
 
     @GetMapping(path = "/find/clinics/{userId}")
     @ResponseBody
-    public ResponseEntity getUserClinics(@PathVariable Long userId) {
+    public ResponseEntity getUserClinics(@PathVariable String userId) {
         return new ResponseEntity(finder.findByUserId(userId), HttpStatus.OK);
     }
 

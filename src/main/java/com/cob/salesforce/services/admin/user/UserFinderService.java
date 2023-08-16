@@ -9,6 +9,6 @@ public interface UserFinderService {
     List<UserModel> getAll();
     UserModel getById(Long Id);
 
-    List<ClinicModel> findByUserId(Long userId);
+    List<ClinicModel> findByUserId(String userId);
 
 }
