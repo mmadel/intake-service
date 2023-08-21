@@ -2,11 +2,9 @@ package com.cob.salesforce.services.security;
 
 import com.cob.salesforce.utils.Encryption;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +15,9 @@ import java.util.stream.Collectors;
 public class KeyCloakUsersFinderService {
     @Autowired
     Keycloak keycloakService;
-    @Value("${keycloak.realm}")
+    @Value("${kc.realm}")
     private String realm;
 
-    @Value("${app.keycloak.client-ui-name}")
-    private String clientUI;
 
     @Autowired
     Encryption encryption;
@@ -53,7 +49,7 @@ public class KeyCloakUsersFinderService {
     public String getUSerRole(String userName) {
         List result = keycloakService.realm(realm).users()
                 .get(getUserId(userName))
-                .roles().clientLevel(getClientId(clientUI)).listAll();
+                .roles().clientLevel(getClientId("intake-ui")).listAll();
         return result.size() > 0 ? result.get(0).toString() : null;
     }
 }

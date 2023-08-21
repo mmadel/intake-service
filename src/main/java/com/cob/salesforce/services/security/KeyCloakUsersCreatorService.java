@@ -31,7 +31,7 @@ public class KeyCloakUsersCreatorService {
 
     @Autowired
     Keycloak keycloakService;
-    @Value("${keycloak.realm}")
+    @Value("${kc.realm}")
     private String realm;
     @Autowired
     Encryption encryption;

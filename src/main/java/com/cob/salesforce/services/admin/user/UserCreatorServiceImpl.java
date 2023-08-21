@@ -33,10 +33,11 @@ public class UserCreatorServiceImpl implements UserCreatorService {
     KeyCloakUsersCreatorService keyCloakUsersCreatorService;
 
     @Override
-    public String create(UserModel userModel) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public UserModel create(UserModel userModel) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         String createdUserId = createKeyCloakUser(userModel);
         assignUserToClinics(createdUserId, userModel.getClinics().stream().map(ClinicModel::getId).collect(Collectors.toList()));
-        return createdUserId;
+        userModel.setUuid(createdUserId);
+        return userModel;
     }
 
     private String createKeyCloakUser(UserModel userModel) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {

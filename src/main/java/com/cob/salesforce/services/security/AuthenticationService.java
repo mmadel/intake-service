@@ -15,14 +15,13 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class AuthenticationService {
-    @Value("${app.keycloak.token.url}")
+    @Value("${kc.auth.url}")
     private String tokenUrl;
-    @Value("${app.keycloak.client-secret}")
-    private String clientSecret;
-    @Value("${app.keycloak.grant-type}")
-    private String grantType;
-    @Value("${app.keycloak.client-id}")
+    @Value("${kc.client.id}")
     private String clientId;
+    @Value("${kc.client.secret}")
+    private String clientSecret;
+
     @Autowired
     RestTemplate restTemplate;
     public Tokens getTokens(Credentials credentials){
@@ -33,7 +32,7 @@ public class AuthenticationService {
         map.add("password", credentials.getPassword());
         map.add("client_id", clientId);
         map.add("client_secret", clientSecret);
-        map.add("grant_type", grantType);
+        map.add("grant_type", "password");
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
         ResponseEntity<Tokens> response = restTemplate.postForEntity(tokenUrl, httpEntity, Tokens.class);
 
