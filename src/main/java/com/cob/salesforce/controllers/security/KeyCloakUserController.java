@@ -1,6 +1,6 @@
 package com.cob.salesforce.controllers.security;
 
-import com.cob.salesforce.models.admin.ClinicModel;
+import com.cob.salesforce.exception.business.UserException;
 import com.cob.salesforce.models.security.KeyCloakUser;
 import com.cob.salesforce.services.security.KeyCloakUsersCreatorService;
 import com.cob.salesforce.services.security.KeyCloakUsersFinderService;
@@ -32,7 +32,7 @@ public class KeyCloakUserController {
 
     @PostMapping(path = "/create")
     @ResponseBody
-    public ResponseEntity create(@RequestBody KeyCloakUser keyCloakUser) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public ResponseEntity create(@RequestBody KeyCloakUser keyCloakUser) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, UserException {
         return new ResponseEntity(keyCloakUsersCreatorService.create(keyCloakUser), HttpStatus.OK);
     }
 

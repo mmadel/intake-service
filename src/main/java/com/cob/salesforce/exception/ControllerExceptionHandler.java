@@ -1,31 +1,39 @@
 package com.cob.salesforce.exception;
 
 import com.cob.salesforce.exception.business.IntakeException;
-import com.cob.salesforce.exception.model.ErrorModel;
+import com.cob.salesforce.exception.response.ControllerErrorResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.ws.rs.WebApplicationException;
+import java.util.Locale;
+
 @ControllerAdvice
+@Slf4j
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
+    @Autowired
+    ResourceBundleMessageSource messageSource;
 
-    @ExceptionHandler(IntakeException.class)
-    protected ResponseEntity<Object> handleClinicalException(
-            IntakeException ex) {
-        return buildResponseEntity(ex);
+    @ExceptionHandler(value = {IntakeException.class})
+    public ResponseEntity  handleFeedbackExceptionException(IntakeException ex, WebRequest request) {
+        String errorMessage = messageSource.getMessage(ex.getCode(), ex.getParameters(), Locale.ENGLISH);
+        ControllerErrorResponse controllerErrorResponse = new ControllerErrorResponse(errorMessage, ex.getStatus() == null ? HttpStatus.INTERNAL_SERVER_ERROR : ex.getStatus());
+        log.error(controllerErrorResponse.getMessage());
+        return new ResponseEntity(controllerErrorResponse, ex.getStatus() == null ? HttpStatus.INTERNAL_SERVER_ERROR : ex.getStatus());
     }
 
-    private ResponseEntity<Object> buildResponseEntity(IntakeException exception) {
-        ErrorModel errorModel = new ErrorModel(exception);
-        logger.error(errorModel.getMessage());
-        errorModel.getException().printStackTrace();
-        return new ResponseEntity<>(errorModel, errorModel.getStatus());
-    }
-
-    private ResponseEntity<Object> buildSecurityResponseEntity(AccessDeniedException exception) {
-        ErrorModel errorModel = new ErrorModel(exception);
-        return new ResponseEntity<>(errorModel, errorModel.getStatus());
+    @ExceptionHandler(value = {WebApplicationException.class})
+    public ResponseEntity  handleWebApplicationException(IntakeException ex, WebRequest request) {
+        String errorMessage = messageSource.getMessage(ex.getCode(), ex.getParameters(), Locale.ENGLISH);
+        ControllerErrorResponse controllerErrorResponse = new ControllerErrorResponse(errorMessage, ex.getStatus() == null ? HttpStatus.INTERNAL_SERVER_ERROR : ex.getStatus());
+        log.error(controllerErrorResponse.getMessage());
+        return new ResponseEntity(controllerErrorResponse, ex.getStatus() == null ? HttpStatus.INTERNAL_SERVER_ERROR : ex.getStatus());
     }
 }

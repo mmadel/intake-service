@@ -1,6 +1,7 @@
 package com.cob.salesforce.services.admin.user;
 
 import com.cob.salesforce.entity.admin.UserClinicEntity;
+import com.cob.salesforce.exception.business.UserException;
 import com.cob.salesforce.models.admin.ClinicModel;
 import com.cob.salesforce.models.admin.user.UserModel;
 import com.cob.salesforce.models.security.KeyCloakUser;
@@ -33,14 +34,7 @@ public class UserCreatorServiceImpl implements UserCreatorService {
     KeyCloakUsersCreatorService keyCloakUsersCreatorService;
 
     @Override
-    public UserModel create(UserModel userModel) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        String createdUserId = createKeyCloakUser(userModel);
-        assignUserToClinics(createdUserId, userModel.getClinics().stream().map(ClinicModel::getId).collect(Collectors.toList()));
-        userModel.setUuid(createdUserId);
-        return userModel;
-    }
-
-    private String createKeyCloakUser(UserModel userModel) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public UserModel create(UserModel userModel) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, UserException {
         KeyCloakUser keyCloakUser = KeyCloakUser.builder()
                 .username(userModel.getName())
                 .firstName("firstName" + generateRandom())
@@ -49,7 +43,10 @@ public class UserCreatorServiceImpl implements UserCreatorService {
                 .password(userModel.getPassword())
                 .roles(Arrays.asList(userModel.getUserRole()))
                 .build();
-        return keyCloakUsersCreatorService.create(keyCloakUser).getId();
+        String createdUserId = keyCloakUsersCreatorService.create(keyCloakUser).getId();
+        assignUserToClinics(createdUserId, userModel.getClinics().stream().map(ClinicModel::getId).collect(Collectors.toList()));
+        userModel.setUuid(createdUserId);
+        return userModel;
     }
 
     private void assignUserToClinics(String createdUserId, List<Long> clinics) {

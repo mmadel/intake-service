@@ -3,7 +3,6 @@ package com.cob.salesforce.controllers.admin.user;
 import com.cob.salesforce.exception.business.UserException;
 import com.cob.salesforce.models.admin.security.CurrentLoggInUser;
 import com.cob.salesforce.models.admin.user.UserModel;
-import com.cob.salesforce.models.validation.PatientFields;
 import com.cob.salesforce.services.admin.user.UserCreatorService;
 import com.cob.salesforce.services.admin.user.UserFinderService;
 import org.modelmapper.ModelMapper;
@@ -34,7 +33,7 @@ public class UserController {
     ModelMapper mapper;
 
     @PostMapping(path = "/create")
-    public ResponseEntity create(@RequestBody UserModel model) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public ResponseEntity create(@RequestBody UserModel model) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, UserException {
         return new ResponseEntity(creator.create(model),HttpStatus.OK);
     }
     @GetMapping(path = "/find")

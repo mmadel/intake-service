@@ -1,5 +1,6 @@
 package com.cob.salesforce.services.security;
 
+import com.cob.salesforce.exception.business.UserException;
 import com.cob.salesforce.models.security.KeyCloakUser;
 import com.cob.salesforce.utils.Encryption;
 import org.keycloak.admin.client.CreatedResponseUtil;
@@ -13,11 +14,13 @@ import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -36,7 +39,34 @@ public class KeyCloakUsersCreatorService {
     @Autowired
     Encryption encryption;
 
-    public UserRepresentation create(KeyCloakUser keyCloakUser) throws NoSuchPaddingException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+
+    public UserRepresentation create(KeyCloakUser keyCloakUser) throws NoSuchPaddingException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, WebApplicationException, UserException {
+
+        RealmResource realmResource = keycloakService.realm(realm);
+        UsersResource usersResource = realmResource.users();
+        UserRepresentation user = prepareUserRepresentation(keyCloakUser);
+        Response response = usersResource.create(user);
+        String userId = null;
+        try {
+            userId = CreatedResponseUtil.getCreatedId(response);
+        } catch (WebApplicationException ex) {
+            throw new UserException(HttpStatus.CONFLICT, UserException.USER_IS_EXISTS, new Object[]{keyCloakUser.getUsername()});
+        }
+
+        UserResource userResource = usersResource.get(userId);
+        ClientRepresentation clientRepresentation = realmResource.clients().findByClientId("intake-ui").get(0);
+        List<RoleRepresentation> roles = null;
+        try {
+            roles = prepareRoleRepresentation(keyCloakUser.getRoles(), realmResource, clientRepresentation);
+        } catch (WebApplicationException ex) {
+            throw new UserException(HttpStatus.CONFLICT, UserException.USER_ROLE_NOT_FOUND, new Object[]{keyCloakUser.getRoles().get(0)});
+        }
+        userResource.roles().clientLevel(clientRepresentation.getId()).add(roles);
+        return userResource.toRepresentation();
+    }
+
+
+    private UserRepresentation prepareUserRepresentation(KeyCloakUser keyCloakUser) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         UserRepresentation user = new UserRepresentation();
         user.setEnabled(true);
         user.setUsername(keyCloakUser.getUsername());
@@ -48,19 +78,16 @@ public class KeyCloakUsersCreatorService {
         credential.setValue(encryption.decrypt(keyCloakUser.getPassword()));
         user.setEmail(keyCloakUser.getEmail());
         user.setCredentials(Arrays.asList(credential));
-        RealmResource realmResource = keycloakService.realm(realm);
-        UsersResource usersResource = realmResource.users();
-        Response response = usersResource.create(user);
-        String userId = CreatedResponseUtil.getCreatedId(response);
-        UserResource userResource = usersResource.get(userId);
-        ClientRepresentation app1Client = realmResource.clients().findByClientId("intake-ui").get(0);
-        List<RoleRepresentation> roles = new ArrayList<>();
-        keyCloakUser.getRoles().forEach(role -> {
-            RoleRepresentation clientRole = realmResource.clients().get(app1Client.getId())
+        return user;
+    }
+
+    private List<RoleRepresentation> prepareRoleRepresentation(List<String> roles, RealmResource realmResource, ClientRepresentation clientRepresentation) {
+        List<RoleRepresentation>  roleRepresentation= new ArrayList<>();
+        roles.forEach(role -> {
+            RoleRepresentation clientRole = realmResource.clients().get(clientRepresentation.getId())
                     .roles().get(role).toRepresentation();
-            roles.add(clientRole);
+            roleRepresentation.add(clientRole);
         });
-        userResource.roles().clientLevel(app1Client.getId()).add(roles);
-        return userResource.toRepresentation();
+        return roleRepresentation;
     }
 }

@@ -1,5 +1,6 @@
 package com.cob.salesforce.services.admin.user;
 
+import com.cob.salesforce.exception.business.UserException;
 import com.cob.salesforce.models.admin.user.UserModel;
 
 import javax.crypto.BadPaddingException;
@@ -11,6 +12,6 @@ import java.security.NoSuchAlgorithmException;
 
 public interface UserCreatorService {
 
-    UserModel create(UserModel userModel) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException;
+    UserModel create(UserModel userModel) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, UserException;
 
 }
