@@ -5,6 +5,7 @@ import com.cob.salesforce.models.admin.security.CurrentLoggInUser;
 import com.cob.salesforce.models.admin.user.UserModel;
 import com.cob.salesforce.services.admin.user.UserCreatorService;
 import com.cob.salesforce.services.admin.user.UserFinderService;
+import com.cob.salesforce.services.admin.user.UserRemoverService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,9 @@ public class UserController {
 
     @Autowired
     UserCreatorService creator;
+
+    @Autowired
+    UserRemoverService remover;
 
     @Autowired
     UserFinderService finder;
@@ -59,5 +63,11 @@ public class UserController {
         return new ResponseEntity(finder.findByUserId(userId), HttpStatus.OK);
     }
 
+    @ResponseBody
+    @DeleteMapping("/delete/userId/{userId}")
+    public ResponseEntity delete(@PathVariable String userId) throws UserException {
+        remover.remove(userId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
 }
