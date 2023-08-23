@@ -1,5 +1,7 @@
 package com.cob.salesforce.security;
 
+import com.cob.salesforce.security.exception.RestAuthenticationEntryPoint;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +15,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+    @Autowired
+    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -29,7 +33,7 @@ public class SecurityConfiguration {
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.authorizeHttpRequests(authorize -> authorize
-                        .antMatchers("/authentication/tokens","/requires/fields/retrieve/**").permitAll()
+                        .antMatchers("/authentication/tokens", "/requires/fields/retrieve/**").permitAll()
                         .antMatchers("/user/**").hasAnyRole("administrator", "normal")
                         .antMatchers("/patient/find/clinic/**").hasAnyRole("administrator", "normal")
                         .antMatchers("/dashboard/**", "/clinic/**",
@@ -37,8 +41,12 @@ public class SecurityConfiguration {
                                 "/reports/generator/**").hasRole("administrator")
                         .anyRequest().authenticated()
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt());
+                .oauth2ResourceServer(oauth2 -> {
+                    oauth2.jwt();
+                    oauth2.authenticationEntryPoint(restAuthenticationEntryPoint);
+                });
 
         return httpSecurity.build();
     }
+
 }

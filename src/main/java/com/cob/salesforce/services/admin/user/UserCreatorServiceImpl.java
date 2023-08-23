@@ -41,6 +41,7 @@ public class UserCreatorServiceImpl implements UserCreatorService {
                 .lastName("lastName" + generateRandom())
                 .email(userModel.getName() + "@mail.com")
                 .password(userModel.getPassword())
+                .address(userModel.getAddress())
                 .roles(Arrays.asList(userModel.getUserRole()))
                 .build();
         String createdUserId = keyCloakUsersCreatorService.create(keyCloakUser).getId();

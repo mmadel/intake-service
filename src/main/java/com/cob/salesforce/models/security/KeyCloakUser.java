@@ -17,6 +17,7 @@ public class KeyCloakUser {
     private String lastName;
     private String password;
     private String email;
+    private String address ;
     private List<String> roles;
 
 }

@@ -25,9 +25,7 @@ import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class KeyCloakUsersCreatorService {
@@ -54,6 +52,7 @@ public class KeyCloakUsersCreatorService {
         }
 
         UserResource userResource = usersResource.get(userId);
+        updateAttribute(userResource,"address" ,keyCloakUser.getAddress());
         ClientRepresentation clientRepresentation = realmResource.clients().findByClientId("intake-ui").get(0);
         List<RoleRepresentation> roles = null;
         try {
@@ -65,7 +64,11 @@ public class KeyCloakUsersCreatorService {
         return userResource.toRepresentation();
     }
 
-
+    private void updateAttribute(UserResource userResource, String property, String value) {
+        UserRepresentation userRepresentation = userResource.toRepresentation();
+        userRepresentation.singleAttribute(property,value);
+        userResource.update(userRepresentation);
+    }
     private UserRepresentation prepareUserRepresentation(KeyCloakUser keyCloakUser) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         UserRepresentation user = new UserRepresentation();
         user.setEnabled(true);
