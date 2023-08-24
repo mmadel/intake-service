@@ -43,7 +43,7 @@ public class SecurityConfiguration {
                         .antMatchers("/patient/find/clinic/**").hasAnyRole("administrator", "normal")
                         .antMatchers("/dashboard/**", "/clinic/**",
                                 "/insurance/company/**", "/reports/recommendation/**",
-                                "/reports/generator/**").hasRole("administrator")
+                                "/reports/generator/**","reports/generator/pdf/patientId/**").hasRole("administrator")
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> {
