@@ -1,7 +1,9 @@
 package com.cob.salesforce.security;
 
+import com.cob.salesforce.security.exception.RestAccessDeniedHandler;
 import com.cob.salesforce.security.exception.RestAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +19,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    @Autowired
+    @Qualifier("handlerRestAccessDenied")
+    RestAccessDeniedHandler restAccessDeniedHandler;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -44,6 +49,7 @@ public class SecurityConfiguration {
                 .oauth2ResourceServer(oauth2 -> {
                     oauth2.jwt();
                     oauth2.authenticationEntryPoint(restAuthenticationEntryPoint);
+                    oauth2.accessDeniedHandler(restAccessDeniedHandler);
                 });
 
         return httpSecurity.build();
