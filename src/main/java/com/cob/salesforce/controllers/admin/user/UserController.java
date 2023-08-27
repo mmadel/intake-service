@@ -48,13 +48,13 @@ public class UserController {
 
     @GetMapping(path = "/find/{userId}")
     @ResponseBody
-    public ResponseEntity getById(@PathVariable Long userId) {
+    public ResponseEntity getById(@PathVariable String userId) {
         return new ResponseEntity(finder.getById(userId), HttpStatus.OK);
     }
     @GetMapping(path = "/find/loggedIn/{userId}")
     @ResponseBody
     public ResponseEntity getLoggedIn(@PathVariable String userId) {
-        return new ResponseEntity(mapper.map(finder.getById(Long.valueOf(userId)), CurrentLoggInUser.class), HttpStatus.OK);
+        return new ResponseEntity(mapper.map(finder.getById(userId), CurrentLoggInUser.class), HttpStatus.OK);
     }
 
     @GetMapping(path = "/find/clinics/{userId}")

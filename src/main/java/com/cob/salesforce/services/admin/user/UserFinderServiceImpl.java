@@ -57,7 +57,7 @@ public class UserFinderServiceImpl implements UserFinderService {
     }
 
     @Override
-    public UserModel getById(Long Id) {
+    public UserModel getById(String Id) {
         return null;
     }
 
