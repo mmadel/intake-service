@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @PutMapping(path = "/update")
-    public ResponseEntity update(@RequestBody UserModel model) throws UserException {
+    public ResponseEntity update(@RequestBody UserModel model) throws UserException, NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         return new ResponseEntity(creator.update(model),HttpStatus.OK);
     }
     @GetMapping(path = "/find")

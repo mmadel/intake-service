@@ -51,12 +51,15 @@ public class UserCreatorServiceImpl implements UserCreatorService {
     }
 
     @Override
-    public UserModel update(UserModel userModel) throws UserException {
+    public UserModel update(UserModel userModel) throws UserException, NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         KeyCloakUser keyCloakUser = KeyCloakUser.builder()
                 .userId(userModel.getUuid())
                 .address(userModel.getAddress())
                 .roles(Arrays.asList(userModel.getUserRole()))
                 .build();
+        if (userModel.getPassword() != null) {
+            keyCloakUser.setPassword(userModel.getPassword());
+        }
         keyCloakUsersCreatorService.update(keyCloakUser);
         userRepository.deleteUser(userModel.getUuid());
         assignUserToClinics(userModel.getUuid(), userModel.getClinics().stream().map(ClinicModel::getId).collect(Collectors.toList()));

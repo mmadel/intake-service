@@ -55,7 +55,7 @@ public class KeyCloakUsersCreatorService {
         UserResource userResource = usersResource.get(userId);
         updateAttribute(userResource, "address", keyCloakUser.getAddress());
         ClientRepresentation clientRepresentation = realmResource.clients().findByClientId("intake-ui").get(0);
-            List<RoleRepresentation> roles = null;
+        List<RoleRepresentation> roles = null;
         try {
             roles = prepareRoleRepresentation(keyCloakUser.getRoles(), realmResource, clientRepresentation);
         } catch (WebApplicationException ex) {
@@ -66,7 +66,7 @@ public class KeyCloakUsersCreatorService {
         return userResource.toRepresentation();
     }
 
-    public void update(KeyCloakUser keyCloakUser) throws UserException {
+    public void update(KeyCloakUser keyCloakUser) throws UserException, NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         RealmResource realmResource = keycloakService.realm(realm);
         UsersResource usersResource = realmResource.users();
         UserResource userResource = null;
@@ -74,6 +74,14 @@ public class KeyCloakUsersCreatorService {
             userResource = usersResource.get(keyCloakUser.getUserId());
         } catch (WebApplicationException ex) {
             throw new UserException(HttpStatus.CONFLICT, UserException.USER_NOT_FOUND, new Object[]{keyCloakUser.getUsername()});
+        }
+        if (keyCloakUser.getPassword() != null) {
+            CredentialRepresentation credential = new CredentialRepresentation();
+            credential.setTemporary(true);
+            credential.setType(CredentialRepresentation.PASSWORD);
+            credential.setValue(encryption.decrypt(keyCloakUser.getPassword()));
+            userResource.resetPassword(credential);
+
         }
         updateAttribute(userResource, "address", keyCloakUser.getAddress());
 
