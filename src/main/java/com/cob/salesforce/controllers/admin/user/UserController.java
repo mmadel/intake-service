@@ -1,5 +1,6 @@
 package com.cob.salesforce.controllers.admin.user;
 
+import com.cob.salesforce.exception.business.UserKeyCloakException;
 import com.cob.salesforce.exception.business.UserException;
 import com.cob.salesforce.models.admin.security.CurrentLoggInUser;
 import com.cob.salesforce.models.admin.user.UserModel;
@@ -37,7 +38,7 @@ public class UserController {
     ModelMapper mapper;
 
     @PostMapping(path = "/create")
-    public ResponseEntity create(@RequestBody UserModel model) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, UserException {
+    public ResponseEntity create(@RequestBody UserModel model) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, UserException, UserKeyCloakException {
         return new ResponseEntity(creator.create(model),HttpStatus.OK);
     }
 

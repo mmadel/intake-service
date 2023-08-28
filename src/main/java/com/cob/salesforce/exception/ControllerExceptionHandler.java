@@ -1,6 +1,7 @@
 package com.cob.salesforce.exception;
 
 import com.cob.salesforce.exception.business.IntakeException;
+import com.cob.salesforce.exception.business.UserKeyCloakException;
 import com.cob.salesforce.exception.response.ControllerErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,5 +63,13 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         ControllerErrorResponse controllerErrorResponse = new ControllerErrorResponse(accessDeniedException.getMessage(), HttpStatus.UNAUTHORIZED);
         log.error(controllerErrorResponse.getMessage());
         return new ResponseEntity<>(controllerErrorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(value = {UserKeyCloakException.class})
+    public ResponseEntity handleKeyCloak(UserKeyCloakException ex, WebRequest request) {
+        String errorMessage = messageSource.getMessage(ex.getCode(), ex.getParameters(), Locale.ENGLISH);
+        ControllerErrorResponse controllerErrorResponse = new ControllerErrorResponse(errorMessage, ex.getStatus());
+        log.error(controllerErrorResponse.getMessage());
+        return new ResponseEntity<>(controllerErrorResponse, ex.getStatus());
     }
 }

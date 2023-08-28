@@ -1,6 +1,7 @@
 package com.cob.salesforce.services.admin.user;
 
 import com.cob.salesforce.entity.admin.UserClinicEntity;
+import com.cob.salesforce.exception.business.UserKeyCloakException;
 import com.cob.salesforce.exception.business.UserException;
 import com.cob.salesforce.models.admin.ClinicModel;
 import com.cob.salesforce.models.admin.user.UserModel;
@@ -34,7 +35,7 @@ public class UserCreatorServiceImpl implements UserCreatorService {
     KeyCloakUsersCreatorService keyCloakUsersCreatorService;
 
     @Override
-    public UserModel create(UserModel userModel) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, UserException {
+    public UserModel create(UserModel userModel) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, UserException, UserKeyCloakException {
         KeyCloakUser keyCloakUser = KeyCloakUser.builder()
                 .username(userModel.getName())
                 .firstName("firstName" + generateRandom())
