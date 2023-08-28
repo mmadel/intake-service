@@ -44,6 +44,11 @@ public class KeyCloakUsersCreatorService {
 
     @Autowired
     Keycloak keycloakService;
+
+
+    @Value("${kc.base.url}")
+    private String keycloakURL;
+
     @Value("${kc.realm}")
     private String realm;
     @Autowired
@@ -110,11 +115,11 @@ public class KeyCloakUsersCreatorService {
         Gson gson = new Gson();
         gson.toJson(credential);
         HttpEntity<String> httpEntity = new HttpEntity<>(gson.toJson(credential).toString(), headers);
-        try{
-            restTemplate.put("http://localhost:8180/admin/realms/patient-intake/users/" + userId + "/reset-password", httpEntity);
-        }catch (HttpClientErrorException.BadRequest exception){
+        try {
+            restTemplate.put(keycloakURL + "/admin/realms/" + realm + "/users/" + userId + "/reset-password", httpEntity);
+        } catch (HttpClientErrorException.BadRequest exception) {
             keyCloakUsersRemoverService.removeKCUser(userId);
-            String message =   exception.getMessage().split(":")[4].split("\"")[0];
+            String message = exception.getMessage().split(":")[4].split("\"")[0];
             throw new UserKeyCloakException(HttpStatus.BAD_REQUEST, UserKeyCloakException.INVALID_PASSWORD, new Object[]{message});
         }
 
@@ -164,18 +169,13 @@ public class KeyCloakUsersCreatorService {
         userResource.update(userRepresentation);
     }
 
-    private UserRepresentation prepareUserRepresentation(KeyCloakUser keyCloakUser) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    private UserRepresentation prepareUserRepresentation(KeyCloakUser keyCloakUser) {
         UserRepresentation user = new UserRepresentation();
         user.setEnabled(true);
         user.setUsername(keyCloakUser.getUsername());
         user.setFirstName(keyCloakUser.getFirstName());
         user.setLastName(keyCloakUser.getLastName());
         user.setEmail(keyCloakUser.getEmail());
-//        CredentialRepresentation credential = new CredentialRepresentation();
-//        credential.setTemporary(false);
-//        credential.setType(CredentialRepresentation.PASSWORD);
-//        credential.setValue(encryption.decrypt(keyCloakUser.getPassword()));
-//        user.setCredentials(Arrays.asList(credential));
         return user;
     }
 
