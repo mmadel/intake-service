@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 @Builder
 public class KeyCloakUser {
+    private String userId;
 
     private String username;
     private String firstName;

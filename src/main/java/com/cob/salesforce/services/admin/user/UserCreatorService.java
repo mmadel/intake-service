@@ -13,5 +13,5 @@ import java.security.NoSuchAlgorithmException;
 public interface UserCreatorService {
 
     UserModel create(UserModel userModel) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, UserException;
-
+    UserModel update(UserModel userModel) throws UserException;
 }

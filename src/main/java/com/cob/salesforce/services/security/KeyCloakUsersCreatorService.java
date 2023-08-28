@@ -6,6 +6,7 @@ import com.cob.salesforce.utils.Encryption;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.ClientRepresentation;
@@ -52,23 +53,54 @@ public class KeyCloakUsersCreatorService {
         }
 
         UserResource userResource = usersResource.get(userId);
-        updateAttribute(userResource,"address" ,keyCloakUser.getAddress());
+        updateAttribute(userResource, "address", keyCloakUser.getAddress());
         ClientRepresentation clientRepresentation = realmResource.clients().findByClientId("intake-ui").get(0);
-        List<RoleRepresentation> roles = null;
+            List<RoleRepresentation> roles = null;
         try {
             roles = prepareRoleRepresentation(keyCloakUser.getRoles(), realmResource, clientRepresentation);
         } catch (WebApplicationException ex) {
             throw new UserException(HttpStatus.CONFLICT, UserException.USER_ROLE_NOT_FOUND, new Object[]{keyCloakUser.getRoles().get(0)});
         }
+
         userResource.roles().clientLevel(clientRepresentation.getId()).add(roles);
         return userResource.toRepresentation();
     }
 
+    public void update(KeyCloakUser keyCloakUser) throws UserException {
+        RealmResource realmResource = keycloakService.realm(realm);
+        UsersResource usersResource = realmResource.users();
+        UserResource userResource = null;
+        try {
+            userResource = usersResource.get(keyCloakUser.getUserId());
+        } catch (WebApplicationException ex) {
+            throw new UserException(HttpStatus.CONFLICT, UserException.USER_NOT_FOUND, new Object[]{keyCloakUser.getUsername()});
+        }
+        updateAttribute(userResource, "address", keyCloakUser.getAddress());
+
+        ClientRepresentation clientRepresentation = realmResource.clients().findByClientId("intake-ui").get(0);
+        RolesResource oldRole = null;
+        try {
+            oldRole = realmResource.clients().get(clientRepresentation.getId()).roles();
+        } catch (WebApplicationException ex) {
+            throw new IllegalArgumentException("Old role not found");
+        }
+        userResource.roles().clientLevel(clientRepresentation.getId()).remove(oldRole.list());
+        List<RoleRepresentation> role = null;
+        try {
+            role = prepareRoleRepresentation(keyCloakUser.getRoles(), realmResource, clientRepresentation);
+        } catch (WebApplicationException ex) {
+            throw new UserException(HttpStatus.CONFLICT, UserException.USER_ROLE_NOT_FOUND, new Object[]{keyCloakUser.getRoles().get(0)});
+        }
+        userResource.roles().clientLevel(clientRepresentation.getId()).add(role);
+
+    }
+
     private void updateAttribute(UserResource userResource, String property, String value) {
         UserRepresentation userRepresentation = userResource.toRepresentation();
-        userRepresentation.singleAttribute(property,value);
+        userRepresentation.singleAttribute(property, value);
         userResource.update(userRepresentation);
     }
+
     private UserRepresentation prepareUserRepresentation(KeyCloakUser keyCloakUser) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         UserRepresentation user = new UserRepresentation();
         user.setEnabled(true);
@@ -85,7 +117,7 @@ public class KeyCloakUsersCreatorService {
     }
 
     private List<RoleRepresentation> prepareRoleRepresentation(List<String> roles, RealmResource realmResource, ClientRepresentation clientRepresentation) {
-        List<RoleRepresentation>  roleRepresentation= new ArrayList<>();
+        List<RoleRepresentation> roleRepresentation = new ArrayList<>();
         roles.forEach(role -> {
             RoleRepresentation clientRole = realmResource.clients().get(clientRepresentation.getId())
                     .roles().get(role).toRepresentation();

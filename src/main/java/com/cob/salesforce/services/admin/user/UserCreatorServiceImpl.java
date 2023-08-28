@@ -50,6 +50,19 @@ public class UserCreatorServiceImpl implements UserCreatorService {
         return userModel;
     }
 
+    @Override
+    public UserModel update(UserModel userModel) throws UserException {
+        KeyCloakUser keyCloakUser = KeyCloakUser.builder()
+                .userId(userModel.getUuid())
+                .address(userModel.getAddress())
+                .roles(Arrays.asList(userModel.getUserRole()))
+                .build();
+        keyCloakUsersCreatorService.update(keyCloakUser);
+        userRepository.deleteUser(userModel.getUuid());
+        assignUserToClinics(userModel.getUuid(), userModel.getClinics().stream().map(ClinicModel::getId).collect(Collectors.toList()));
+        return null;
+    }
+
     private void assignUserToClinics(String createdUserId, List<Long> clinics) {
         List<UserClinicEntity> userToClinics = new ArrayList<>();
         clinics.forEach(clinicId -> {

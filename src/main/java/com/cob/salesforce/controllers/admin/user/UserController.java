@@ -40,6 +40,11 @@ public class UserController {
     public ResponseEntity create(@RequestBody UserModel model) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, UserException {
         return new ResponseEntity(creator.create(model),HttpStatus.OK);
     }
+
+    @PutMapping(path = "/update")
+    public ResponseEntity update(@RequestBody UserModel model) throws UserException {
+        return new ResponseEntity(creator.update(model),HttpStatus.OK);
+    }
     @GetMapping(path = "/find")
     @ResponseBody
     public ResponseEntity getAll() {
