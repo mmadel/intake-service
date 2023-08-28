@@ -48,7 +48,7 @@ public class UserFinderServiceImpl implements UserFinderService {
             });
             List<ClinicModel> clinicModels = new ArrayList<>();
             clinicRepository.findAllById(clinicIds).forEach(clinicEntity -> {
-                clinicModels.add(mapper.map(clinicEntity , ClinicModel.class));
+                clinicModels.add(mapper.map(clinicEntity, ClinicModel.class));
             });
             userModel.setClinics(clinicModels);
             userModels.add(userModel);
@@ -58,7 +58,8 @@ public class UserFinderServiceImpl implements UserFinderService {
 
     @Override
     public UserModel getById(String Id) {
-        return null;
+        UserRepresentation userRepresentation = keyCloakUsersService.getUser(Id);
+        return mapFromKCUserToUserModel(userRepresentation);
     }
 
 
@@ -78,4 +79,13 @@ public class UserFinderServiceImpl implements UserFinderService {
     }
 
 
+    private UserModel mapFromKCUserToUserModel(UserRepresentation userRepresentation) {
+        UserModel userModel = new UserModel();
+        userModel.setUuid(userRepresentation.getId());
+        userModel.setName(userRepresentation.getUsername());
+        userModel.setAddress(userRepresentation.getAttributes().get("address").get(0));
+        userModel.setClinics(findByUserId(userRepresentation.getId()));
+        userModel.setUserRole(keyCloakUsersService.getUSerRole(userRepresentation.getUsername()));
+        return userModel;
+    }
 }

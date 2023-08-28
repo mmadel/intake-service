@@ -36,6 +36,14 @@ public class KeyCloakUsersFinderService {
                 .get();
     }
 
+    public UserRepresentation getUser(String userId) {
+        return keycloakService.realm(realm)
+                .users().list()
+                .stream().filter(userRepresentation -> userRepresentation.getId().equals(userId))
+                .findFirst()
+                .get();
+    }
+
     public String getClientId(String clientName) {
         return keycloakService.realm(realm).clients().findAll()
                 .stream()
