@@ -2,7 +2,6 @@ package com.cob.salesforce.controllers;
 
 import com.cob.salesforce.dependencies.creator.PatientPhotoUploaderService;
 import com.cob.salesforce.exception.business.PatientException;
-import com.cob.salesforce.exception.response.ControllerErrorResponseAdvisor;
 import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.services.PatientCreatorService;
 import com.cob.salesforce.services.PatientFinderService;
@@ -29,17 +28,12 @@ public class PatientControllers {
     @Autowired
     private PatientPhotoUploaderService patientPhotoUploaderService;
 
-    @Autowired
-    ControllerErrorResponseAdvisor controllerErrorResponseAdvisor;
+
     @PostMapping("/create")
     @ResponseBody
-    public ResponseEntity<Long> create(@RequestBody PatientDTO model) {
+    public ResponseEntity<Long> create(@RequestBody PatientDTO model) throws PatientException {
         Long createdPatientId = 0L;
-        try {
-            createdPatientId = patientCreatorService.create(model);
-        }catch (PatientException patientException){
-            return controllerErrorResponseAdvisor.responseError(patientException);
-        }
+        createdPatientId = patientCreatorService.create(model);
         return new ResponseEntity<>(createdPatientId, HttpStatus.OK);
     }
 

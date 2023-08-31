@@ -1,90 +1,91 @@
 package com.cob.salesforce.services.admin.user;
 
-import com.cob.salesforce.entity.admin.ClinicEntity;
-import com.cob.salesforce.entity.admin.user.UserEntity;
+import com.cob.salesforce.entity.admin.UserClinicEntity;
+import com.cob.salesforce.exception.business.UserKeyCloakException;
 import com.cob.salesforce.exception.business.UserException;
 import com.cob.salesforce.models.admin.ClinicModel;
 import com.cob.salesforce.models.admin.user.UserModel;
-import com.cob.salesforce.repositories.admin.clinic.ClinicRepository;
+import com.cob.salesforce.models.security.KeyCloakUser;
 import com.cob.salesforce.repositories.admin.user.UserRepository;
-import org.modelmapper.ModelMapper;
+import com.cob.salesforce.services.security.KeyCloakUsersCreatorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.transaction.Transactional;
-import java.util.Date;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class UserCreatorServiceImpl implements UserCreatorService {
-    @Autowired
-    UserRepository repository;
 
     @Autowired
-    ClinicRepository clinicRepository;
-    @Autowired
-    ModelMapper mapper;
+    UserRepository userRepository;
 
     @Autowired
-    PasswordEncoder encoder;
+    KeyCloakUsersCreatorService keyCloakUsersCreatorService;
 
     @Override
-    public UserModel create(UserModel model) {
-        UserEntity toBeSaved = mapper.map(model, UserEntity.class);
-        Set<ClinicEntity> clinics = null;
-        if(model.getClinics() != null)
-            clinics = model.getClinics().stream().map(clinicModel -> clinicRepository.findById(clinicModel.getId()).get()).collect(Collectors.toSet());
-        toBeSaved.setClinics(clinics);
-        //https://www.dariawan.com/tutorials/spring/illegalargumentexception-there-no-passwordencoder-mapped-id-null/
-        toBeSaved.setPassword("{bcrypt}" + encoder.encode(model.getPassword()));
-        UserEntity createdUser = repository.save(toBeSaved);
-        model.setCreatedAt(createdUser.getCreatedAt());
-        model.setId(createdUser.getId());
-        return model;
+    public UserModel create(UserModel userModel) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, UserException, UserKeyCloakException {
+        KeyCloakUser keyCloakUser = KeyCloakUser.builder()
+                .username(userModel.getName())
+                .firstName("firstName" + generateRandom())
+                .lastName("lastName" + generateRandom())
+                .email(userModel.getName() + "@mail.com")
+                .password(userModel.getPassword())
+                .address(userModel.getAddress())
+                .roles(Arrays.asList(userModel.getUserRole()))
+                .build();
+        String createdUserId = keyCloakUsersCreatorService.create(keyCloakUser).getId();
+        assignUserToClinics(createdUserId, userModel.getClinics().stream().map(ClinicModel::getId).collect(Collectors.toList()));
+        userModel.setUuid(createdUserId);
+        return userModel;
     }
+
     @Override
-    public UserModel update(UserModel model) throws UserException {
+    public UserModel update(UserModel userModel) throws UserException, NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        KeyCloakUser keyCloakUser = KeyCloakUser.builder()
+                .userId(userModel.getUuid())
+                .address(userModel.getAddress())
+                .roles(Arrays.asList(userModel.getUserRole()))
+                .build();
+        if (userModel.getPassword() != null) {
+            keyCloakUser.setPassword(userModel.getPassword());
+        }
+        keyCloakUsersCreatorService.update(keyCloakUser);
+        userRepository.deleteUser(userModel.getUuid());
+        assignUserToClinics(userModel.getUuid(), userModel.getClinics().stream().map(ClinicModel::getId).collect(Collectors.toList()));
+        return null;
+    }
 
-        Optional<UserEntity> entity = repository.getByName(model.getName());
+    private void assignUserToClinics(String createdUserId, List<Long> clinics) {
+        List<UserClinicEntity> userToClinics = new ArrayList<>();
+        clinics.forEach(clinicId -> {
+            UserClinicEntity entity = new UserClinicEntity();
+            entity.setClinicId(clinicId);
+            entity.setUserId(createdUserId);
+            userToClinics.add(entity);
+        });
+        userRepository.saveAll(userToClinics);
+    }
 
-        UserEntity toBeUpdate = mapUserToEntity(model);
-        if (entity.isPresent() && !model.getName().equals(entity.get().getName()))
-            throw new UserException(HttpStatus.CONFLICT, UserException.USER_IS_EXISTS,
-                    new Object[]{model.getName()});
-        if (entity.isPresent() && entity.get().getPassword().equals(model.getPassword()))
-            toBeUpdate.setPassword(model.getPassword());
-        else
-            toBeUpdate.setPassword("{bcrypt}" + encoder.encode(model.getPassword()));
-        toBeUpdate.setCreatedAt(new Date().getTime());
-        UserEntity updatedUser = repository.save(toBeUpdate);
-        model.setCreatedAt(updatedUser.getCreatedAt());
-        return model;
-    }
-    private UserEntity mapUserToEntity(UserModel model) {
-        //https://www.dariawan.com/tutorials/spring/illegalargumentexception-there-no-passwordencoder-mapped-id-null/
-        UserEntity entity = mapper.map(model, UserEntity.class);
-        entity.setClinics(getClinics(model.getClinics()));
-        return entity;
-    }
-    private Set<ClinicEntity> getClinics(List<ClinicModel> clinicsModels) {
-        Set<ClinicEntity> clinics = null;
-        if (clinicsModels != null)
-            clinics = clinicsModels.stream().map(clinicModel -> clinicRepository.findById(clinicModel.getId()).get()).collect(Collectors.toSet());
-        return clinics;
-    }
-    public void delete(long id) throws UserException {
-        Optional<UserEntity> entity = repository.findById(id);
-        if(entity.isEmpty())
-            throw new UserException(HttpStatus.CONFLICT, UserException.USER_NOT_FOUND,
-                    new Object[]{id});
-        UserEntity toBeDeleted = entity.get();
-        toBeDeleted.setClinics(null);
-        repository.delete(toBeDeleted);
+    private String generateRandom() {
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 10;
+        Random random = new Random();
+        return random.ints(leftLimit, rightLimit + 1)
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
     }
 }

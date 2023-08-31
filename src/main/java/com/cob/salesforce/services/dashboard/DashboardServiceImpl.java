@@ -10,7 +10,7 @@ import com.cob.salesforce.models.dashboard.GenderContainer;
 import com.cob.salesforce.models.dashboard.PatientSourceContainer;
 import com.cob.salesforce.models.dashboard.WeekCounterContainer;
 import com.cob.salesforce.repositories.*;
-import com.cob.salesforce.repositories.admin.user.UserRepository;
+import com.cob.salesforce.services.admin.user.UserFinderService;
 import com.cob.salesforce.utils.DateUtil;
 import com.cob.salesforce.utils.NumberUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +26,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DashboardServiceImpl implements DashboardService {
     double totalNumberOfPatients = 0;
-
     @Autowired
-    UserRepository userRepository;
+    UserFinderService userFinderService;
+
     @Autowired
     PatientRepository patientRepository;
     @Autowired
@@ -42,7 +42,7 @@ public class DashboardServiceImpl implements DashboardService {
     InsuranceWorkerCommercialRepository insuranceWorkerCommercialRepository;
 
     @Override
-    public DashboardDataContainer getData(Long clinicId, Long userId, Long startDate, Long endDate) {
+    public DashboardDataContainer getData(Long clinicId, String userId, Long startDate, Long endDate) {
         List<Patient> patients = null;
         if (startDate == 0 && endDate == 0)
             patients = patientRepository.findByClinicId(null, clinicId).getContent();
@@ -71,7 +71,11 @@ public class DashboardServiceImpl implements DashboardService {
         return weekCounterContainer;
     }
 
-    private Map getClinicsData(Long userId, Long startDate, Long endDate) {
+    private void fetchClinicsByUserId(String userId) {
+
+    }
+
+    private Map getClinicsData(String userId, Long startDate, Long endDate) {
         log.debug("DashboardService-Get Clinics Data {}", userId);
         Map clinicData = new HashMap<String, List<Integer>>();
         double totalPatients = 0;
@@ -81,20 +85,21 @@ public class DashboardServiceImpl implements DashboardService {
             totalPatients = patientRepository.getByCreatedDateRange(startDate, endDate).size();
         log.debug("DashboardService-Get Clinics Data:totalPatients {}", totalPatients);
         double finalTotalPatients = totalPatients;
-        userRepository.findUserClinics(userId).stream().forEach(clinicEntity -> {
+        userFinderService.findByUserId(userId).forEach(clinicModel -> {
             double numberOfPatient = 0;
             if (startDate == 0 && endDate == 0)
-                numberOfPatient = patientRepository.findByClinicId(null, clinicEntity.getId()).getContent().size();
+                numberOfPatient = patientRepository.findByClinicId(null, clinicModel.getId()).getContent().size();
             else
-                numberOfPatient = patientRepository.findInDateRange(startDate, endDate, clinicEntity.getId()).size();
-            log.debug("DashboardService-Get Clinics Data:Clinic  {} , numberOfPatient {} ", clinicEntity.getName(), numberOfPatient);
+                numberOfPatient = patientRepository.findInDateRange(startDate, endDate, clinicModel.getId()).size();
+            log.debug("DashboardService-Get Clinics Data:Clinic  {} , numberOfPatient {} ", clinicModel.getName(), numberOfPatient);
             List<Double> numberPercentage = new ArrayList<>();
             numberPercentage.add(Double.valueOf(numberOfPatient));
             double clinicPercentage = calculatePercentage(finalTotalPatients, numberOfPatient);
-            log.debug("DashboardService-Get Clinics Data:Clinic  {} , Percentage {} ", clinicEntity.getName(), clinicPercentage);
+            log.debug("DashboardService-Get Clinics Data:Clinic  {} , Percentage {} ", clinicModel.getName(), clinicPercentage);
             numberPercentage.add(clinicPercentage);
-            clinicData.put(clinicEntity.getName(), numberPercentage);
+            clinicData.put(clinicModel.getName(), numberPercentage);
         });
+
         return clinicData;
     }
 
