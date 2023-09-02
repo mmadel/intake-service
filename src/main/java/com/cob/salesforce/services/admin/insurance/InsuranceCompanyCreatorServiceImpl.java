@@ -1,7 +1,7 @@
 package com.cob.salesforce.services.admin.insurance;
 
 import com.cob.salesforce.entity.admin.ClinicEntity;
-import com.cob.salesforce.entity.admin.insurance.InsuranceCompanyEntity;
+import com.cob.salesforce.entity.admin.InsuranceCompanyEntity;
 import com.cob.salesforce.models.admin.insurance.InsuranceCompanyModel;
 import com.cob.salesforce.repositories.admin.clinic.ClinicRepository;
 import com.cob.salesforce.repositories.admin.clinic.InsuranceCompanyRepository;
@@ -35,7 +35,6 @@ public class InsuranceCompanyCreatorServiceImpl implements InsuranceCompanyCreat
         });
         InsuranceCompanyEntity created = repository.save(mapper.map(model, InsuranceCompanyEntity.class));
         created.setClinics(clinicEntityList);
-        model.setCreatedAt(created.getCreatedAt());
         model.setId(created.getId());
         return model;
     }
