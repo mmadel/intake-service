@@ -46,7 +46,7 @@ public class KeyCloakUsersCreatorService {
     Keycloak keycloakService;
 
 
-    @Value("${kc.base.url}")
+    @Value("${kc.url}")
     private String keycloakURL;
 
     @Value("${kc.realm}")
