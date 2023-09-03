@@ -31,7 +31,8 @@ public abstract class AuditService {
     public List queryEntityAuditTable(Class entity, String UUID) {
         reader = AuditReaderFactory.get(factory.createEntityManager());
         AuditQuery auditQuery = reader.createQuery()
-                .forRevisionsOfEntity(entity, false, false);
+                .forRevisionsOfEntity(entity, false, false)
+                .addOrder(AuditEntity.revisionProperty("timestamp").asc());
         if (UUID != null)
             auditQuery.add(AuditEntity.revisionProperty("uuid").eq(UUID));
         return auditQuery.getResultList();
