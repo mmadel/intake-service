@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.RevisionType;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 
 import java.util.Date;
 
@@ -14,6 +15,8 @@ public class AuditModel {
     private Date revisionDate;
     private String uuid;
     private RevisionType revisionType;
-    private String entity;
+
+    private Object entity;
+    private String entityName;
 
 }
