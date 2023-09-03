@@ -15,7 +15,7 @@ public class ClinicAuditController {
 
     @GetMapping(path = "/retrieve/uuid/{uuid}")
     @ResponseBody
-    public ResponseEntity retrieveByEntityAndUUID(@PathVariable String uuid) throws ClassNotFoundException {
+    public ResponseEntity retrieveByEntityAndUUID(@PathVariable String uuid)  {
         return new ResponseEntity(auditService.getByEntityAndUUID(ClinicEntity.class, uuid), HttpStatus.OK);
     }
 
