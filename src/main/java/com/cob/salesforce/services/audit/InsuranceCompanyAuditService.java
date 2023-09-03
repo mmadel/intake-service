@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManagerFactory;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,6 +28,7 @@ public class InsuranceCompanyAuditService extends AuditService {
 
     @Override
     public List<AuditModel> getByEntityAndUUID(Class entity, String UUID) {
+        List<AuditModel> result = new ArrayList<>();
         List insuranceCompanyQueryResult = queryEntityAuditTable(entity, UUID);
         for (Object item : insuranceCompanyQueryResult) {
             InsuranceCompanyEntity entityClass = (InsuranceCompanyEntity) ((Object[]) item)[0];

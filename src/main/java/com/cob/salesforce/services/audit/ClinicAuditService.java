@@ -4,10 +4,9 @@ import com.cob.salesforce.entity.admin.ClinicEntity;
 import com.cob.salesforce.entity.audit.CustomRevisionEntity;
 import com.cob.salesforce.models.admin.audit.AuditModel;
 import org.hibernate.envers.RevisionType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManagerFactory;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,6 +20,7 @@ public class ClinicAuditService extends AuditService {
 
     @Override
     public List<AuditModel> getByEntityAndUUID(Class entity, String UUID) {
+        List<AuditModel> result = new ArrayList<>();
         List clinicQueryResult = queryEntityAuditTable(entity, UUID);
         for (Object item : clinicQueryResult) {
             ClinicEntity entityClass = (ClinicEntity) ((Object[]) item)[0];

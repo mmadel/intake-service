@@ -17,7 +17,6 @@ public abstract class AuditService {
 
     private EntityManagerFactory factory;
     private AuditReader reader;
-    List<AuditModel> result = new ArrayList<>();
 
     abstract List<AuditModel> getByEntity(Class entity) throws ClassNotFoundException;
 
