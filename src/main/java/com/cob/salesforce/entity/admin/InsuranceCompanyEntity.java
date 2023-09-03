@@ -1,7 +1,5 @@
 package com.cob.salesforce.entity.admin;
 
-import com.cob.salesforce.entity.admin.ClinicEntity;
-import com.cob.salesforce.utils.DateUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.AuditTable;
@@ -9,7 +7,6 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity

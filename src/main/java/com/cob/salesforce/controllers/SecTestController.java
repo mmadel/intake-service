@@ -10,11 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class SecTestController {
 
-    @Autowired
-    AuditService auditService;
     @GetMapping("/all")
-    public String sayGreeting(HttpServletRequest request) throws ClassNotFoundException {
-        auditService.test("InsuranceCompanyEntity");
+    public String sayGreeting(HttpServletRequest request) {
         return "hello,world..!!";
     }
 

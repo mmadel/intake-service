@@ -16,4 +16,5 @@ import javax.persistence.Table;
 @Table(schema = "audit_salesforce",catalog ="audit_salesforce", name = "revinfo")
 public class CustomRevisionEntity extends DefaultRevisionEntity {
     private String uuid;
+
 }

@@ -7,12 +7,10 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 
-import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
-
 @Entity
 @Setter
 @Getter
-@Audited()
+@Audited(withModifiedFlag = true)
 @AuditTable(schema = "audit_salesforce",catalog ="audit_salesforce",  value = "AU_CLINIC")
 public class ClinicEntity {
     @Id
