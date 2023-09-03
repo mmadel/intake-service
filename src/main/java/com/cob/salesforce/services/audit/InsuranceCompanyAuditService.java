@@ -35,7 +35,7 @@ public class InsuranceCompanyAuditService extends AuditService {
             InsuranceCompanyEntity clinicVersion = (InsuranceCompanyEntity) getEntityVersion(entity, entityClass.getId(), versionId);
             RevisionType revisionType = (RevisionType) ((Object[]) item)[2];
             result.add(AuditModel.builder()
-                    .revisionDate(CustomRevisionEntity.getRevisionDate())
+                    .revisionDate(CustomRevisionEntity.getTimestamp())
                     .uuid(CustomRevisionEntity.getUuid())
                     .revisionType(revisionType)
                     .entity(clinicVersion)

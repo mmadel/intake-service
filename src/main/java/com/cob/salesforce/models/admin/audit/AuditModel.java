@@ -12,7 +12,7 @@ import java.util.Date;
 @Getter
 @Builder
 public class AuditModel {
-    private Date revisionDate;
+    private Long revisionDate;
     private String uuid;
     private RevisionType revisionType;
 
