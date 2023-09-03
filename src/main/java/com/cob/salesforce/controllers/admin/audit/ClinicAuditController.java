@@ -1,17 +1,17 @@
 package com.cob.salesforce.controllers.admin.audit;
 
 import com.cob.salesforce.entity.admin.ClinicEntity;
-import com.cob.salesforce.services.audit.AuditService;
+import com.cob.salesforce.services.audit.ClinicAuditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/audit")
-public class AuditController {
+@RequestMapping(value = "/audit/clinic")
+public class ClinicAuditController {
     @Autowired
-    AuditService auditService;
+    ClinicAuditService auditService;
 
     @GetMapping(path = "/retrieve/uuid/{uuid}")
     @ResponseBody
