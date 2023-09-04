@@ -1,15 +1,17 @@
 package com.cob.salesforce.configuration;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.filter.CommonsRequestLoggingFilter;
 import org.springframework.web.filter.ServletContextRequestLoggingFilter;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class ApplicationConfiguration {

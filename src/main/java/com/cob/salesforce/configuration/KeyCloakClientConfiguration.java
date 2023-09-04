@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class KeyCloakClientConfiguration {
-    @Value("${kc.base.url}")
+    @Value("${kc.url}")
     private String baseUrl;
     @Value("${kc.realm}")
     private String realm;

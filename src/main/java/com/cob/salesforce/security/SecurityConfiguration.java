@@ -38,7 +38,7 @@ public class SecurityConfiguration {
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.authorizeHttpRequests(authorize -> authorize
-                        .antMatchers("/authentication/tokens", "/requires/fields/retrieve/**").permitAll()
+                        .antMatchers("/authentication/tokens", "/requires/fields/retrieve/**","/audit/**").permitAll()
                         .antMatchers("/user/**").hasAnyRole("administrator", "normal")
                         .antMatchers("/patient/find/clinic/**").hasAnyRole("administrator", "normal")
                         .antMatchers("/dashboard/**", "/clinic/**",
