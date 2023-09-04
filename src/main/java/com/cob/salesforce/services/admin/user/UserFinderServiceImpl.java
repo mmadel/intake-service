@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
@@ -33,6 +35,7 @@ public class UserFinderServiceImpl implements UserFinderService {
     public List<UserModel> getAll() {
         List<UserModel> userModels = new ArrayList<>();
         List<UserRepresentation> kcUsers = keyCloakUsersService.getAllUsers();
+        List<String> userRepresentationIdList = new ArrayList<>();
         kcUsers.forEach(userRepresentation -> {
             UserModel userModel = new UserModel();
             userModel.setName(userRepresentation.getUsername());
@@ -41,17 +44,44 @@ public class UserFinderServiceImpl implements UserFinderService {
             if (userRole != null) {
                 userModel.setUserRole(userRole);
             }
-
-            List<Long> clinicIds = new ArrayList<>();
-            userRepository.findByUserId(userRepresentation.getId()).get().forEach(userClinicEntity -> {
-                clinicIds.add(userClinicEntity.getClinicId());
-            });
-            List<ClinicModel> clinicModels = new ArrayList<>();
-            clinicRepository.findAllById(clinicIds).forEach(clinicEntity -> {
-                clinicModels.add(mapper.map(clinicEntity, ClinicModel.class));
-            });
-            userModel.setClinics(clinicModels);
+            userRepresentationIdList.add(userRepresentation.getId());
             userModels.add(userModel);
+        });
+        List<Long> clinicIds = new ArrayList<>();
+        Map<String, List<ClinicModel>> userClinicMap = new HashMap<>();
+        userRepository.findByUsers(userRepresentationIdList).forEach(userClinicEntity -> {
+            clinicIds.add(userClinicEntity.getClinicId());
+            List<ClinicModel> clinics = userClinicMap.get(userClinicEntity.getUserId());
+            if (clinics == null) {
+                List<ClinicModel> list = new ArrayList<>();
+                ClinicModel clinicModel = new ClinicModel();
+                clinicModel.setId(userClinicEntity.getClinicId());
+                list.add(clinicModel);
+                userClinicMap.put(userClinicEntity.getUserId(), list);
+            } else {
+                ClinicModel clinicModel = new ClinicModel();
+                clinicModel.setId(userClinicEntity.getClinicId());
+                clinics.add(clinicModel);
+                userClinicMap.put(userClinicEntity.getUserId(), clinics);
+            }
+        });
+
+        clinicRepository.findAllById(clinicIds).forEach(clinicEntity -> {
+            userClinicMap.entrySet().stream().forEach(stringListEntry -> {
+                List<ClinicModel> list = stringListEntry.getValue();
+                list.forEach(model -> {
+                    if (model.getId().equals(clinicEntity.getId())) {
+                        model.setName(clinicEntity.getName());
+                        model.setAddress(clinicEntity.getAddress());
+                    }
+                });
+            });
+        });
+        userModels.forEach(model -> {
+            userClinicMap.entrySet().stream().forEach(stringListEntry -> {
+                if (stringListEntry.getKey().equals(model.getUuid()))
+                    model.setClinics(stringListEntry.getValue());
+            });
         });
         return userModels;
     }

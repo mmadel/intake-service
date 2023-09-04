@@ -15,4 +15,7 @@ public interface UserRepository extends PagingAndSortingRepository<UserClinicEnt
     @Modifying
     @Query("delete from UserClinicEntity uc where uc.userId =:userId")
     void deleteUser(@Param("userId") String userId);
+
+    @Query("select uc from UserClinicEntity uc where uc.userId in :ids")
+    List<UserClinicEntity> findByUsers(@Param("ids") List<String> ids);
 }
