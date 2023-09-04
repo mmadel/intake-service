@@ -83,10 +83,6 @@ public class KeyCloakUsersCreatorService {
         setUserPassword(userId, keyCloakUser.getPassword());
 
         UserResource userResource = usersResource.get(userId);
-        CredentialRepresentation credential = new CredentialRepresentation();
-        credential.setTemporary(true);
-        credential.setType(CredentialRepresentation.PASSWORD);
-        credential.setValue(encryption.decrypt(keyCloakUser.getPassword()));
 
         updateAttribute(userResource, "address", keyCloakUser.getAddress());
         ClientRepresentation clientRepresentation = realmResource.clients().findByClientId("intake-ui").get(0);
@@ -109,7 +105,7 @@ public class KeyCloakUsersCreatorService {
                 .password(admin_password)
                 .build()).getAccess_token());
         CredentialRepresentation credential = new CredentialRepresentation();
-        credential.setTemporary(false);
+        credential.setTemporary(true);
         credential.setType(CredentialRepresentation.PASSWORD);
         credential.setValue(encryption.decrypt(password));
         Gson gson = new Gson();
