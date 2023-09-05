@@ -7,5 +7,6 @@ import lombok.Setter;
 @Getter
 public class PatientSignatureDTO {
     private String signature;
+    private byte[] signatureAsBytes;
     private Long patientId;
 }

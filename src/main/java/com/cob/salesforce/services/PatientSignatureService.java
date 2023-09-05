@@ -24,6 +24,7 @@ public class PatientSignatureService {
     public PatientSignatureDTO get(Long patientId) {
         PatientSignatureEntity entity = repository.findByPatientId(patientId);
         PatientSignatureDTO model = new PatientSignatureDTO();
+        model.setSignatureAsBytes(entity.getSignature());
         model.setSignature(javax.xml.bind.DatatypeConverter.printBase64Binary(entity.getSignature()));
         return model;
     }
