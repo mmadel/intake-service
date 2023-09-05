@@ -16,5 +16,5 @@ public class PatientSignatureEntity {
 
     @Column(name = "signature", unique = false, nullable = false, length = 100000)
     private byte[] signature;
-    private String patientId;
+    private Long patientId;
 }

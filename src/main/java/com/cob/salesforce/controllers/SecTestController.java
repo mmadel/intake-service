@@ -19,14 +19,14 @@ public class SecTestController {
     @Autowired
     PatientSignatureRepository repository;
     @PostMapping("/all")
-    public String sayGreeting(@RequestBody PatientSignatureDTO model) throws UnsupportedEncodingException {
+    public ResponseEntity sayGreeting(@RequestBody PatientSignatureDTO model) throws UnsupportedEncodingException {
         PatientSignatureEntity entity = new PatientSignatureEntity();
         String base64Image = model.getSignature().split(",")[1];
 
         entity.setSignature(javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image));
-        entity.setPatientId("33333");
+        entity.setPatientId(model.getPatientId());
         repository.save(entity);
-        return "hello,world..!!";
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/test/{id}")

@@ -7,5 +7,5 @@ import lombok.Setter;
 @Getter
 public class PatientSignatureDTO {
     private String signature;
-    private String patientId;
+    private Long patientId;
 }
