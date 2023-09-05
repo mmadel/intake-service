@@ -10,6 +10,7 @@ import java.io.IOException;
 public class PatientSignaturePDFGenerator {
     public static void create(Document document, PatientDTO dto) throws DocumentException, IOException {
         Image img = Image.getInstance((dto.getPatientSignature().getSignatureAsBytes()));
+        img.scaleToFit(100f, 100f);
         document.add(img);
     }
 }
