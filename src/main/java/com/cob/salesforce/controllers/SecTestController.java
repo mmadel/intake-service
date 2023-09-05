@@ -1,16 +1,10 @@
 package com.cob.salesforce.controllers;
 
-import com.cob.salesforce.entity.PatientSignatureEntity;
 import com.cob.salesforce.models.PatientSignatureDTO;
-import com.cob.salesforce.repositories.PatientSignatureRepository;
-import com.cob.salesforce.services.audit.AuditService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 
 @RestController
