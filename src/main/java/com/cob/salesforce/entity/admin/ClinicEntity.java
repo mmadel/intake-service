@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Audited(withModifiedFlag = true)
-@AuditTable(schema = "audit_salesforce",catalog ="audit_salesforce",  value = "AU_CLINIC")
+@AuditTable(value = "AU_CLINIC")
 public class ClinicEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

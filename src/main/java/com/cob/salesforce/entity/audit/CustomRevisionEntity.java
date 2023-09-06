@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Getter
 @Entity
 @RevisionEntity(CustomRevisionListener.class)
-@Table(schema = "audit_salesforce",catalog ="audit_salesforce", name = "revinfo")
+@Table(name = "revinfo")
 public class CustomRevisionEntity extends DefaultRevisionEntity {
     private String uuid;
 

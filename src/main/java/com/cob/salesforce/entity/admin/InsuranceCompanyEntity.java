@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @Getter
 @Audited()
-@AuditTable(schema = "audit_salesforce",catalog ="audit_salesforce",  value = "AU_INSURANCE_COMPANY")
+@AuditTable(value = "AU_INSURANCE_COMPANY")
 public class InsuranceCompanyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
