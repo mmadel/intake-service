@@ -65,11 +65,11 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(controllerErrorResponse, HttpStatus.UNAUTHORIZED);
     }
 
-//    @ExceptionHandler(value = {UserKeyCloakException.class})
-//    public ResponseEntity handleKeyCloak(UserKeyCloakException ex, WebRequest request) {
-//        String errorMessage = messageSource.getMessage(ex.getCode(), ex.getParameters(), Locale.ENGLISH);
-//        ControllerErrorResponse controllerErrorResponse = new ControllerErrorResponse(errorMessage, ex.getStatus());
-//        log.error(controllerErrorResponse.getMessage());
-//        return new ResponseEntity<>(controllerErrorResponse, ex.getStatus());
-//    }
+    @ExceptionHandler(value = {UserKeyCloakException.class})
+    public ResponseEntity handleKeyCloak(UserKeyCloakException ex, WebRequest request) {
+        String errorMessage = messageSource.getMessage(ex.getCode(), ex.getParameters(), Locale.ENGLISH);
+        ControllerErrorResponse controllerErrorResponse = new ControllerErrorResponse(errorMessage, ex.getStatus());
+        log.error(controllerErrorResponse.getMessage());
+        return new ResponseEntity<>(controllerErrorResponse, ex.getStatus());
+    }
 }

@@ -38,12 +38,12 @@ public class SecurityConfiguration {
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.authorizeHttpRequests(authorize -> authorize
-                        .antMatchers("/authentication/tokens", "/requires/fields/retrieve/**","/all","/test/**").permitAll()
+                        .antMatchers("/authentication/tokens", "/requires/fields/retrieve/**").permitAll()
                         .antMatchers("/user/**").hasAnyRole("administrator", "normal")
                         .antMatchers("/patient/find/clinic/**").hasAnyRole("administrator", "normal")
                         .antMatchers("/dashboard/**", "/clinic/**",
                                 "/insurance/company/**", "/reports/recommendation/**",
-                                "/reports/generator/**","reports/generator/pdf/patientId/**").hasRole("administrator")
+                                "/reports/generator/**","reports/generator/pdf/patientId/**","/audit/**").hasRole("administrator")
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> {
