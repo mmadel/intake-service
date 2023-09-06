@@ -27,7 +27,7 @@ public class PatientDTO {
     AgreementsDTO agreements;
 
     Map<String, String> patientAgreement = new LinkedHashMap<>();
-    PatientSignatureDTO patientSignature;
+    private PatientSignatureDTO patientSignature;
 
 
     Long createdAt;
