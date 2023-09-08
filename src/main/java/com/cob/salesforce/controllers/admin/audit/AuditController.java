@@ -5,6 +5,8 @@ import com.cob.salesforce.entity.admin.InsuranceCompanyEntity;
 import com.cob.salesforce.models.admin.audit.AuditModel;
 import com.cob.salesforce.services.audit.ClinicAuditService;
 import com.cob.salesforce.services.audit.InsuranceCompanyAuditService;
+import com.cob.salesforce.services.audit.Temp;
+import com.cob.salesforce.services.audit.Tempa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +18,9 @@ import java.util.List;
 @RequestMapping(value = "/audit")
 public class AuditController {
     @Autowired
-    ClinicAuditService clinicAuditService;
+    Temp clinicAuditService;
     @Autowired
-    InsuranceCompanyAuditService insuranceCompanyAuditService;
+    Tempa insuranceCompanyAuditService;
 
     @GetMapping(path = "/retrieve/uuid/{uuid}")
     @ResponseBody
