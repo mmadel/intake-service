@@ -23,6 +23,7 @@ public class PatientMedicalHistoryMapper implements PatientDependencyMapper {
 
     @PostConstruct
     public void init() {
+        this.mapper.getConfiguration().setAmbiguityIgnored(true);
         mapper.createTypeMap(PatientDTO.class, PatientMedicalHistory.class)
                 .addMappings(mapper -> {
                     mapper.map(src -> src.getMedicalHistoryInformation().getHeight(), PatientMedicalHistory::setHeight);
