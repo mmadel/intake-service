@@ -78,7 +78,7 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     private Map getClinicsData(String userId, Long startDate, Long endDate) {
-        log.debug("DashboardService-Get Clinics Data {}", userId);
+        log.info("DashboardService-Get Clinics Data {}", userId);
         Map clinicData = new HashMap<String, List<Integer>>();
         double totalPatients = 0;
         if (startDate == 0 && endDate == 0)
