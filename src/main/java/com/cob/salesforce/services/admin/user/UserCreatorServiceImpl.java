@@ -8,7 +8,10 @@ import com.cob.salesforce.models.admin.user.UserModel;
 import com.cob.salesforce.models.security.KeyCloakUser;
 import com.cob.salesforce.repositories.admin.user.UserRepository;
 import com.cob.salesforce.services.security.KeyCloakUsersCreatorService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.BadPaddingException;
@@ -26,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class UserCreatorServiceImpl implements UserCreatorService {
 
     @Autowired
@@ -35,7 +39,9 @@ public class UserCreatorServiceImpl implements UserCreatorService {
     KeyCloakUsersCreatorService keyCloakUsersCreatorService;
 
     @Override
+    @CacheEvict(value = "users", allEntries = true)
     public UserModel create(UserModel userModel) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, UserException, UserKeyCloakException {
+        log.info("create user " , userModel.getName());
         KeyCloakUser keyCloakUser = KeyCloakUser.builder()
                 .username(userModel.getName())
                 .firstName("firstName" + generateRandom())
@@ -52,7 +58,9 @@ public class UserCreatorServiceImpl implements UserCreatorService {
     }
 
     @Override
+    @CacheEvict(value = "users", allEntries = true)
     public UserModel update(UserModel userModel) throws UserException, NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        log.info("update user " , userModel.getName());
         KeyCloakUser keyCloakUser = KeyCloakUser.builder()
                 .userId(userModel.getUuid())
                 .address(userModel.getAddress())

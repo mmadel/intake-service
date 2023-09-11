@@ -5,12 +5,14 @@ import com.cob.salesforce.models.admin.user.UserModel;
 import com.cob.salesforce.repositories.admin.clinic.ClinicRepository;
 import com.cob.salesforce.repositories.admin.user.UserRepository;
 import com.cob.salesforce.services.security.KeyCloakUsersFinderService;
+import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
+@Slf4j
 public class UserFinderServiceImpl implements UserFinderService {
     @Autowired
     UserRepository userRepository;
@@ -32,7 +35,9 @@ public class UserFinderServiceImpl implements UserFinderService {
     KeyCloakUsersFinderService keyCloakUsersService;
 
     @Override
+    @Cacheable("users")
     public List<UserModel> getAll() {
+        log.info("get all users");
         List<UserModel> userModels = new ArrayList<>();
         List<UserRepresentation> kcUsers = keyCloakUsersService.getAllUsers();
         List<String> userRepresentationIdList = new ArrayList<>();
