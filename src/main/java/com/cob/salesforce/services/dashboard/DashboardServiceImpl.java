@@ -13,8 +13,9 @@ import com.cob.salesforce.repositories.*;
 import com.cob.salesforce.services.admin.user.UserFinderService;
 import com.cob.salesforce.utils.DateUtil;
 import com.cob.salesforce.utils.NumberUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +24,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
+
 public class DashboardServiceImpl implements DashboardService {
+    private static final Logger log = LogManager.getLogger(DashboardServiceImpl.class);
     double totalNumberOfPatients = 0;
     @Autowired
     UserFinderService userFinderService;
