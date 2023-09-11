@@ -21,6 +21,7 @@ public class PatientMedicalMapper implements PatientDependencyMapper {
     }
     @PostConstruct
     public void init() {
+        this.mapper.getConfiguration().setAmbiguityIgnored(true);
         this.mapper.createTypeMap(PatientDTO.class, PatientMedical.class)
                 .addMappings(mapper -> {
                     mapper.map(src -> src.getMedicalQuestionnaireInfo().getAppointmentBooking(), PatientMedical::setAppointmentBooking);
