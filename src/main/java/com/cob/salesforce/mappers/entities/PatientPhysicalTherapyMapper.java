@@ -23,6 +23,7 @@ public class PatientPhysicalTherapyMapper implements PatientDependencyMapper {
 
     @PostConstruct
     public void init() {
+        this.mapper.getConfiguration().setAmbiguityIgnored(true);
         mapper.createTypeMap(PatientDTO.class, PhysicalTherapy.class)
                 .addMappings(mapper -> {
                     mapper.map(src -> src.getMedicalQuestionnaireInfo().getPhysicalTherapy().getLocation(), PhysicalTherapy::setLocation);
