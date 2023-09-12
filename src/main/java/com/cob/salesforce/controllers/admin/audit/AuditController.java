@@ -1,12 +1,12 @@
 package com.cob.salesforce.controllers.admin.audit;
 
+import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.entity.admin.ClinicEntity;
 import com.cob.salesforce.entity.admin.InsuranceCompanyEntity;
 import com.cob.salesforce.models.admin.audit.AuditModel;
 import com.cob.salesforce.services.audit.ClinicAuditService;
 import com.cob.salesforce.services.audit.InsuranceCompanyAuditService;
-import com.cob.salesforce.services.audit.Temp;
-import com.cob.salesforce.services.audit.Tempa;
+import com.cob.salesforce.services.audit.PatientAuditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,11 @@ import java.util.List;
 @RequestMapping(value = "/audit")
 public class AuditController {
     @Autowired
-    Temp clinicAuditService;
+    ClinicAuditService clinicAuditService;
     @Autowired
-    Tempa insuranceCompanyAuditService;
+    InsuranceCompanyAuditService insuranceCompanyAuditService;
+    @Autowired
+    PatientAuditService patientAuditService;
 
     @GetMapping(path = "/retrieve/uuid/{uuid}")
     @ResponseBody
@@ -28,6 +30,7 @@ public class AuditController {
         List<AuditModel> result = new ArrayList<>();
         result.addAll(clinicAuditService.getByEntityAndUUID(ClinicEntity.class, uuid));
         result.addAll(insuranceCompanyAuditService.getByEntityAndUUID(InsuranceCompanyEntity.class, uuid));
+        result.addAll(patientAuditService.getByEntityAndUUID(Patient.class, uuid));
         return new ResponseEntity(result, HttpStatus.OK);
     }
 }

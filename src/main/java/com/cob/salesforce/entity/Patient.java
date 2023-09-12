@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,6 +19,8 @@ import java.util.Set;
 @Entity(name = "patient")
 @Getter
 @Setter
+@Audited
+@AuditTable(value = "AU_PATIENT")
 public class Patient {
 
     @Id
@@ -87,6 +92,7 @@ public class Patient {
         createdAt = new Date().getTime();
     }
 
+    @NotAudited
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "clinic_id", referencedColumnName = "id")
     private ClinicEntity clinic;
