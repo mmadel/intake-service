@@ -4,6 +4,7 @@ import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.entity.admin.ClinicEntity;
 import com.cob.salesforce.entity.admin.InsuranceCompanyEntity;
 import com.cob.salesforce.models.admin.audit.AuditModel;
+import com.cob.salesforce.models.admin.audit.AuditResponse;
 import com.cob.salesforce.services.audit.ClinicAuditService;
 import com.cob.salesforce.services.audit.InsuranceCompanyAuditService;
 import com.cob.salesforce.services.audit.PatientAuditService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @RestController
 @RequestMapping(value = "/audit")
 public class AuditController {
@@ -26,11 +28,25 @@ public class AuditController {
 
     @GetMapping(path = "/retrieve/uuid/{uuid}")
     @ResponseBody
-    public ResponseEntity retrieve(@PathVariable String uuid) {
-        List<AuditModel> result = new ArrayList<>();
-        result.addAll(clinicAuditService.getByEntityAndUUID(ClinicEntity.class, uuid));
-        result.addAll(insuranceCompanyAuditService.getByEntityAndUUID(InsuranceCompanyEntity.class, uuid));
-        result.addAll(patientAuditService.getByEntityAndUUID(Patient.class, uuid));
-        return new ResponseEntity(result, HttpStatus.OK);
+    public ResponseEntity retrieve(@PathVariable String uuid, @RequestParam(name = "currentPage") Integer currentPage,
+                                   @RequestParam(name = "pageSize") Integer pageSize) {
+        Integer pageSizePerEntity = pageSize % 3;
+        int clinicPageSize = pageSizePerEntity;
+        int insuranceCompanyPageSize = pageSizePerEntity;
+        int patientPageSize = pageSizePerEntity;
+        if (clinicPageSize + insuranceCompanyPageSize + patientPageSize > pageSize)
+            patientPageSize = patientPageSize - 1;
+        AuditResponse clinicAuditResponse = clinicAuditService.getByEntityAndUUID(uuid, currentPage, clinicPageSize);
+        AuditResponse insuranceCompanyAuditResponse = insuranceCompanyAuditService.getByEntityAndUUID(uuid, currentPage, insuranceCompanyPageSize);
+        AuditResponse patientAuditResponse = patientAuditService.getByEntityAndUUID(uuid, currentPage, patientPageSize);
+        List<AuditModel> auditModels = new ArrayList<>();
+        auditModels.addAll(clinicAuditResponse.getAuditModels());
+        auditModels.addAll(insuranceCompanyAuditResponse.getAuditModels());
+        auditModels.addAll(patientAuditResponse.getAuditModels());
+        AuditResponse auditResponse = AuditResponse.builder()
+                .count(clinicAuditResponse.getCount() + insuranceCompanyAuditResponse.getCount() + patientAuditResponse.getCount())
+                .auditModels(auditModels)
+                .build();
+        return new ResponseEntity(auditResponse, HttpStatus.OK);
     }
 }

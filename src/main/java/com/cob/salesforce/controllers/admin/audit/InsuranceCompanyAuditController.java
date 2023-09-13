@@ -16,13 +16,15 @@ public class InsuranceCompanyAuditController {
 
     @GetMapping(path = "/retrieve/uuid/{uuid}")
     @ResponseBody
-    public ResponseEntity retrieveByEntityAndUUID(@PathVariable String uuid) {
-        return new ResponseEntity(insuranceCompanyAuditService.getByEntityAndUUID(InsuranceCompanyEntity.class, uuid), HttpStatus.OK);
+    public ResponseEntity retrieveByEntityAndUUID(@PathVariable String uuid, @RequestParam(name = "offset") Integer offset,
+                                                  @RequestParam(name = "limit") Integer limit) {
+        return new ResponseEntity(insuranceCompanyAuditService.getByEntityAndUUID(uuid, offset, limit), HttpStatus.OK);
     }
 
     @GetMapping(path = "/retrieve")
     @ResponseBody
-    public ResponseEntity retrieveByUUID() throws ClassNotFoundException {
-        return new ResponseEntity(insuranceCompanyAuditService.getByEntity(InsuranceCompanyEntity.class), HttpStatus.OK);
+    public ResponseEntity retrieveByUUID(@RequestParam(name = "offset") Integer offset,
+                                         @RequestParam(name = "limit") Integer limit) throws ClassNotFoundException {
+        return new ResponseEntity(insuranceCompanyAuditService.getByEntity(offset, limit), HttpStatus.OK);
     }
 }
