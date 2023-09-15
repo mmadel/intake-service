@@ -2,6 +2,7 @@ package com.cob.salesforce.entity.intake;
 
 import com.cob.salesforce.enums.Gender;
 import com.cob.salesforce.enums.MaritalStatus;
+import com.cob.salesforce.models.intake.agreement.PatientAgreement;
 import com.cob.salesforce.models.intake.essentials.*;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "new_patient")
@@ -25,37 +27,12 @@ public class PatientEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "patient_name", columnDefinition = "json")
+    @Column(name = "patient_essential_information", columnDefinition = "json")
     @Type(type = "json")
-    private PatientName patientName;
-
-    @Column(name = "date_of_birth")
-    private Long dateOfBirth;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "gender")
-    private Gender gender;
-
-    @Column(name = "patient_phone", columnDefinition = "json")
+    PatientEssentialInformation patientEssentialInformation;
+    @Column(name = "patient_agreements", columnDefinition = "json")
     @Type(type = "json")
-    private PatientPhone patientPhone;
-
-    @Column(name = "email")
-    private String email;
-    @Column(name = "patient_address", columnDefinition = "json")
-    @Type(type = "json")
-    private PatientAddress patientAddress;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "marital_status")
-    private MaritalStatus maritalStatus;
-
-    @Column(name = "patient_emergency_contact", columnDefinition = "json")
-    @Type(type = "json")
-    private PatientEmergencyContact patientEmergencyContact;
-
-    @Column(name = "patient_employment", columnDefinition = "json")
-    @Type(type = "json")
-    private PatientEmployment patientEmployment;
+    private List<PatientAgreement> patientAgreements;
     @Column
     private Long createdAt;
 

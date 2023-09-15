@@ -7,17 +7,12 @@ import java.io.Serializable;
 
 @Setter
 @Getter
-public class Source implements Serializable {
-    private boolean SourceType;
-
+public class DoctorSource  implements Serializable {
     private String doctorName;
 
     private String doctorNPI;
 
-
     private Long doctorFax;
 
     private String doctorAddress;
-
-    private String organizationName;
 }

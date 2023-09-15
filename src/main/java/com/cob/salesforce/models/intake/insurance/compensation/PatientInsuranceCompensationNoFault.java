@@ -3,9 +3,11 @@ package com.cob.salesforce.models.intake.insurance.compensation;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Setter
 @Getter
-public class PatientInsuranceCompensationNoFault {
+public class PatientInsuranceCompensationNoFault implements Serializable {
     private String injuryType;
     private Long accidentDate;
 

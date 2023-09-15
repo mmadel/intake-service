@@ -1,5 +1,6 @@
 package com.cob.salesforce.models.intake.medical;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,8 @@ import java.io.Serializable;
 
 @Setter
 @Getter
-public class PatientMedical  implements Serializable {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class PatientMedical implements Serializable {
     private Boolean familyResultSubmission;
     private String appointmentBooking;
     private String primaryDoctor;
