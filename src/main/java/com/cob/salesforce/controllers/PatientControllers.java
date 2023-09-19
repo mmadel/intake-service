@@ -2,11 +2,12 @@ package com.cob.salesforce.controllers;
 
 import com.cob.salesforce.dependencies.creator.PatientPhotoUploaderService;
 import com.cob.salesforce.exception.business.PatientException;
-import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.models.PatientSignatureDTO;
+import com.cob.salesforce.models.intake.Patient;
 import com.cob.salesforce.services.PatientCreatorService;
 import com.cob.salesforce.services.PatientFinderService;
 import com.cob.salesforce.services.PatientSignatureService;
+import com.cob.salesforce.services.intake.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,8 @@ import java.io.IOException;
 public class PatientControllers {
 
     @Autowired
+    PatientService patientService;
+    @Autowired
     private PatientCreatorService patientCreatorService;
     @Autowired
     private PatientFinderService patientFinderService;
@@ -35,9 +38,8 @@ public class PatientControllers {
 
     @PostMapping("/create")
     @ResponseBody
-    public ResponseEntity<Long> create(@RequestBody PatientDTO model) throws PatientException {
-        Long createdPatientId = 0L;
-        createdPatientId = patientCreatorService.create(model);
+    public ResponseEntity<Long> create(@RequestBody Patient model) throws PatientException {
+        Long createdPatientId = patientService.create(model);
         return new ResponseEntity<>(createdPatientId, HttpStatus.OK);
     }
 

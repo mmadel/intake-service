@@ -5,6 +5,7 @@ import com.cob.salesforce.entity.PatientPhotoImage;
 import com.cob.salesforce.repositories.PatientGrantorRepository;
 import com.cob.salesforce.repositories.PatientPhotoImageRepository;
 import com.cob.salesforce.repositories.PatientRepository;
+import com.cob.salesforce.repositories.intake.PatientRepositoryNew;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,8 @@ public class PatientPhotoUploaderServiceImpl implements PatientPhotoUploaderServ
 
     @Autowired
     PatientRepository patientRepository;
+    @Autowired
+    PatientRepositoryNew patientRepositoryNew;
 
     @Autowired
     PatientGrantorRepository patientGrantorRepository;
@@ -36,7 +39,7 @@ public class PatientPhotoUploaderServiceImpl implements PatientPhotoUploaderServ
                             .name(multipartFile.getOriginalFilename())
                             .type(multipartFile.getContentType())
                             .image(multipartFile.getBytes())
-                            .patient(patientRepository.findById(patientId).get())
+                            .patient(patientRepositoryNew.findById(patientId).get())
                             .build());
                 }
                 if (multipartFile.getOriginalFilename().contains("guarantor")) {
