@@ -2,9 +2,11 @@ package com.cob.salesforce.controllers.admin.reports;
 
 import com.cob.salesforce.models.PatientContainerDTO;
 import com.cob.salesforce.models.PatientDTO;
+import com.cob.salesforce.models.intake.Patient;
 import com.cob.salesforce.services.PatientFinderService;
 import com.cob.salesforce.services.export.excel.ExcelReportGenerator;
 import com.cob.salesforce.services.export.pdf.PatientPDFGenerator;
+import com.cob.salesforce.services.intake.PatientFinderServiceNew;
 import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,9 @@ public class ReportGeneratorController {
     @Autowired
     PatientFinderService patientFinderService;
 
+    @Autowired
+    PatientFinderServiceNew patientFinderServiceNew;
+
     @PostMapping("/excel")
     public void generateExcel(@RequestBody List<PatientContainerDTO> patients, HttpServletResponse response) throws IOException {
         ExcelReportGenerator excelReportGenerator = new ExcelReportGenerator();
@@ -41,11 +46,12 @@ public class ReportGeneratorController {
     @PostMapping(value = "/pdf/patientId/{patientId}")
     public void generatePDF(@PathVariable("patientId") Long patientId,
                             HttpServletResponse response) throws DocumentException, IOException {
-        PatientDTO patientData = patientFinderService.getPatient(patientId);
+        //PatientDTO patientData = patientFinderService.getPatient(patientId);
+        Patient model = patientFinderServiceNew.getPatient(patientId);
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition","inline");
         PatientPDFGenerator pdfGenerator = new PatientPDFGenerator();
-        pdfGenerator.setData(patientData);
+        pdfGenerator.setData(model);
         pdfGenerator.generate(response);
     }
 }

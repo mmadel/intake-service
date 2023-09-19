@@ -6,6 +6,7 @@ import com.cob.salesforce.mappers.dtos.*;
 import com.cob.salesforce.mappers.entities.PatientContainerMapper;
 import com.cob.salesforce.models.*;
 import com.cob.salesforce.repositories.*;
+import com.cob.salesforce.repositories.intake.PatientRepositoryNew;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class PatientFinderServiceImpl implements PatientFinderService {
+
+    @Autowired
+    PatientRepositoryNew patientRepositoryNew;
     @Autowired
     PatientRepository patientRepository;
     @Autowired

@@ -29,4 +29,5 @@ public class Patient {
     private PatientAgreement patientAgreements;
 
     private Long clinicId;
+    private Long createdAt;
 }

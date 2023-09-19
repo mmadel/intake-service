@@ -1,12 +1,15 @@
 package com.cob.salesforce.services.intake;
 
 import com.cob.salesforce.BeanFactory;
+import com.cob.salesforce.entity.intake.PatientSourceEntity;
 import com.cob.salesforce.enums.InsuranceWorkerType;
 import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.models.intake.Patient;
 import com.cob.salesforce.models.intake.grantor.PatientGrantor;
 import com.cob.salesforce.models.intake.insurance.PatientInsurance;
 import com.cob.salesforce.models.intake.medical.PatientMedical;
+import com.cob.salesforce.models.intake.source.DoctorSource;
+import com.cob.salesforce.models.intake.source.EntitySource;
 import com.cob.salesforce.models.intake.source.PatientSource;
 import com.cob.salesforce.repositories.intake.PatientGrantorRepositoryNew;
 import com.cob.salesforce.repositories.intake.PatientInsuranceRepositoryNew;
@@ -33,6 +36,7 @@ public class PatientDependenciesMapper {
         return getPatientInsurance(patientId)
                 .getPatientCommercialInsurance() != null ? InsuranceWorkerType.Commercial : InsuranceWorkerType.Comp_NoFault;
     }
+
     private static PatientMedical getPatientMedical(Long patientId) {
         ModelMapper mapper = BeanFactory.getBean(ModelMapper.class);
         PatientMedicalRepositoryNew repository = BeanFactory.getBean(PatientMedicalRepositoryNew.class);
@@ -46,9 +50,23 @@ public class PatientDependenciesMapper {
     }
 
     private static PatientSource getPatientSource(Long patientId) {
-        ModelMapper mapper = BeanFactory.getBean(ModelMapper.class);
         PatientSourceRepositoryNew repository = BeanFactory.getBean(PatientSourceRepositoryNew.class);
-        return mapper.map(repository.findByPatient_Id(patientId).get().getPatientSource(), PatientSource.class);
+        PatientSourceEntity patientSource = repository.findByPatient_Id(patientId).get();
+        PatientSource model = new PatientSource();
+        switch (patientSource.getPatientSourceType()) {
+            case Entity:
+                EntitySource entitySource = new EntitySource();
+                entitySource.setOrganizationName(patientSource.getPatientSource().getOrganizationName());
+                model.setEntitySource(entitySource);
+                break;
+            case Doctor:
+                DoctorSource doctorSource = new DoctorSource();
+                doctorSource.setDoctorName(patientSource.getPatientSource().getDoctorName());
+                doctorSource.setDoctorNPI(patientSource.getPatientSource().getDoctorNPI());
+                model.setDoctorSource(doctorSource);
+                break;
+        }
+        return model;
     }
 
     private static PatientGrantor getPatientGuarantor(Long patientId) {

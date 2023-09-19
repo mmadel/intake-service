@@ -37,6 +37,13 @@ public class PatientFinderServiceNew {
         return getPatientListContainer(total, records);
     }
 
+    public Patient getPatient(Long id) {
+        PatientEntity patientEntity = patientRepository.findById(id).get();
+        Patient patient = mapper.map(patientEntity, Patient.class);
+        PatientDependenciesMapper.mapper(patient);
+        return patient;
+    }
+
     private PatientListContainer getPatientListContainer(long total, List<PatientRecord> records) {
         return PatientListContainer.builder()
                 .records(records)
