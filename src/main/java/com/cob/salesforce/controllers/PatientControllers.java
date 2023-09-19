@@ -7,6 +7,7 @@ import com.cob.salesforce.models.intake.Patient;
 import com.cob.salesforce.services.PatientCreatorService;
 import com.cob.salesforce.services.PatientFinderService;
 import com.cob.salesforce.services.PatientSignatureService;
+import com.cob.salesforce.services.intake.PatientFinderServiceNew;
 import com.cob.salesforce.services.intake.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -22,9 +23,15 @@ import java.io.IOException;
 @RestController
 @RequestMapping(value = "/patient")
 public class PatientControllers {
-
+    /*
+        New Impl
+     */
     @Autowired
     PatientService patientService;
+
+    @Autowired
+    PatientFinderServiceNew finder;
+
     @Autowired
     private PatientCreatorService patientCreatorService;
     @Autowired
@@ -45,11 +52,11 @@ public class PatientControllers {
 
     @ResponseBody
     @GetMapping("/find/clinic/{clinicId}")
-    public ResponseEntity<com.cob.salesforce.models.PatientListData> list(@RequestParam(name = "offset") String offset,
+    public ResponseEntity list(@RequestParam(name = "offset") String offset,
                                                                           @RequestParam(name = "limit") String limit,
                                                                           @PathVariable(name = "clinicId") Long clinicId) {
         Pageable paging = PageRequest.of(Integer.parseInt(offset), Integer.parseInt(limit));
-        return new ResponseEntity<>(patientFinderService.getPatients(paging, clinicId), HttpStatus.OK);
+        return new ResponseEntity<>(finder.getPatients(paging, clinicId), HttpStatus.OK);
     }
 
     @ResponseBody

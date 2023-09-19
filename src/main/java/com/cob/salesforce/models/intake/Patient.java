@@ -8,6 +8,7 @@ import com.cob.salesforce.models.intake.medical.PatientMedical;
 import com.cob.salesforce.models.intake.signature.PatientSignature;
 import com.cob.salesforce.models.intake.source.PatientSource;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
