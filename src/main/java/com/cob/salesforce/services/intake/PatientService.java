@@ -1,6 +1,7 @@
 package com.cob.salesforce.services.intake;
 
 import com.cob.salesforce.BeanFactory;
+import com.cob.salesforce.entity.admin.ClinicEntity;
 import com.cob.salesforce.entity.intake.*;
 import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.models.intake.Patient;
@@ -9,6 +10,7 @@ import com.cob.salesforce.models.intake.insurance.PatientInsurance;
 import com.cob.salesforce.models.intake.medical.PatientMedical;
 import com.cob.salesforce.models.intake.source.PatientSource;
 import com.cob.salesforce.models.intake.source.PatientSourceValue;
+import com.cob.salesforce.repositories.admin.clinic.ClinicRepository;
 import com.cob.salesforce.repositories.intake.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,14 @@ public class PatientService {
     @Autowired
     PatientRepositoryNew repository;
     @Autowired
+    ClinicRepository clinicRepository;
+    @Autowired
     ModelMapper mapper;
 
     public Long create(Patient model) {
-        PatientEntity created = repository.save(mapper.map(model, PatientEntity.class));
+        PatientEntity toBeCreated = mapper.map(model, PatientEntity.class);
+        toBeCreated.setClinic(getClinic(model.getClinicId()));
+        PatientEntity created = repository.save(toBeCreated);
         createPatientSource(created, model.getPatientSource());
         createPatientMedical(created, model.getPatientMedical());
         createPatientInsurance(created, model.getPatientInsurance());
@@ -71,5 +77,8 @@ public class PatientService {
         PatientGrantorEntity toBeCreated = mapper.map(patientGrantor, PatientGrantorEntity.class);
         toBeCreated.setPatient(created);
         repository.save(toBeCreated);
+    }
+    private ClinicEntity getClinic(Long id){
+        return clinicRepository.findById(id).get();
     }
 }

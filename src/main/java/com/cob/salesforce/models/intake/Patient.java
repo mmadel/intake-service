@@ -26,4 +26,6 @@ public class Patient {
     private PatientSource patientSource;
     private PatientSignature patientSignature;
     private PatientAgreement patientAgreements;
+
+    private Long clinicId;
 }
