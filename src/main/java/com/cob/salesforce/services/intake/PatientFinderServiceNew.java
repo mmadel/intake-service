@@ -36,6 +36,7 @@ public class PatientFinderServiceNew {
         List<PatientRecord> records = constructPatientRecords(entities);
         return getPatientListContainer(total, records);
     }
+
     private PatientListContainer getPatientListContainer(long total, List<PatientRecord> records) {
         return PatientListContainer.builder()
                 .records(records)
@@ -43,19 +44,11 @@ public class PatientFinderServiceNew {
                 .records(records)
                 .build();
     }
+
     private List<PatientRecord> constructPatientRecords(List<PatientEntity> entities) {
         return entities.stream()
                 .map(patient -> {
-                    return PatientRecord
-                            .builder()
-                            .firstName(patient.getPatientEssentialInformation().getPatientName().getFirstName())
-                            .middleName(patient.getPatientEssentialInformation().getPatientName().getMiddleName())
-                            .lastName(patient.getPatientEssentialInformation().getPatientName().getLastName())
-                            .email(patient.getPatientEssentialInformation().getEmail())
-                            .phoneNumber(patient.getPatientEssentialInformation().getPatientPhone().getPhone())
-                            .sourceType(PatientDependenciesMapper.mapToSourceType(patient.getId()))
-                            .insuranceType(PatientDependenciesMapper.mapToInsuranceType(patient.getId()))
-                            .build();
+                    return PatientListRecordMapper.map(patient);
                 }).collect(Collectors.toList());
     }
 

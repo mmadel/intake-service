@@ -17,4 +17,6 @@ public class PatientRecord {
     String phoneNumber;
     PatientSourceType sourceType;
     InsuranceWorkerType insuranceType;
+
+    Long patientId;
 }
