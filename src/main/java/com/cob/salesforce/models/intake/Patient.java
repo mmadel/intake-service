@@ -25,5 +25,5 @@ public class Patient {
     private PatientGrantor patientGrantor;
     private PatientSource patientSource;
     private PatientSignature patientSignature;
-    private List<PatientAgreement> patientAgreements;
+    private PatientAgreement patientAgreements;
 }

@@ -2,11 +2,13 @@ package com.cob.salesforce.services.intake;
 
 import com.cob.salesforce.BeanFactory;
 import com.cob.salesforce.entity.intake.*;
+import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.models.intake.Patient;
 import com.cob.salesforce.models.intake.grantor.PatientGrantor;
 import com.cob.salesforce.models.intake.insurance.PatientInsurance;
 import com.cob.salesforce.models.intake.medical.PatientMedical;
 import com.cob.salesforce.models.intake.source.PatientSource;
+import com.cob.salesforce.models.intake.source.PatientSourceValue;
 import com.cob.salesforce.repositories.intake.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,8 @@ public class PatientService {
         createPatientSource(created, model.getPatientSource());
         createPatientMedical(created, model.getPatientMedical());
         createPatientInsurance(created, model.getPatientInsurance());
-        createPatientGrantor(created, model.getPatientGrantor());
+        if (model.getPatientGrantor() != null)
+            createPatientGrantor(created, model.getPatientGrantor());
         return created.getId();
     }
 
@@ -37,8 +40,22 @@ public class PatientService {
 
     private void createPatientSource(PatientEntity created, PatientSource patientSource) {
         PatientSourceRepositoryNew repository = BeanFactory.getBean(PatientSourceRepositoryNew.class);
-        PatientSourceEntity toBeCreated = mapper.map(patientSource, PatientSourceEntity.class);
+        PatientSourceEntity toBeCreated = new PatientSourceEntity();
         toBeCreated.setPatient(created);
+        toBeCreated.setPatient(created);
+        if (patientSource.getDoctorSource() != null) {
+            toBeCreated.setPatientSourceType(PatientSourceType.Doctor);
+            toBeCreated.setPatientSource(PatientSourceValue.builder()
+                    .doctorName(patientSource.getDoctorSource().getDoctorName())
+                    .doctorNPI(patientSource.getDoctorSource().getDoctorNPI())
+                    .build());
+        }
+        if (patientSource.getEntitySource() != null) {
+            toBeCreated.setPatientSourceType(PatientSourceType.Entity);
+            toBeCreated.setPatientSource(PatientSourceValue.builder()
+                    .organizationName(patientSource.getEntitySource().getOrganizationName())
+                    .build());
+        }
         repository.save(toBeCreated);
     }
 

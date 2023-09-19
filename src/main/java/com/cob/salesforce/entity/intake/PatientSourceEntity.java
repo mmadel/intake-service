@@ -1,6 +1,8 @@
 package com.cob.salesforce.entity.intake;
 
+import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.models.intake.source.PatientSource;
+import com.cob.salesforce.models.intake.source.PatientSourceValue;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,12 +28,14 @@ public class PatientSourceEntity {
 
     @Column(name = "patient_source_data", columnDefinition = "json")
     @Type(type = "json")
-    private PatientSource patientSource;
+    private PatientSourceValue patientSource;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private PatientEntity patient;
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "patient_source_type")
+    private PatientSourceType patientSourceType;
     @Column
     private Long createdAt;
 

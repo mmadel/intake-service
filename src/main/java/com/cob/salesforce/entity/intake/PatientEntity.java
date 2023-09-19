@@ -32,7 +32,7 @@ public class PatientEntity {
     PatientEssentialInformation patientEssentialInformation;
     @Column(name = "patient_agreements", columnDefinition = "json")
     @Type(type = "json")
-    private List<PatientAgreement> patientAgreements;
+    private PatientAgreement patientAgreement;
     @Column
     private Long createdAt;
 
