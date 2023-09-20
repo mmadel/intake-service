@@ -1,8 +1,7 @@
 package com.cob.salesforce.controllers.admin.reports;
 
-import com.cob.salesforce.models.PatientContainerDTO;
-import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.models.intake.Patient;
+import com.cob.salesforce.models.intake.container.report.PatientReportRecord;
 import com.cob.salesforce.services.PatientFinderService;
 import com.cob.salesforce.services.export.excel.ExcelReportGenerator;
 import com.cob.salesforce.services.export.pdf.PatientPDFGenerator;
@@ -30,7 +29,7 @@ public class ReportGeneratorController {
     PatientFinderServiceNew patientFinderServiceNew;
 
     @PostMapping("/excel")
-    public void generateExcel(@RequestBody List<PatientContainerDTO> patients, HttpServletResponse response) throws IOException {
+    public void generateExcel(@RequestBody List<PatientReportRecord> patients, HttpServletResponse response) throws IOException {
         ExcelReportGenerator excelReportGenerator = new ExcelReportGenerator();
         response.setContentType("application/octet-stream");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");

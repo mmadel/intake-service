@@ -4,6 +4,7 @@ import com.cob.salesforce.BeanFactory;
 import com.cob.salesforce.entity.intake.PatientEntity;
 import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.models.intake.container.report.PatientReportRecord;
+import com.cob.salesforce.models.intake.source.PatientSourceValue;
 import com.cob.salesforce.models.reporting.PatientSearchCriteria;
 import com.cob.salesforce.models.reporting.PatientSearchResult;
 import com.cob.salesforce.repositories.intake.PatientRepositoryNew;
@@ -56,11 +57,11 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
         if (!dateFrom.equals(dateTo))
             return patientRepository.getByCreatedDateRangeAndClinicId(dateFrom, dateTo, clinicId)
                     .stream()
-                    .map(this::constructPatientReportRecord).collect(Collectors.toList());
+                    .map(patient -> constructPatientReportRecord(patient, null, null)).collect(Collectors.toList());
         else
             return patientRepository.getByCreatedDateAndClinicId(dateFrom, clinicId)
                     .stream()
-                    .map(this::constructPatientReportRecord).collect(Collectors.toList());
+                    .map(patient -> constructPatientReportRecord(patient, null, null)).collect(Collectors.toList());
     }
 
     private List<PatientReportRecord> fetchPatientDoctorSource(String doctorNameCriteria,
@@ -89,7 +90,13 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
                         , startDate
                         , endDate
                         , clinicId)
-                .stream().map(patientDoctorSource -> constructPatientReportRecord(patientDoctorSource.getPatient())).collect(Collectors.toList());
+                .stream().map(patientSourceEntity -> {
+                    String[] sourceData = {patientSourceEntity.getPatientSource().getDoctorName(),
+                            patientSourceEntity.getPatientSource().getDoctorNPI(), null};
+                    return constructPatientReportRecord(patientSourceEntity.getPatient(),
+                            PatientSourceType.Doctor,
+                            sourceData);
+                }).collect(Collectors.toList());
     }
 
     private List<PatientReportRecord> fetchPatientEntitySource(List<String> organizationNameCriteria,
@@ -105,22 +112,40 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
             startDate = null;
             endDate = null;
         }
+
         return patientSourceRepository.findByOrganization(PatientSourceType.Entity,
                         organizationName,
                         startDate,
                         endDate,
                         clinicId)
-                .stream().map(patientSourceEntity -> constructPatientReportRecord(patientSourceEntity.getPatient())).collect(Collectors.toList());
+                .stream().map(patientSourceEntity -> {
+                    String[] sourceData = {null, null, patientSourceEntity.getPatientSource().getOrganizationName()};
+                    return constructPatientReportRecord(patientSourceEntity.getPatient(),
+                            PatientSourceType.Entity,
+                            sourceData);
+                }).collect(Collectors.toList());
     }
 
-    private PatientReportRecord constructPatientReportRecord(PatientEntity patientEntity) {
+    private PatientSourceValue getPatientSource(Long id) {
+        PatientSourceRepositoryNew patientSourceRepository = BeanFactory.getBean(PatientSourceRepositoryNew.class);
+        return patientSourceRepository.findByPatient_Id(id).get().getPatientSource();
+    }
+
+    private PatientReportRecord constructPatientReportRecord(PatientEntity patientEntity, PatientSourceType patientSourceType,
+                                                             String[] sourceData) {
         return PatientReportRecord.builder()
                 .firstName(patientEntity.getPatientEssentialInformation().getPatientName().getFirstName())
                 .middleName(patientEntity.getPatientEssentialInformation().getPatientName().getMiddleName())
                 .lastName(patientEntity.getPatientEssentialInformation().getPatientName().getLastName())
                 .email(patientEntity.getPatientEssentialInformation().getEmail())
                 .phoneNumber(patientEntity.getPatientEssentialInformation().getPatientPhone().getPhone())
+                .gender(patientEntity.getPatientEssentialInformation().getGender().label)
+                .createdAt(patientEntity.getCreatedAt())
+                .patientSourceType(patientSourceType)
                 .patientId(patientEntity.getId())
+                .doctorName(sourceData[0])
+                .doctorNPI(sourceData[1])
+                .organizationName(sourceData[2])
                 .build();
     }
 }
