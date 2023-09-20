@@ -38,7 +38,7 @@ public class PatientPersonalInfoPDFCreator {
         PDFPageCreator.createHeader(document, "");
         PDFPageCreator.createTable(document, emergencyRow, new String[]{
                 source.getPatientEssentialInformation().getPatientEmergencyContact().getEmergencyName(),
-                source.getPatientEssentialInformation().getPatientEmergencyContact().getEmergencyName(),
+                source.getPatientEssentialInformation().getPatientEmergencyContact().getEmergencyPhone(),
         }, 2);
     }
 }
