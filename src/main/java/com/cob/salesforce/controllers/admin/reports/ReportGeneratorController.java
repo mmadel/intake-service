@@ -2,7 +2,6 @@ package com.cob.salesforce.controllers.admin.reports;
 
 import com.cob.salesforce.models.intake.Patient;
 import com.cob.salesforce.models.intake.container.report.PatientReportRecord;
-import com.cob.salesforce.services.PatientFinderService;
 import com.cob.salesforce.services.export.excel.ExcelReportGenerator;
 import com.cob.salesforce.services.export.pdf.PatientPDFGenerator;
 import com.cob.salesforce.services.intake.PatientFinderServiceNew;
@@ -21,9 +20,6 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/reports/generator")
 public class ReportGeneratorController {
-
-    @Autowired
-    PatientFinderService patientFinderService;
 
     @Autowired
     PatientFinderServiceNew patientFinderServiceNew;
@@ -45,7 +41,6 @@ public class ReportGeneratorController {
     @PostMapping(value = "/pdf/patientId/{patientId}")
     public void generatePDF(@PathVariable("patientId") Long patientId,
                             HttpServletResponse response) throws DocumentException, IOException {
-        //PatientDTO patientData = patientFinderService.getPatient(patientId);
         Patient model = patientFinderServiceNew.getPatient(patientId);
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition","inline");

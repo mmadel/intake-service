@@ -1,6 +1,5 @@
 package com.cob.salesforce.repositories;
 
-import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.entity.PatientPhotoImage;
 import com.cob.salesforce.entity.intake.PatientEntity;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface PatientPhotoImageRepository extends PagingAndSortingRepository<PatientPhotoImage, Long> {
-    Long deleteByPatient(Patient patient);
 
     @Query("select pp from PatientPhotoImage pp where pp.patient.id = :patientId")
     List<PatientPhotoImage> findByIDPatient(@Param("patientId")  Long patientId);

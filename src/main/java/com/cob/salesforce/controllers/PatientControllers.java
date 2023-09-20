@@ -4,8 +4,6 @@ import com.cob.salesforce.dependencies.creator.PatientPhotoUploaderService;
 import com.cob.salesforce.exception.business.PatientException;
 import com.cob.salesforce.models.PatientSignatureDTO;
 import com.cob.salesforce.models.intake.Patient;
-import com.cob.salesforce.services.PatientCreatorService;
-import com.cob.salesforce.services.PatientFinderService;
 import com.cob.salesforce.services.PatientSignatureService;
 import com.cob.salesforce.services.intake.PatientFinderServiceNew;
 import com.cob.salesforce.services.intake.PatientService;
@@ -31,11 +29,6 @@ public class PatientControllers {
 
     @Autowired
     PatientFinderServiceNew finder;
-
-    @Autowired
-    private PatientCreatorService patientCreatorService;
-    @Autowired
-    private PatientFinderService patientFinderService;
 
     @Autowired
     private PatientPhotoUploaderService patientPhotoUploaderService;
@@ -66,12 +59,12 @@ public class PatientControllers {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @ResponseBody
-    @DeleteMapping("/delete/{patientId}")
-    public ResponseEntity delete(@PathVariable(name = "patientId") Long patientId) {
-        patientCreatorService.delete(patientId);
-        return new ResponseEntity(HttpStatus.OK);
-    }
+//    @ResponseBody
+//    @DeleteMapping("/delete/{patientId}")
+//    public ResponseEntity delete(@PathVariable(name = "patientId") Long patientId) {
+//        patientCreatorService.delete(patientId);
+//        return new ResponseEntity(HttpStatus.OK);
+//    }
 
     @PostMapping("/signature/upload")
     public ResponseEntity uploadPatientSignature(@RequestBody PatientSignatureDTO model) {

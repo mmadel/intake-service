@@ -1,8 +1,5 @@
 package com.cob.salesforce.services.export.pdf;
 
-import com.cob.salesforce.models.InsuranceWorkerCommercialDTO;
-import com.cob.salesforce.models.InsuranceWorkerCompNoFaultDTO;
-import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.models.intake.Patient;
 import com.cob.salesforce.models.intake.insurance.commercial.PatientCommercialInsurance;
 import com.cob.salesforce.models.intake.insurance.compensation.PatientInsuranceCompensationNoFault;

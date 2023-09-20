@@ -1,8 +1,5 @@
 package com.cob.salesforce.controllers.admin.audit;
 
-import com.cob.salesforce.entity.Patient;
-import com.cob.salesforce.entity.admin.ClinicEntity;
-import com.cob.salesforce.entity.admin.InsuranceCompanyEntity;
 import com.cob.salesforce.models.admin.audit.AuditModel;
 import com.cob.salesforce.models.admin.audit.AuditResponse;
 import com.cob.salesforce.services.audit.ClinicAuditService;

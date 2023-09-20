@@ -1,5 +1,6 @@
 package com.cob.salesforce.entity;
 
+import com.cob.salesforce.entity.intake.PatientEntity;
 import com.cob.salesforce.enums.EmergencyRelation;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,5 +36,5 @@ public class PatientGrantor {
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
-    private Patient patient;
+    private PatientEntity patient;
 }

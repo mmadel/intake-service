@@ -1,8 +1,6 @@
 package com.cob.salesforce.services.export.pdf;
 
-import com.cob.salesforce.models.BasicInfoDTO;
 import com.cob.salesforce.models.intake.Patient;
-import com.cob.salesforce.models.intake.essentials.PatientEssentialInformation;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 

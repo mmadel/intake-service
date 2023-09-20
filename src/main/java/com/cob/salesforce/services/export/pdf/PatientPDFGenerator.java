@@ -1,11 +1,8 @@
 package com.cob.salesforce.services.export.pdf;
 
 import com.cob.salesforce.BeanFactory;
-import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.models.PatientSignatureDTO;
 import com.cob.salesforce.models.intake.Patient;
-import com.cob.salesforce.repositories.AgreementRepository;
-import com.cob.salesforce.repositories.PatientSignatureRepository;
 import com.cob.salesforce.services.PatientSignatureService;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;

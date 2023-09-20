@@ -1,8 +1,5 @@
 package com.cob.salesforce.services.export.pdf;
 
-import com.cob.salesforce.models.MedicalHistoryInformationDTO;
-import com.cob.salesforce.models.MedicalQuestionnaireInfoDTO;
-import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.models.intake.Patient;
 import com.cob.salesforce.models.intake.medical.PatientMedical;
 import com.cob.salesforce.models.intake.medical.PatientMedicalHistory;

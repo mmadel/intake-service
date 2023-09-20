@@ -1,7 +1,5 @@
 package com.cob.salesforce.services.dashboard;
 
-import com.cob.salesforce.entity.Patient;
-import com.cob.salesforce.entity.PatientEntitySource;
 import com.cob.salesforce.entity.intake.PatientEntity;
 import com.cob.salesforce.entity.intake.PatientSourceEntity;
 import com.cob.salesforce.enums.Gender;
@@ -11,7 +9,6 @@ import com.cob.salesforce.models.dashboard.DashboardDataContainer;
 import com.cob.salesforce.models.dashboard.GenderContainer;
 import com.cob.salesforce.models.dashboard.PatientSourceContainer;
 import com.cob.salesforce.models.dashboard.WeekCounterContainer;
-import com.cob.salesforce.repositories.*;
 import com.cob.salesforce.repositories.intake.PatientInsuranceRepositoryNew;
 import com.cob.salesforce.repositories.intake.PatientRepositoryNew;
 import com.cob.salesforce.repositories.intake.PatientSourceRepositoryNew;
@@ -42,17 +39,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Autowired
     PatientSourceRepositoryNew patientSourceRepositoryNew;
-    @Autowired
-    PatientRepository patientRepository;
-    @Autowired
-    PatientDoctorSourceRepository patientDoctorSourceRepository;
-    @Autowired
-    PatientEntitySourceRepository patientEntitySourceRepository;
 
-    @Autowired
-    InsuranceWorkerInsuranceWorkerCompNoFaultRepository insuranceWorkerInsuranceWorkerCompNoFaultRepository;
-    @Autowired
-    InsuranceWorkerCommercialRepository insuranceWorkerCommercialRepository;
 
     @Override
     public DashboardDataContainer getData(Long clinicId, String userId, Long startDate, Long endDate) {

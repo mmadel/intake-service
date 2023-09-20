@@ -1,6 +1,5 @@
 package com.cob.salesforce.controllers.admin.audit;
 
-import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.services.audit.PatientAuditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

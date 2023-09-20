@@ -1,6 +1,5 @@
 package com.cob.salesforce.repositories.intake;
 
-import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.entity.intake.PatientEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

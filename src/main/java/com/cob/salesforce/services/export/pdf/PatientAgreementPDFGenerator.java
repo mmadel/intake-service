@@ -2,7 +2,6 @@ package com.cob.salesforce.services.export.pdf;
 
 import com.cob.salesforce.BeanFactory;
 import com.cob.salesforce.entity.Agreement;
-import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.models.PatientSignatureDTO;
 import com.cob.salesforce.models.intake.agreement.PatientAgreement;
 import com.cob.salesforce.repositories.AgreementRepository;
@@ -90,7 +89,7 @@ public class PatientAgreementPDFGenerator {
         patientNameCell.setBorder(Rectangle.NO_BORDER);
 
 
-        patientNameCell.addElement(new Phrase("Patient Signature:"));
+        patientNameCell.addElement(new Phrase("patient Signature:"));
         PdfPCell patientSignatureCell = new PdfPCell();
         patientSignatureCell.setBorder(Rectangle.NO_BORDER);
         Image img = Image.getInstance((signature.getSignatureAsBytes()));

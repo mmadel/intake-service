@@ -4,7 +4,6 @@ import com.cob.salesforce.entity.PatientGrantor;
 import com.cob.salesforce.entity.PatientPhotoImage;
 import com.cob.salesforce.repositories.PatientGrantorRepository;
 import com.cob.salesforce.repositories.PatientPhotoImageRepository;
-import com.cob.salesforce.repositories.PatientRepository;
 import com.cob.salesforce.repositories.intake.PatientRepositoryNew;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +18,6 @@ public class PatientPhotoUploaderServiceImpl implements PatientPhotoUploaderServ
     @Autowired
     PatientPhotoImageRepository repository;
 
-    @Autowired
-    PatientRepository patientRepository;
     @Autowired
     PatientRepositoryNew patientRepositoryNew;
 
