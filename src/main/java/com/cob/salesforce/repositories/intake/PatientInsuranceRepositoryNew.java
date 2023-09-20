@@ -21,6 +21,6 @@ public interface PatientInsuranceRepositoryNew extends CrudRepository<PatientIns
     @Query("SELECT count(pi.id) FROM  PatientInsuranceEntity pi  WHERE pi.patient.clinic.id =:clinicId AND pi.patientInsuranceType =:type" +
             " AND pi.createdAt >= :startDate" +
             " AND  pi.createdAt <= :endDate")
-    public Integer findCounterByInsuranceTypeByDateRange(@Param("start") Long startDate, @Param("end") Long endDate,
+    public Integer findCounterByInsuranceTypeByDateRange(@Param("startDate") Long startDate, @Param("endDate") Long endDate,
                                                          @Param("clinicId") Long clinicId, @Param("type") InsuranceWorkerType type);
 }

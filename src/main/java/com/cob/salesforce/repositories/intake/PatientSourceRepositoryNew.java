@@ -42,7 +42,7 @@ public interface PatientSourceRepositoryNew extends CrudRepository<PatientSource
     @Query("SELECT count(ps.id) FROM  PatientSourceEntity ps  WHERE ps.patient.clinic.id =:clinicId AND ps.patientSourceType =:type" +
             " AND ps.createdAt >= :startDate" +
             " AND  ps.createdAt <= :endDate")
-    public Integer findCounterBySourceTypeByDateRange(@Param("start") Long startDate, @Param("end") Long endDate,
+    public Integer findCounterBySourceTypeByDateRange(@Param("startDate") Long startDate, @Param("endDate") Long endDate,
                                                          @Param("clinicId") Long clinicId, @Param("type") PatientSourceType type);
 
     @Query("SELECT ps FROM  PatientSourceEntity ps  WHERE ps.patient.clinic.id =:clinicId AND ps.patientSourceType =:type")
@@ -52,7 +52,7 @@ public interface PatientSourceRepositoryNew extends CrudRepository<PatientSource
     @Query("SELECT ps FROM  PatientSourceEntity ps  WHERE ps.patient.clinic.id =:clinicId AND ps.patientSourceType =:type" +
             " AND ps.createdAt >= :startDate" +
             " AND  ps.createdAt <= :endDate")
-    public List<PatientSourceEntity> findBySourceTypeByDateRange(@Param("start") Long startDate, @Param("end") Long endDate,
+    public List<PatientSourceEntity> findBySourceTypeByDateRange(@Param("startDate") Long startDate, @Param("endDate") Long endDate,
                                                       @Param("clinicId") Long clinicId, @Param("type") PatientSourceType type);
 
 }
