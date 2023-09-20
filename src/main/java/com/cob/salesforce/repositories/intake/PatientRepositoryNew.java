@@ -29,9 +29,15 @@ public interface PatientRepositoryNew extends CrudRepository<PatientEntity, Long
 
     Page<PatientEntity> findByClinicId(Pageable pageable, Long clinicId);
 
-    @Query("Select ps from patient ps" +
+    @Query("Select ps from PatientEntity ps" +
             " where ( ps.createdAt >= :start) " +
             "AND ( ps.createdAt <= :end)" +
             "AND ps.clinic.id = :clinicId")
     List<PatientEntity> findInDateRange(@Param("start") Long start, @Param("end") Long end, Long clinicId);
+
+    @Query("Select ps from PatientEntity ps" +
+            " where (:dateFrom is null or ps.createdAt >= :dateFrom) " +
+            "AND (:dateTo is null or ps.createdAt <= :dateTo) ")
+    List<PatientEntity> getByCreatedDateRange(@Param("dateFrom") Long dateFrom
+            , @Param("dateTo") Long dateTo);
 }

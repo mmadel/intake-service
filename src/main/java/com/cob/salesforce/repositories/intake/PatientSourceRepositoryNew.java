@@ -30,8 +30,29 @@ public interface PatientSourceRepositoryNew extends CrudRepository<PatientSource
             "AND ((:dateFrom is null or ds.createdAt >= :dateFrom) AND (:dateTo is null or ds.createdAt < :dateTo) )" +
             "AND ds.patient.clinic.id = :clinicId ")
     List<PatientSourceEntity> findByOrganization(@Param("type") PatientSourceType type,
-                                           @Param("names") List<String> names
+                                                 @Param("names") List<String> names
             , @Param("dateFrom") Long dateFrom
             , @Param("dateTo") Long dateTo
             , @Param("clinicId") Long clinicId);
+
+    @Query("SELECT count(ps.id) FROM  PatientSourceEntity ps  WHERE ps.patient.clinic.id =:clinicId AND ps.patientSourceType =:type")
+    public Integer findCounterBySourceType(@Param("clinicId") Long clinicId, @Param("type") PatientSourceType type);
+
+
+    @Query("SELECT count(ps.id) FROM  PatientSourceEntity ps  WHERE ps.patient.clinic.id =:clinicId AND ps.patientSourceType =:type" +
+            " AND ps.createdAt >= :startDate" +
+            " AND  ps.createdAt <= :endDate")
+    public Integer findCounterBySourceTypeByDateRange(@Param("start") Long startDate, @Param("end") Long endDate,
+                                                         @Param("clinicId") Long clinicId, @Param("type") PatientSourceType type);
+
+    @Query("SELECT ps FROM  PatientSourceEntity ps  WHERE ps.patient.clinic.id =:clinicId AND ps.patientSourceType =:type")
+    public List<PatientSourceEntity> findBySourceType(@Param("clinicId") Long clinicId, @Param("type") PatientSourceType type);
+
+
+    @Query("SELECT ps FROM  PatientSourceEntity ps  WHERE ps.patient.clinic.id =:clinicId AND ps.patientSourceType =:type" +
+            " AND ps.createdAt >= :startDate" +
+            " AND  ps.createdAt <= :endDate")
+    public List<PatientSourceEntity> findBySourceTypeByDateRange(@Param("start") Long startDate, @Param("end") Long endDate,
+                                                      @Param("clinicId") Long clinicId, @Param("type") PatientSourceType type);
+
 }
