@@ -3,6 +3,7 @@ package com.cob.salesforce.services.intake;
 import com.cob.salesforce.BeanFactory;
 import com.cob.salesforce.entity.admin.ClinicEntity;
 import com.cob.salesforce.entity.intake.*;
+import com.cob.salesforce.enums.InsuranceWorkerType;
 import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.models.intake.Patient;
 import com.cob.salesforce.models.intake.grantor.PatientGrantor;
@@ -69,6 +70,7 @@ public class PatientService {
         PatientInsuranceRepositoryNew repository = BeanFactory.getBean(PatientInsuranceRepositoryNew.class);
         PatientInsuranceEntity toBeCreated = mapper.map(patientInsurance, PatientInsuranceEntity.class);
         toBeCreated.setPatient(created);
+        toBeCreated.setPatientInsuranceType(patientInsurance.getPatientCommercialInsurance() != null? InsuranceWorkerType.Commercial:InsuranceWorkerType.Comp_NoFault);
         repository.save(toBeCreated);
     }
 

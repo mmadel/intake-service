@@ -1,5 +1,6 @@
 package com.cob.salesforce.models.intake.insurance.compensation;
 
+import com.cob.salesforce.models.intake.essentials.PatientAddress;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +18,7 @@ public class PatientInsuranceCompensationNoFault implements Serializable {
 
     private String fax;
 
-    private String address;
+    private PatientAddress address;
 
     private String insuranceName;
 
