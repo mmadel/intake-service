@@ -19,8 +19,6 @@ import java.util.Set;
 @Entity(name = "patient")
 @Getter
 @Setter
-@Audited
-@AuditTable(value = "AU_PATIENT")
 public class Patient {
 
     @Id

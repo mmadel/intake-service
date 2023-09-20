@@ -11,6 +11,8 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
@@ -24,6 +26,8 @@ import java.util.List;
 })
 @Getter
 @Setter
+@Audited
+@AuditTable(value = "AU_PATIENT")
 public class PatientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +42,7 @@ public class PatientEntity {
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "clinic_id", referencedColumnName = "id")
+    @NotAudited
     private ClinicEntity clinic;
     @Column
     private Long createdAt;
