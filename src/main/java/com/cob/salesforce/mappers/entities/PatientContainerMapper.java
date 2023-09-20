@@ -23,10 +23,10 @@ public class PatientContainerMapper {
         patientContainerDTO.setGender(entity.getGender() != null ? entity.getGender().label : "");
         patientContainerDTO.setPhoneType(entity.getPhoneType() != null ? entity.getPhoneType().label : "");
         patientContainerDTO.setPhoneNumber(entity.getPhone());
-        patientContainerDTO.setIdType(entity.getIdType() != null ? entity.getIdType().label : "");
-        patientContainerDTO.setIdEffectiveFrom(entity.getIdEffectiveFrom());
-        patientContainerDTO.setIdEffectiveTo(entity.getIdEffectiveTo());
-        patientContainerDTO.setPatientId(entity.getPatientId());
+//        patientContainerDTO.setIdType(entity.getIdType() != null ? entity.getIdType().label : "");
+//        patientContainerDTO.setIdEffectiveFrom(entity.getIdEffectiveFrom());
+//        patientContainerDTO.setIdEffectiveTo(entity.getIdEffectiveTo());
+//        patientContainerDTO.setPatientId(entity.getPatientId());
         patientContainerDTO.setMaritalStatus(entity.getMaritalStatus() != null ? entity.getMaritalStatus().label : "");
         patientContainerDTO.setEmergencyName(entity.getEmergencyName());
         patientContainerDTO.setEmergencyPhone(entity.getEmergencyPhone());

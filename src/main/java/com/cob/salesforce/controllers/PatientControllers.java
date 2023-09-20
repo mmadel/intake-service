@@ -2,10 +2,11 @@ package com.cob.salesforce.controllers;
 
 import com.cob.salesforce.dependencies.creator.PatientPhotoUploaderService;
 import com.cob.salesforce.exception.business.PatientException;
-import com.cob.salesforce.exception.response.ControllerErrorResponseAdvisor;
 import com.cob.salesforce.models.PatientDTO;
+import com.cob.salesforce.models.PatientSignatureDTO;
 import com.cob.salesforce.services.PatientCreatorService;
 import com.cob.salesforce.services.PatientFinderService;
+import com.cob.salesforce.services.PatientSignatureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,16 +31,13 @@ public class PatientControllers {
     private PatientPhotoUploaderService patientPhotoUploaderService;
 
     @Autowired
-    ControllerErrorResponseAdvisor controllerErrorResponseAdvisor;
+    PatientSignatureService patientSignatureService;
+
     @PostMapping("/create")
     @ResponseBody
-    public ResponseEntity<Long> create(@RequestBody PatientDTO model) {
+    public ResponseEntity<Long> create(@RequestBody PatientDTO model) throws PatientException {
         Long createdPatientId = 0L;
-        try {
-            createdPatientId = patientCreatorService.create(model);
-        }catch (PatientException patientException){
-            return controllerErrorResponseAdvisor.responseError(patientException);
-        }
+        createdPatientId = patientCreatorService.create(model);
         return new ResponseEntity<>(createdPatientId, HttpStatus.OK);
     }
 
@@ -64,5 +62,16 @@ public class PatientControllers {
     public ResponseEntity delete(@PathVariable(name = "patientId") Long patientId) {
         patientCreatorService.delete(patientId);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("/signature/upload")
+    public ResponseEntity uploadPatientSignature(@RequestBody PatientSignatureDTO model) {
+        patientSignatureService.upload(model);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/signature/patientId/{patientId}")
+    public ResponseEntity getPatientSignature(@PathVariable(name = "patientId") Long patientId) {
+        return new ResponseEntity(patientSignatureService.get(patientId), HttpStatus.OK);
     }
 }

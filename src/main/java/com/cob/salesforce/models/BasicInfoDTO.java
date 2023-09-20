@@ -2,7 +2,6 @@
 package com.cob.salesforce.models;
 
 import com.cob.salesforce.enums.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,11 +30,11 @@ public class BasicInfoDTO {
 
     private String patientId;
 
-    private String idType;
+    //private String idType;
 
-    private Long idEffectiveFrom;
+    //private Long idEffectiveFrom;
 
-    private Long idEffectiveTo;
+    //private Long idEffectiveTo;
 
     private String lastName;
 
@@ -46,6 +45,9 @@ public class BasicInfoDTO {
     private String phoneNumber;
 
     private String phoneType;
+
+    private PatientGrantorModel pateintGrantor;
+
 
     public String getFullName() {
         return getFirstName() + ',' + getMiddleName()
@@ -60,9 +62,10 @@ public class BasicInfoDTO {
         return phoneType == "" ? null : PhoneType.valueOf(phoneType);
     }
 
-    public IDType getIDTypeEnum() {
-        return idType == "" ? null : IDType.valueOf(idType);
-    }
+//    public IDType getIDTypeEnum() {
+//
+//        return idType == "" ? null : IDType.valueOf(idType);
+//    }
 
     public EmploymentStatus getEmploymentStatusEnum() {
         return employmentStatus == "" ? null : EmploymentStatus.valueOf(employmentStatus);

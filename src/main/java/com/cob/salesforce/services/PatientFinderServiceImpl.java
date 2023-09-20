@@ -31,6 +31,8 @@ public class PatientFinderServiceImpl implements PatientFinderService {
     @Qualifier("PatientContainerMapper")
     PatientContainerMapper mapper;
 
+    @Autowired
+    PatientSignatureService patientSignatureService;
 
     @Override
     public PatientListData getPatients(Pageable pageable, Long clinicId) {
@@ -57,6 +59,7 @@ public class PatientFinderServiceImpl implements PatientFinderService {
         dto.setMedicalQuestionnaireInfo(getMedicalQuestionnaireInfo(patient));
         setPatientInsuranceInfo(dto, patient);
         setAgreements(dto, patient.getAgreement());
+        dto.setPatientSignature(patientSignatureService.get(patient.getId()));
         return dto;
     }
 

@@ -1,14 +1,11 @@
 
 package com.cob.salesforce.models;
 
-import com.cob.salesforce.entity.Agreement;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -30,8 +27,9 @@ public class PatientDTO {
     AgreementsDTO agreements;
 
     Map<String, String> patientAgreement = new LinkedHashMap<>();
+    private PatientSignatureDTO patientSignature;
+
 
     Long createdAt;
-
 
 }

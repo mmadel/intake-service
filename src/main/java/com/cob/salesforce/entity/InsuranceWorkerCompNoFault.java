@@ -35,7 +35,7 @@ public class InsuranceWorkerCompNoFault extends PatientDependencyEntity{
     @Column(name = "insurance_name")
     private String insuranceName;
     @Column(name = "claim_number")
-    private BigInteger claimNumber;
+    private String claimNumber;
     @Column(name = "adjuster_name")
     private String adjusterName;
 

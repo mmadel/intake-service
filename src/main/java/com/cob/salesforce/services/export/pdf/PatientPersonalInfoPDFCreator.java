@@ -33,13 +33,13 @@ public class PatientPersonalInfoPDFCreator {
                 patientPersonalInfo.getPhoneType(),
                 patientPersonalInfo.getPhoneNumber(),
         }, 4);
-        PDFPageCreator.createHeader(document, "");
-        PDFPageCreator.createTable(document, idRow, new String[]{
-                patientPersonalInfo.getIdType(),
-                patientPersonalInfo.getPatientId(),
-                patientPersonalInfo.getIdEffectiveFrom().toString(),
-                patientPersonalInfo.getIdEffectiveTo().toString(),
-        }, 4);
+//        PDFPageCreator.createHeader(document, "");
+//        PDFPageCreator.createTable(document, idRow, new String[]{
+//                patientPersonalInfo.getIdType(),
+//                patientPersonalInfo.getPatientId(),
+//                patientPersonalInfo.getIdEffectiveFrom().toString(),
+//                patientPersonalInfo.getIdEffectiveTo().toString(),
+//        }, 4);
         PDFPageCreator.createHeader(document, "");
         PDFPageCreator.createTable(document, emergencyRow, new String[]{
                 patientPersonalInfo.getEmergencyName(),

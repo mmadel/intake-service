@@ -29,6 +29,7 @@ public class PatientPDFGenerator {
         PatientMedicalPDFCreator.create(document, source);
         PatientInsurancePDFCreator.create(document, source);
         PatientAgreementPDFGenerator.create(document, source);
+        //PatientSignaturePDFGenerator.create(document, source);
         document.close();
     }
 

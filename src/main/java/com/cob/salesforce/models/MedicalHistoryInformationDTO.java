@@ -12,6 +12,7 @@ public class MedicalHistoryInformationDTO {
     private Double height;
     private String heightUnit;
     private Double weight;
+    private String weightUnit;
     private String evaluationSubmission;
     private String medicationPrescription;
 

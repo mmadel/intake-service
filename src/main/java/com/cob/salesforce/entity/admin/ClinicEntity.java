@@ -1,15 +1,17 @@
 package com.cob.salesforce.entity.admin;
 
-import com.cob.salesforce.utils.DateUtil;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Setter
 @Getter
+@Audited(withModifiedFlag = true)
+@AuditTable(value = "AU_CLINIC")
 public class ClinicEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,12 +21,4 @@ public class ClinicEntity {
     private String name;
     @Column(name = "address")
     private String address;
-
-    @Column
-    private Long createdAt;
-
-    @PrePersist
-    private void beforeSaving() {
-        createdAt = new Date().getTime();
-    }
 }
