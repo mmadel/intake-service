@@ -1,7 +1,7 @@
 package com.cob.salesforce.services.audit;
 
-import com.cob.salesforce.entity.Patient;
 import com.cob.salesforce.entity.audit.CustomRevisionEntity;
+import com.cob.salesforce.entity.intake.PatientEntity;
 import com.cob.salesforce.models.admin.audit.AuditModel;
 import com.cob.salesforce.models.admin.audit.AuditResponse;
 import org.hibernate.envers.AuditReader;
@@ -21,7 +21,7 @@ public class PatientAuditService extends AuditService {
         AuditReader auditReader = AuditReaderFactory.get(entityManager);
 
         return AuditResponse.builder()
-                .count((Long) (buildQuery(Patient.class, auditReader, UUID, null, null).getSingleResult()))
+                .count((Long) (buildQuery(PatientEntity.class, auditReader, UUID, null, null).getSingleResult()))
                 .auditModels(getAuditModels(auditReader, UUID, offset, pageSize))
                 .build();
     }
@@ -34,19 +34,19 @@ public class PatientAuditService extends AuditService {
     @Override
     List<AuditModel> getAuditModels(AuditReader auditReader, String uuid, Integer currentPage, Integer pageSize) {
         List<AuditModel> result = new ArrayList<>();
-        List patientQueryResult = buildQuery(Patient.class, auditReader, uuid, currentPage, pageSize).getResultList();
+        List patientQueryResult = buildQuery(PatientEntity.class, auditReader, uuid, currentPage, pageSize).getResultList();
         for (Object item : patientQueryResult) {
-            Patient entityClass = (Patient) ((Object[]) item)[0];
+            PatientEntity entityClass = (PatientEntity) ((Object[]) item)[0];
             CustomRevisionEntity CustomRevisionEntity = (com.cob.salesforce.entity.audit.CustomRevisionEntity) ((Object[]) item)[1];
             Integer versionId = CustomRevisionEntity.getId();
 
-            Patient patientVersion = auditReader.find(Patient.class, entityClass.getId(), versionId);
+            PatientEntity patientVersion = auditReader.find(PatientEntity.class, entityClass.getId(), versionId);
             RevisionType revisionType = (RevisionType) ((Object[]) item)[2];
             result.add(AuditModel.builder()
                     .revisionDate(CustomRevisionEntity.getTimestamp())
                     .uuid(CustomRevisionEntity.getUuid())
                     .revisionType(revisionType)
-                    .entity(patientVersion)
+                    .entity(patientVersion.getPatientEssentialInformation())
                     .entityName(((Object[]) item)[0].getClass().getSimpleName())
                     .build());
         }

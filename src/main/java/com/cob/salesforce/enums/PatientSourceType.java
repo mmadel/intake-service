@@ -1,7 +1,7 @@
 package com.cob.salesforce.enums;
 
 public enum PatientSourceType {
-    Doctor("doctor"),
+    Doctor("Doctor"),
     Entity("entity");
 
     public final String label;

@@ -1,7 +1,7 @@
 package com.cob.salesforce.services.dashboard;
 
-import com.cob.salesforce.entity.Patient;
-import com.cob.salesforce.entity.PatientEntitySource;
+import com.cob.salesforce.entity.intake.PatientEntity;
+import com.cob.salesforce.entity.intake.PatientSourceEntity;
 import com.cob.salesforce.enums.Gender;
 import com.cob.salesforce.enums.InsuranceWorkerType;
 import com.cob.salesforce.enums.PatientSourceType;
@@ -9,7 +9,9 @@ import com.cob.salesforce.models.dashboard.DashboardDataContainer;
 import com.cob.salesforce.models.dashboard.GenderContainer;
 import com.cob.salesforce.models.dashboard.PatientSourceContainer;
 import com.cob.salesforce.models.dashboard.WeekCounterContainer;
-import com.cob.salesforce.repositories.*;
+import com.cob.salesforce.repositories.intake.PatientInsuranceRepositoryNew;
+import com.cob.salesforce.repositories.intake.PatientRepositoryNew;
+import com.cob.salesforce.repositories.intake.PatientSourceRepositoryNew;
 import com.cob.salesforce.services.admin.user.UserFinderService;
 import com.cob.salesforce.utils.DateUtil;
 import com.cob.salesforce.utils.NumberUtil;
@@ -30,40 +32,80 @@ public class DashboardServiceImpl implements DashboardService {
     UserFinderService userFinderService;
 
     @Autowired
-    PatientRepository patientRepository;
-    @Autowired
-    PatientDoctorSourceRepository patientDoctorSourceRepository;
-    @Autowired
-    PatientEntitySourceRepository patientEntitySourceRepository;
+    PatientRepositoryNew patientRepositoryNew;
 
     @Autowired
-    InsuranceWorkerInsuranceWorkerCompNoFaultRepository insuranceWorkerInsuranceWorkerCompNoFaultRepository;
+    PatientInsuranceRepositoryNew patientInsuranceRepositoryNew;
+
     @Autowired
-    InsuranceWorkerCommercialRepository insuranceWorkerCommercialRepository;
+    PatientSourceRepositoryNew patientSourceRepositoryNew;
+
 
     @Override
     public DashboardDataContainer getData(Long clinicId, String userId, Long startDate, Long endDate) {
-        List<Patient> patients = null;
+        startDate= startDate == null ?  0 : startDate;
+        endDate= endDate == null ?  0 : endDate;
+        List<PatientEntity> patients = null;
         if (startDate == 0 && endDate == 0)
-            patients = patientRepository.findByClinicId(null, clinicId).getContent();
+            patients = patientRepositoryNew.findByClinicId(null, clinicId).getContent();
         else
-            patients = patientRepository.findInDateRange(startDate, endDate, clinicId);
+            patients = patientRepositoryNew.findInDateRange(startDate, endDate, clinicId);
         totalNumberOfPatients = patients.size();
         getPatientAtWeek(clinicId);
         return DashboardDataContainer.builder()
                 .totalNumberOfPatient(totalNumberOfPatients)
-                .totalNumberOfCompensationNoFaultPatient(getTotalNumberOfCompensationNoFaultPatient(patients))
-                .totalNumberOfCommercialPatient(getTotalNumberOfCommercialPatient(patients))
-                .genderContainer(getGenderData(patients))
-                .patientSourceContainer(getPatientSourceData(patients))
+                .totalNumberOfCompensationNoFaultPatient(getTotalNumberOfCompensationNoFaultPatient(clinicId, startDate, endDate))
+                .totalNumberOfCommercialPatient(getTotalNumberOfCommercialPatient(clinicId, startDate, endDate))
+                .genderContainer(getGenderData(clinicId, startDate, endDate))
+                .patientSourceContainer(getPatientSourceData(clinicId, startDate, endDate))
                 .clinicsData(getClinicsData(userId, startDate, endDate))
                 .weekCounterContainer(getPatientAtWeek(clinicId))
                 .build();
     }
 
+    private int getTotalNumberOfCompensationNoFaultPatient(Long clinicId, Long startDate, Long endDate) {
+        int counter = 0;
+        if (startDate == 0 || endDate == 0)
+            counter= patientInsuranceRepositoryNew.findCounterByInsuranceType(clinicId, InsuranceWorkerType.Comp_NoFault);
+        else
+            counter =patientInsuranceRepositoryNew.findCounterByInsuranceTypeByDateRange(startDate, endDate, clinicId, InsuranceWorkerType.Comp_NoFault);
+        return counter;
+    }
+
+    private int getTotalNumberOfCommercialPatient(Long clinicId, Long startDate, Long endDate) {
+        int counter = 0;
+        if (startDate == 0 || endDate == 0)
+            counter= patientInsuranceRepositoryNew.findCounterByInsuranceType(clinicId, InsuranceWorkerType.Commercial);
+        else
+            counter= patientInsuranceRepositoryNew.findCounterByInsuranceTypeByDateRange(startDate, endDate, clinicId, InsuranceWorkerType.Commercial);
+        return counter;
+    }
+
+    private GenderContainer getGenderData(Long clinicId, Long startDate, Long endDate) {
+        List<PatientEntity> patients;
+        if (startDate == 0 || endDate == 0)
+            patients = patientRepositoryNew.findByClinicId(null, clinicId).getContent();
+        else
+            patients = patientRepositoryNew.findInDateRange(startDate, endDate, clinicId);
+        int numberOfMale = patients
+                .stream()
+                .filter(patient -> patient.getPatientEssentialInformation().getGender().equals(Gender.Male)).collect(Collectors.toList()).size();
+        int numberOfFemale = patients
+                .stream()
+                .filter(patient -> patient.getPatientEssentialInformation().getGender().equals(Gender.Female)).collect(Collectors.toList()).size();
+        return GenderContainer
+                .builder()
+                .malePercentage(calculatePercentage(numberOfMale))
+                .maleNumber(numberOfMale)
+                .femalePercentage(calculatePercentage(numberOfFemale))
+                .femaleNumber(numberOfFemale)
+                .build();
+
+    }
+
     private WeekCounterContainer getPatientAtWeek(Long clinicId) {
         Long[] startEnd = DateUtil.startEndDatePeriod(7);
-        List<Patient> patients = patientRepository.findInDateRange(startEnd[0], startEnd[1], clinicId);
+        List<PatientEntity> patients = patientRepositoryNew.findInDateRange(startEnd[0], startEnd[1], clinicId);
         WeekCounterContainer weekCounterContainer = new WeekCounterContainer();
         patients.stream().forEach(patient -> {
             incrementDaysOfWeek(patient.getCreatedAt(), weekCounterContainer, patients.size());
@@ -71,26 +113,23 @@ public class DashboardServiceImpl implements DashboardService {
         return weekCounterContainer;
     }
 
-    private void fetchClinicsByUserId(String userId) {
-
-    }
 
     private Map getClinicsData(String userId, Long startDate, Long endDate) {
         log.debug("DashboardService-Get Clinics Data {}", userId);
         Map clinicData = new HashMap<String, List<Integer>>();
         double totalPatients = 0;
         if (startDate == 0 && endDate == 0)
-            totalPatients = Lists.newArrayList(patientRepository.findAll().iterator()).size();
+            totalPatients = Lists.newArrayList(patientRepositoryNew.findAll().iterator()).size();
         else
-            totalPatients = patientRepository.getByCreatedDateRange(startDate, endDate).size();
+            totalPatients = patientRepositoryNew.getByCreatedDateRange(startDate, endDate).size();
         log.debug("DashboardService-Get Clinics Data:totalPatients {}", totalPatients);
         double finalTotalPatients = totalPatients;
         userFinderService.findByUserId(userId).forEach(clinicModel -> {
             double numberOfPatient = 0;
             if (startDate == 0 && endDate == 0)
-                numberOfPatient = patientRepository.findByClinicId(null, clinicModel.getId()).getContent().size();
+                numberOfPatient = patientRepositoryNew.findByClinicId(null, clinicModel.getId()).getContent().size();
             else
-                numberOfPatient = patientRepository.findInDateRange(startDate, endDate, clinicModel.getId()).size();
+                numberOfPatient = patientRepositoryNew.findInDateRange(startDate, endDate, clinicModel.getId()).size();
             log.debug("DashboardService-Get Clinics Data:Clinic  {} , numberOfPatient {} ", clinicModel.getName(), numberOfPatient);
             List<Double> numberPercentage = new ArrayList<>();
             numberPercentage.add(Double.valueOf(numberOfPatient));
@@ -103,55 +142,31 @@ public class DashboardServiceImpl implements DashboardService {
         return clinicData;
     }
 
-    private int getTotalNumberOfCompensationNoFaultPatient(List<Patient> patients) {
-        return patients
-                .stream()
-                .filter(patient -> patient.getInsuranceWorkerType().equals(InsuranceWorkerType.Comp_NoFault))
-                .collect(Collectors.toList()).size();
-    }
 
-    private int getTotalNumberOfCommercialPatient(List<Patient> patients) {
-        return patients
-                .stream()
-                .filter(patient -> patient.getInsuranceWorkerType().equals(InsuranceWorkerType.Commercial))
-                .collect(Collectors.toList()).size();
-    }
-
-    private GenderContainer getGenderData(List<Patient> patients) {
-        int numberOfMale = patients
-                .stream()
-                .filter(patient -> patient.getGender().equals(Gender.Male)).collect(Collectors.toList()).size();
-        int numberOfFemale = patients
-                .stream()
-                .filter(patient -> patient.getGender().equals(Gender.Female)).collect(Collectors.toList()).size();
-        return GenderContainer
-                .builder()
-                .malePercentage(calculatePercentage(numberOfMale))
-                .maleNumber(numberOfMale)
-                .femalePercentage(calculatePercentage(numberOfFemale))
-                .femaleNumber(numberOfFemale)
-                .build();
-
-    }
-
-    private PatientSourceContainer getPatientSourceData(List<Patient> patients) {
-        int numberOfDoctorSource = patients.stream()
-                .filter(patient -> patient.getPatientSourceType().equals(PatientSourceType.Doctor))
-                .collect(Collectors.toList()).size();
+    private PatientSourceContainer getPatientSourceData(Long clinicId, Long startDate, Long endDate) {
+        int numberOfDoctorSource = 0;
+        if (startDate == 0 && endDate == 0)
+            numberOfDoctorSource = patientSourceRepositoryNew.findCounterBySourceType(clinicId, PatientSourceType.Doctor);
+        else
+            numberOfDoctorSource = patientSourceRepositoryNew.findCounterBySourceTypeByDateRange(startDate, endDate, clinicId, PatientSourceType.Doctor);
         AtomicInteger numberOfZocdoc = new AtomicInteger();
         AtomicInteger numberOfTV = new AtomicInteger();
         AtomicInteger numberOfWebsite = new AtomicInteger();
         AtomicInteger numberOfSocialMedia = new AtomicInteger();
 
-        List<PatientEntitySource> PatientEntitySource = Lists.newArrayList(patientEntitySourceRepository.findByPatientIn(patients).iterator());
-        PatientEntitySource.stream().forEach(patientEntitySource -> {
-            if (patientEntitySource.getName().equals("Zocdoc"))
+        List<PatientSourceEntity> patientSourceEntities = null;
+        if (startDate == 0 && endDate == 0)
+            patientSourceEntities = patientSourceRepositoryNew.findBySourceType(clinicId, PatientSourceType.Entity);
+        else
+            patientSourceEntities = patientSourceRepositoryNew.findBySourceTypeByDateRange(startDate, endDate, clinicId, PatientSourceType.Entity);
+        patientSourceEntities.stream().forEach(patientEntitySource -> {
+            if (patientEntitySource.getPatientSource().getOrganizationName().equals("Zocdoc"))
                 numberOfZocdoc.getAndIncrement();
-            if (patientEntitySource.getName().equals("TV"))
+            if (patientEntitySource.getPatientSource().getOrganizationName().equals("TV"))
                 numberOfTV.getAndIncrement();
-            if (patientEntitySource.getName().equals("website"))
+            if (patientEntitySource.getPatientSource().getOrganizationName().equals("website"))
                 numberOfWebsite.getAndIncrement();
-            if (patientEntitySource.getName().equals("socialmedia"))
+            if (patientEntitySource.getPatientSource().getOrganizationName().equals("socialmedia"))
                 numberOfSocialMedia.getAndIncrement();
         });
         return PatientSourceContainer.builder()

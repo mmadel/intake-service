@@ -1,72 +1,72 @@
 package com.cob.salesforce.services.export.pdf;
 
-import com.cob.salesforce.models.InsuranceWorkerCommercialDTO;
-import com.cob.salesforce.models.InsuranceWorkerCompNoFaultDTO;
-import com.cob.salesforce.models.PatientDTO;
+import com.cob.salesforce.models.intake.Patient;
+import com.cob.salesforce.models.intake.insurance.commercial.PatientCommercialInsurance;
+import com.cob.salesforce.models.intake.insurance.compensation.PatientInsuranceCompensationNoFault;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 
 public class PatientInsurancePDFCreator {
-    public static void create(Document document, PatientDTO dto) throws DocumentException {
+    public static void create(Document document, Patient dto) throws DocumentException {
         PDFPageCreator.createHeader(document, "Insurance Information");
-        if (!dto.getInsuranceQuestionnaireInfo().getIsCompNoFault())
-            createInsuranceWorkerCommercial(document, dto.getInsuranceQuestionnaireInfo().getInsuranceWorkerCommercial());
+        if (dto.getPatientInsurance().getPatientInsuranceCompensationNoFault() == null)
+            createInsuranceWorkerCommercial(document, dto.getPatientInsurance().getPatientCommercialInsurance());
         else
-            createInsuranceWorkerCompNoFault(document, dto.getInsuranceQuestionnaireInfo().getInsuranceWorkerCompNoFault());
+            createInsuranceWorkerCompNoFault(document, dto.getPatientInsurance().getPatientInsuranceCompensationNoFault());
 
     }
 
-    private static void createInsuranceWorkerCommercial(Document document, InsuranceWorkerCommercialDTO dto) throws DocumentException {
-        String[] typeRow = new String[]{"Insurance Worker Type"};
+    private static void createInsuranceWorkerCommercial(Document document, PatientCommercialInsurance patientCommercialInsurance) throws DocumentException {
+        String[] typeRow = new String[]{"Insurance Type"};
         PDFPageCreator.createTable(document, typeRow, new String[]{
-                "Insurance Worker Commercial"
+                "Commercial"
         }, 1);
         PDFPageCreator.createHeader(document, "");
         String[] firstRow = new String[]{"Insurance Company", "MemberId", "PolicyId", "Relationship"};
         PDFPageCreator.createTable(document, firstRow, new String[]{
-                dto.getInsuranceCompanyId().toString(),
-                dto.getMemberId().toString(),
-                dto.getPolicyId().toString(),
-                dto.getRelationship()
+                patientCommercialInsurance.getInsuranceCompanyId().toString(),
+                patientCommercialInsurance.getMemberId().toString(),
+                patientCommercialInsurance.getPolicyId().toString(),
+                patientCommercialInsurance.getRelationship()
         }, 4);
         PDFPageCreator.createHeader(document, "");
         String[] secondRow = new String[]{"Secondary Insurance", "Medicare Coverage"};
         PDFPageCreator.createTable(document, secondRow, new String[]{
-                dto.getIsSecondaryInsurance() ? "Yes" : "No",
-                dto.getIsMedicareCoverage() ? "Yes" : "No"
+                patientCommercialInsurance.getSecondaryInsurance() != null ? "Yes" : "No",
+                patientCommercialInsurance.getMedicareCoverage() != null ? "Yes" : "No"
         }, 2);
     }
 
-    private static void createInsuranceWorkerCompNoFault(Document document, InsuranceWorkerCompNoFaultDTO dto) throws DocumentException {
-        String[] typeRow = new String[]{"Insurance Worker Type"};
+    private static void createInsuranceWorkerCompNoFault(Document document, PatientInsuranceCompensationNoFault patientInsuranceCompensationNoFault) throws DocumentException {
+        String[] typeRow = new String[]{"Insurance Type"};
         PDFPageCreator.createTable(document, typeRow, new String[]{
-                "Insurance Worker Compensation"
+                "Compensation No Fault"
         }, 1);
         PDFPageCreator.createHeader(document, "");
         String[] firstRow = new String[]{"InjuryType", "AccidentDate", "WorkerStatus", "WorkerAddress"};
         PDFPageCreator.createTable(document, firstRow, new String[]{
-                dto.getInjuryType(),
-                dto.getAccidentDate().toString(),
-                dto.getWorkerStatus(),
-                dto.getWorkerCompAddress().getFullAddress()
+                patientInsuranceCompensationNoFault.getInjuryType(),
+                patientInsuranceCompensationNoFault.getAccidentDate().toString(),
+                patientInsuranceCompensationNoFault.getWorkerStatus(),
+                patientInsuranceCompensationNoFault.getAddress().getFirst() + "," + patientInsuranceCompensationNoFault.getAddress().getCountry()
         }, 4);
         PDFPageCreator.createHeader(document, "");
         String[] secondRow = new String[]{"insuranceName", "claimNumber"};
         PDFPageCreator.createTable(document, secondRow, new String[]{
-                dto.getInsuranceName(),
-                dto.getClaimNumber().toString()
+                patientInsuranceCompensationNoFault.getInsuranceName(),
+                patientInsuranceCompensationNoFault.getClaimNumber().toString()
         }, 2);
         PDFPageCreator.createHeader(document, "");
         String[] adjusterRow = new String[]{"AdjusterName", "AdjusterPhone"};
         PDFPageCreator.createTable(document, adjusterRow, new String[]{
-                dto.getAdjusterInfoName(),
-                dto.getAdjusterInfoPhone()
+                patientInsuranceCompensationNoFault.getAdjusterInfoName(),
+                patientInsuranceCompensationNoFault.getAdjusterInfoPhone()
         }, 2);
         PDFPageCreator.createHeader(document, "");
         String[] attorneyRow = new String[]{"AttorneyName", "AttorneyPhone"};
         PDFPageCreator.createTable(document, attorneyRow, new String[]{
-                dto.getAttorneyInfoName(),
-                dto.getAttorneyInfoPhone()
+                patientInsuranceCompensationNoFault.getAttorneyInfoName(),
+                patientInsuranceCompensationNoFault.getAttorneyInfoPhone()
         }, 2);
     }
 }

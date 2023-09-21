@@ -6,8 +6,10 @@ import com.cob.salesforce.exception.response.ControllerErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
@@ -71,5 +73,13 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         ControllerErrorResponse controllerErrorResponse = new ControllerErrorResponse(errorMessage, ex.getStatus());
         log.error(controllerErrorResponse.getMessage());
         return new ResponseEntity<>(controllerErrorResponse, ex.getStatus());
+    }
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex, HttpHeaders headers,
+            HttpStatus status, WebRequest request) {
+        ControllerErrorResponse controllerErrorResponse = new ControllerErrorResponse(ex.getMessage(), status);
+        log.error(controllerErrorResponse.getMessage());
+        return new ResponseEntity<>(controllerErrorResponse, status);
     }
 }

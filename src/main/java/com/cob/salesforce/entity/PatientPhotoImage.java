@@ -1,5 +1,6 @@
 package com.cob.salesforce.entity;
 
+import com.cob.salesforce.entity.intake.PatientEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,5 +26,5 @@ public class PatientPhotoImage {
     private byte[] image;
     @ManyToOne(cascade = CascadeType.ALL )
     @JoinColumn(name="patient_id", referencedColumnName = "id")
-    private Patient patient;
+    private PatientEntity patient;
 }

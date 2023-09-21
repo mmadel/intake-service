@@ -2,11 +2,11 @@ package com.cob.salesforce.controllers;
 
 import com.cob.salesforce.dependencies.creator.PatientPhotoUploaderService;
 import com.cob.salesforce.exception.business.PatientException;
-import com.cob.salesforce.models.PatientDTO;
 import com.cob.salesforce.models.PatientSignatureDTO;
-import com.cob.salesforce.services.PatientCreatorService;
-import com.cob.salesforce.services.PatientFinderService;
+import com.cob.salesforce.models.intake.Patient;
 import com.cob.salesforce.services.PatientSignatureService;
+import com.cob.salesforce.services.intake.PatientFinderServiceNew;
+import com.cob.salesforce.services.intake.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +21,14 @@ import java.io.IOException;
 @RestController
 @RequestMapping(value = "/patient")
 public class PatientControllers {
+    /*
+        New Impl
+     */
+    @Autowired
+    PatientService patientService;
 
     @Autowired
-    private PatientCreatorService patientCreatorService;
-    @Autowired
-    private PatientFinderService patientFinderService;
+    PatientFinderServiceNew finder;
 
     @Autowired
     private PatientPhotoUploaderService patientPhotoUploaderService;
@@ -35,19 +38,18 @@ public class PatientControllers {
 
     @PostMapping("/create")
     @ResponseBody
-    public ResponseEntity<Long> create(@RequestBody PatientDTO model) throws PatientException {
-        Long createdPatientId = 0L;
-        createdPatientId = patientCreatorService.create(model);
+    public ResponseEntity<Long> create(@RequestBody Patient model) throws PatientException {
+        Long createdPatientId = patientService.create(model);
         return new ResponseEntity<>(createdPatientId, HttpStatus.OK);
     }
 
     @ResponseBody
     @GetMapping("/find/clinic/{clinicId}")
-    public ResponseEntity<com.cob.salesforce.models.PatientListData> list(@RequestParam(name = "offset") String offset,
+    public ResponseEntity list(@RequestParam(name = "offset") String offset,
                                                                           @RequestParam(name = "limit") String limit,
                                                                           @PathVariable(name = "clinicId") Long clinicId) {
         Pageable paging = PageRequest.of(Integer.parseInt(offset), Integer.parseInt(limit));
-        return new ResponseEntity<>(patientFinderService.getPatients(paging, clinicId), HttpStatus.OK);
+        return new ResponseEntity<>(finder.getPatients(paging, clinicId), HttpStatus.OK);
     }
 
     @ResponseBody
@@ -57,12 +59,12 @@ public class PatientControllers {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @ResponseBody
-    @DeleteMapping("/delete/{patientId}")
-    public ResponseEntity delete(@PathVariable(name = "patientId") Long patientId) {
-        patientCreatorService.delete(patientId);
-        return new ResponseEntity(HttpStatus.OK);
-    }
+//    @ResponseBody
+//    @DeleteMapping("/delete/{patientId}")
+//    public ResponseEntity delete(@PathVariable(name = "patientId") Long patientId) {
+//        patientCreatorService.delete(patientId);
+//        return new ResponseEntity(HttpStatus.OK);
+//    }
 
     @PostMapping("/signature/upload")
     public ResponseEntity uploadPatientSignature(@RequestBody PatientSignatureDTO model) {

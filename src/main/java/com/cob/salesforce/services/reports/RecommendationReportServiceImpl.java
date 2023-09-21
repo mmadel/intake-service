@@ -1,17 +1,14 @@
 package com.cob.salesforce.services.reports;
 
 import com.cob.salesforce.BeanFactory;
+import com.cob.salesforce.entity.intake.PatientEntity;
 import com.cob.salesforce.enums.PatientSourceType;
-import com.cob.salesforce.mappers.entities.PatientContainerMapper;
-import com.cob.salesforce.models.PatientContainerDTO;
+import com.cob.salesforce.models.intake.container.report.PatientReportRecord;
+import com.cob.salesforce.models.intake.source.PatientSourceValue;
 import com.cob.salesforce.models.reporting.PatientSearchCriteria;
 import com.cob.salesforce.models.reporting.PatientSearchResult;
-import com.cob.salesforce.repositories.PatientDoctorSourceRepository;
-import com.cob.salesforce.repositories.PatientEntitySourceRepository;
-import com.cob.salesforce.repositories.PatientMedicalRepository;
-import com.cob.salesforce.repositories.PatientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.cob.salesforce.repositories.intake.PatientRepositoryNew;
+import com.cob.salesforce.repositories.intake.PatientSourceRepositoryNew;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,17 +16,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class RecommendationReportServiceImpl implements RecommendationReportService {
-    @Autowired
-    PatientEntitySourceRepository patientEntitySourceRepository;
-    @Autowired
-    PatientDoctorSourceRepository patientDoctorSourceRepository;
-    @Autowired
-    @Qualifier("PatientContainerMapper")
-    PatientContainerMapper mapper;
+
 
     @Override
     public PatientSearchResult getReportData(PatientSearchCriteria patientSearchCriteria) {
-        List<PatientContainerDTO> patients =
+        List<PatientReportRecord> patients =
                 patientSearchCriteria.getType() != null ?
                         getDataByPatientSourceType(patientSearchCriteria) :
                         getDataByDateRange(patientSearchCriteria.getStartDate(), patientSearchCriteria.getEndDate(), patientSearchCriteria.getClinicId());
@@ -40,54 +31,121 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
                 .build();
     }
 
-    private List<PatientContainerDTO> getDataByPatientSourceType(PatientSearchCriteria patientSearchCriteria) {
-        List<PatientContainerDTO> patients = null;
+    private List<PatientReportRecord> getDataByPatientSourceType(PatientSearchCriteria patientSearchCriteria) {
+        List<PatientReportRecord> list = null;
+        PatientSourceRepositoryNew patientDoctorSourceRepository = BeanFactory.getBean(PatientSourceRepositoryNew.class);
         switch (patientSearchCriteria.getType()) {
             case Doctor:
-                PatientDoctorSourceRepository patientDoctorSourceRepository = BeanFactory.getBean(PatientDoctorSourceRepository.class);
-                patients = patientDoctorSourceRepository.findDoctor(patientSearchCriteria.getDoctorName()
-                                , patientSearchCriteria.getDoctorNPI()
-                                , patientSearchCriteria.getStartDate()
-                                , patientSearchCriteria.getEndDate()
-                                , patientSearchCriteria.getClinicId())
-                        .stream().map(patientDoctorSource -> {
-                            PatientContainerDTO dto = mapper.map(patientDoctorSource.getPatient());
-                            dto.setPatientSourceType(PatientSourceType.Doctor);
-                            dto.setDoctorName(patientDoctorSource.getName());
-                            dto.setDoctorNPI(patientDoctorSource.getNpi());
-                            return dto;
-                        }).collect(Collectors.toList());
-                break;
+                return fetchPatientDoctorSource(patientSearchCriteria.getDoctorName(),
+                        patientSearchCriteria.getDoctorNPI(),
+                        patientSearchCriteria.getStartDate(),
+                        patientSearchCriteria.getEndDate(),
+                        patientSearchCriteria.getClinicId(),
+                        patientDoctorSourceRepository);
             case Entity:
-                PatientEntitySourceRepository patientEntitySourceRepository = BeanFactory.getBean(PatientEntitySourceRepository.class);
-                PatientMedicalRepository patientMedicalRepository = BeanFactory.getBean(PatientMedicalRepository.class);
-                patients = patientEntitySourceRepository.findByEntityName(patientSearchCriteria.getEntityNames(),
-                                patientSearchCriteria.getStartDate(),
-                                patientSearchCriteria.getEndDate()
-                                , patientSearchCriteria.getClinicId())
-                        .stream()
-                        .map(patientEntitySource -> {
-                            PatientContainerDTO dto = mapper.map(patientEntitySource.getPatient());
-                            dto.setPatientSourceType(PatientSourceType.Entity);
-                            dto.setEntitySourceData(patientEntitySource.getName());
-                            dto.setPrimaryDoctor(patientMedicalRepository.findByPatient_Id(patientEntitySource.getPatient().getId()).getPrimaryDoctor());
-                            return dto;
-                        }).collect(Collectors.toList());
-                break;
+                return fetchPatientEntitySource(patientSearchCriteria.getEntityNames(),
+                        patientSearchCriteria.getStartDate(),
+                        patientSearchCriteria.getEndDate(),
+                        patientSearchCriteria.getClinicId(),
+                        patientDoctorSourceRepository);
         }
-
-        return patients;
+        return list;
     }
 
-    private List<PatientContainerDTO> getDataByDateRange(Long dateFrom, Long dateTo, Long clinicId) {
-        PatientRepository patientRepository = BeanFactory.getBean(PatientRepository.class);
+    private List<PatientReportRecord> getDataByDateRange(Long dateFrom, Long dateTo, Long clinicId) {
+        PatientRepositoryNew patientRepository = BeanFactory.getBean(PatientRepositoryNew.class);
         if (!dateFrom.equals(dateTo))
             return patientRepository.getByCreatedDateRangeAndClinicId(dateFrom, dateTo, clinicId)
                     .stream()
-                    .map(patientEntitySource -> mapper.map(patientEntitySource)).collect(Collectors.toList());
+                    .map(patient -> constructPatientReportRecord(patient, null, null)).collect(Collectors.toList());
         else
             return patientRepository.getByCreatedDateAndClinicId(dateFrom, clinicId)
                     .stream()
-                    .map(patientEntitySource -> mapper.map(patientEntitySource)).collect(Collectors.toList());
+                    .map(patient -> constructPatientReportRecord(patient, null, null)).collect(Collectors.toList());
+    }
+
+    private List<PatientReportRecord> fetchPatientDoctorSource(String doctorNameCriteria,
+                                                               String doctorNPICriteria, Long startDate, Long endDate,
+                                                               Long clinicId,
+                                                               PatientSourceRepositoryNew patientDoctorSourceRepository) {
+        String doctorName;
+        String npi;
+        if (doctorNameCriteria == null || doctorNameCriteria.isEmpty())
+            doctorName = null;
+        else
+            doctorName = doctorNameCriteria;
+
+        if (doctorNPICriteria == null || doctorNPICriteria.isEmpty())
+            npi = null;
+        else
+            npi = doctorNPICriteria;
+        if ((startDate != null || endDate != null) && (startDate == 0 || endDate == 0)) {
+            startDate = null;
+            endDate = null;
+        }
+        return patientDoctorSourceRepository.findByDoctor(
+                        PatientSourceType.Doctor,
+                        doctorName
+                        , npi
+                        , startDate
+                        , endDate
+                        , clinicId)
+                .stream().map(patientSourceEntity -> {
+                    String[] sourceData = {patientSourceEntity.getPatientSource().getDoctorName(),
+                            patientSourceEntity.getPatientSource().getDoctorNPI(), null};
+                    return constructPatientReportRecord(patientSourceEntity.getPatient(),
+                            PatientSourceType.Doctor,
+                            sourceData);
+                }).collect(Collectors.toList());
+    }
+
+    private List<PatientReportRecord> fetchPatientEntitySource(List<String> organizationNameCriteria,
+                                                               Long startDate, Long endDate,
+                                                               Long clinicId,
+                                                               PatientSourceRepositoryNew patientSourceRepository) {
+        List<String> organizationName;
+        if (organizationNameCriteria == null || organizationNameCriteria.isEmpty())
+            organizationName = null;
+        else
+            organizationName = organizationNameCriteria;
+        if ((startDate != null || endDate != null) && (startDate == 0 || endDate == 0)) {
+            startDate = null;
+            endDate = null;
+        }
+
+        return patientSourceRepository.findByOrganization(PatientSourceType.Entity,
+                        organizationName,
+                        startDate,
+                        endDate,
+                        clinicId)
+                .stream().map(patientSourceEntity -> {
+                    String[] sourceData = {null, null, patientSourceEntity.getPatientSource().getOrganizationName()};
+                    return constructPatientReportRecord(patientSourceEntity.getPatient(),
+                            PatientSourceType.Entity,
+                            sourceData);
+                }).collect(Collectors.toList());
+    }
+
+    private PatientSourceValue getPatientSource(Long id) {
+        PatientSourceRepositoryNew patientSourceRepository = BeanFactory.getBean(PatientSourceRepositoryNew.class);
+        return patientSourceRepository.findByPatient_Id(id).get().getPatientSource();
+    }
+
+    private PatientReportRecord constructPatientReportRecord(PatientEntity patientEntity, PatientSourceType patientSourceType,
+                                                             String[] sourceData) {
+        return PatientReportRecord.builder()
+                .firstName(patientEntity.getPatientEssentialInformation().getPatientName().getFirstName())
+                .middleName(patientEntity.getPatientEssentialInformation().getPatientName().getMiddleName())
+                .lastName(patientEntity.getPatientEssentialInformation().getPatientName().getLastName())
+                .email(patientEntity.getPatientEssentialInformation().getEmail())
+                .phoneNumber(patientEntity.getPatientEssentialInformation().getPatientPhone().getPhone())
+                .gender(patientEntity.getPatientEssentialInformation().getGender().label)
+                .createdAt(patientEntity.getCreatedAt())
+                .patientSourceType(patientSourceType)
+                .patientId(patientEntity.getId())
+                .doctorName(sourceData[0])
+                .doctorNPI(sourceData[1])
+                .organizationName(sourceData[2])
+                .build();
     }
 }

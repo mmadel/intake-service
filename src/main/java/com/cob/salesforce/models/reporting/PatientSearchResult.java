@@ -1,6 +1,6 @@
 package com.cob.salesforce.models.reporting;
 
-import com.cob.salesforce.models.PatientContainerDTO;
+import com.cob.salesforce.models.intake.container.report.PatientReportRecord;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,5 +12,5 @@ import java.util.List;
 @Builder
 public class PatientSearchResult {
     int resultCount;
-    List<PatientContainerDTO> result;
+    List<PatientReportRecord> result;
 }

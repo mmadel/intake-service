@@ -1,6 +1,6 @@
 package com.cob.salesforce.services.export.pdf;
 
-import com.cob.salesforce.models.BasicInfoDTO;
+import com.cob.salesforce.models.intake.Patient;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 
@@ -17,33 +17,26 @@ public class PatientPersonalInfoPDFCreator {
     static final String[] emergencyRow = new String[]
             {"Emergency Name", "Emergency Phone"};
 
-    public static void create(Document document, BasicInfoDTO patientPersonalInfo) throws DocumentException {
+    public static void create(Document document, Patient source) throws DocumentException {
         PDFPageCreator.createHeader(document, "Personal Information");
         PDFPageCreator.createTable(document, firstRow, new String[]{
-                patientPersonalInfo.getEmploymentStatus(),
-                patientPersonalInfo.getMiddleName(),
-                patientPersonalInfo.getLastName(),
-                patientPersonalInfo.getGender(),
-                patientPersonalInfo.getMaritalStatus(),
+                source.getPatientEssentialInformation().getPatientName().getFirstName(),
+                source.getPatientEssentialInformation().getPatientName().getMiddleName(),
+                source.getPatientEssentialInformation().getPatientName().getLastName(),
+                source.getPatientEssentialInformation().getGender().label,
+                source.getPatientEssentialInformation().getMaritalStatus().label,
         }, 5);
         PDFPageCreator.createHeader(document, "");
         PDFPageCreator.createTable(document, secondRow, new String[]{
-                patientPersonalInfo.getEmploymentStatus(),
-                patientPersonalInfo.getEmail(),
-                patientPersonalInfo.getPhoneType(),
-                patientPersonalInfo.getPhoneNumber(),
+                source.getPatientEssentialInformation().getPatientEmployment().getEmploymentStatus().label,
+                source.getPatientEssentialInformation().getEmail(),
+                source.getPatientEssentialInformation().getPatientPhone().getPhoneType().label,
+                source.getPatientEssentialInformation().getPatientPhone().getPhone(),
         }, 4);
-//        PDFPageCreator.createHeader(document, "");
-//        PDFPageCreator.createTable(document, idRow, new String[]{
-//                patientPersonalInfo.getIdType(),
-//                patientPersonalInfo.getPatientId(),
-//                patientPersonalInfo.getIdEffectiveFrom().toString(),
-//                patientPersonalInfo.getIdEffectiveTo().toString(),
-//        }, 4);
         PDFPageCreator.createHeader(document, "");
         PDFPageCreator.createTable(document, emergencyRow, new String[]{
-                patientPersonalInfo.getEmergencyName(),
-                patientPersonalInfo.getEmergencyName(),
+                source.getPatientEssentialInformation().getPatientEmergencyContact().getEmergencyName(),
+                source.getPatientEssentialInformation().getPatientEmergencyContact().getEmergencyPhone(),
         }, 2);
     }
 }
