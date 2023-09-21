@@ -1,12 +1,11 @@
 package com.cob.salesforce.services.admin.validation;
 
-import com.cob.salesforce.models.validation.BasicInfo;
-import com.cob.salesforce.models.validation.PatientFields;
+import com.cob.salesforce.models.intake.fields.PatientField;
 
 public interface PatientValidationFieldService {
-    PatientFields change(PatientFields PatientFields);
+    PatientField change(PatientField PatientFields);
 
-    PatientFields get();
+    PatientField get(Long clinicId);
 
-    BasicInfo getPateintBasicInfo();
+
 }

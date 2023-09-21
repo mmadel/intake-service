@@ -1,11 +1,12 @@
-package com.cob.salesforce.models.validation;
+package com.cob.salesforce.models.intake.fields;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class InsuranceCommercialInfoRequired {
+public class InsuranceCommercialInformation {
+
     private Boolean insuranceCompany;
     private Boolean memberId;
     private Boolean ploicyId;

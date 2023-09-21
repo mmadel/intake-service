@@ -1,11 +1,12 @@
-package com.cob.salesforce.models.validation;
+package com.cob.salesforce.models.intake.fields;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class MedicalHistoryInfoRequired {
+public class MedicalHistoryInformation {
+
     Boolean height;
     Boolean weight;
     Boolean evaluationReason;

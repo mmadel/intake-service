@@ -1,12 +1,11 @@
-package com.cob.salesforce.models.validation;
+package com.cob.salesforce.models.intake.fields;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class InsuranceCompInfoRequired {
-    private Boolean compNoFault;
+public class InsuranceCompensationInformation {
     private Boolean relatedInjury;
     private Boolean accidentDate;
     private Boolean workerStatus;
