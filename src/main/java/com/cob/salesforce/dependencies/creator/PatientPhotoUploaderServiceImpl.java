@@ -2,8 +2,10 @@ package com.cob.salesforce.dependencies.creator;
 
 import com.cob.salesforce.entity.PatientGrantor;
 import com.cob.salesforce.entity.PatientPhotoImage;
+import com.cob.salesforce.entity.intake.PatientGrantorEntity;
 import com.cob.salesforce.repositories.PatientGrantorRepository;
 import com.cob.salesforce.repositories.PatientPhotoImageRepository;
+import com.cob.salesforce.repositories.intake.PatientGrantorRepositoryNew;
 import com.cob.salesforce.repositories.intake.PatientRepositoryNew;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,8 @@ public class PatientPhotoUploaderServiceImpl implements PatientPhotoUploaderServ
 
     @Autowired
     PatientRepositoryNew patientRepositoryNew;
-
     @Autowired
-    PatientGrantorRepository patientGrantorRepository;
+    PatientGrantorRepositoryNew patientGrantorRepositoryNew;
 
     @Override
     public void upload(MultipartFile[] files, Long patientId) {
@@ -40,14 +41,14 @@ public class PatientPhotoUploaderServiceImpl implements PatientPhotoUploaderServ
                             .build());
                 }
                 if (multipartFile.getOriginalFilename().contains("guarantor")) {
-                    PatientGrantor toBeUpdated = patientGrantorRepository.findByPatient_Id(patientId);
+                    PatientGrantorEntity toBeUpdated = patientGrantorRepositoryNew.findByPatient_Id(patientId).get();
                     if (multipartFile.getOriginalFilename().contains("Idfront")){
                         toBeUpdated.setIdFront(multipartFile.getBytes());
-                        patientGrantorRepository.save(toBeUpdated);
+                        patientGrantorRepositoryNew.save(toBeUpdated);
                     }
                     if (multipartFile.getOriginalFilename().contains("Idback")){
                         toBeUpdated.setIdBack(multipartFile.getBytes());
-                        patientGrantorRepository.save(toBeUpdated);
+                        patientGrantorRepositoryNew.save(toBeUpdated);
                     }
 
                 }
