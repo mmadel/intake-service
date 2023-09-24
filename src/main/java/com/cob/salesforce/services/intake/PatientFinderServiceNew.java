@@ -54,16 +54,7 @@ public class PatientFinderServiceNew {
 
     private List<PatientRecord> constructPatientRecords(List<PatientEntity> entities) {
         return entities.stream()
-                .map(patient -> {
-                    return PatientListRecordMapper.map(patient);
-                }).collect(Collectors.toList());
+                .map(patient -> PatientListRecordMapper.map(patient)).collect(Collectors.toList());
     }
 
-    private List<Patient> getPatients(List<PatientEntity> entities) {
-        return entities.stream().map(patientEntity -> {
-            Patient patient = mapper.map(patientEntity, Patient.class);
-            PatientDependenciesMapper.mapper(patient);
-            return patient;
-        }).collect(Collectors.toList());
-    }
 }

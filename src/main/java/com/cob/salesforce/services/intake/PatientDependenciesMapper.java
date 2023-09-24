@@ -32,6 +32,10 @@ public class PatientDependenciesMapper {
                 .getDoctorSource() != null ? PatientSourceType.Doctor : PatientSourceType.Entity;
     }
 
+    public static Boolean mapToHasGuarantor(Long patientId) {
+        return getPatientGuarantor(patientId) != null ? true : false;
+    }
+
     public static InsuranceWorkerType mapToInsuranceType(Long patientId) {
         return getPatientInsurance(patientId)
                 .getPatientCommercialInsurance() != null ? InsuranceWorkerType.Commercial : InsuranceWorkerType.Comp_NoFault;

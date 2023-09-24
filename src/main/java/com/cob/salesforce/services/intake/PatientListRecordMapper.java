@@ -15,6 +15,7 @@ public class PatientListRecordMapper {
                 .phoneNumber(patient.getPatientEssentialInformation().getPatientPhone().getPhone())
                 .sourceType(PatientDependenciesMapper.mapToSourceType(patient.getId()))
                 .insuranceType(PatientDependenciesMapper.mapToInsuranceType(patient.getId()))
+                .hasGuarantor(PatientDependenciesMapper.mapToHasGuarantor(patient.getId()))
                 .patientId(patient.getId())
                 .build();
     }
