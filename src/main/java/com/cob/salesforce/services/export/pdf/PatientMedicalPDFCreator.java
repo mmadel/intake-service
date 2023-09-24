@@ -13,11 +13,11 @@ public class PatientMedicalPDFCreator {
         PDFPageCreator.createHeader(document, "Medical Information");
         createMedicalHistoryInfo(document, model.getPatientMedical().getPatientMedicalHistory());
         createMedicalInfo(document, model.getPatientMedical());
-        createPatientSource(document , model.getPatientSource());
+        createPatientSource(document, model.getPatientSource());
     }
 
     private static void createMedicalInfo(Document document, PatientMedical dto) throws DocumentException {
-        PDFPageCreator.createSubHeader(document, "Physical Therapy Receiving");
+        PDFPageCreator.createHeader(document, "Physical Therapy Receiving");
         if (dto.getPatientPhysicalTherapy() != null) {
             String[] primaryDoctorRow = new String[]{"Location", "Number Of Visit"};
             PDFPageCreator.createTable(document, primaryDoctorRow, new String[]{
@@ -40,7 +40,7 @@ public class PatientMedicalPDFCreator {
             PDFPageCreator.createTable(document, recommendationDoctorRow, new String[]{
                     dto.getDoctorSource().getDoctorName(),
                     dto.getDoctorSource().getDoctorNPI(),
-            }, 4);
+            }, 2);
         }
         PDFPageCreator.createHeader(document, "");
         if (dto.getEntitySource() != null) {
@@ -56,7 +56,8 @@ public class PatientMedicalPDFCreator {
         PDFPageCreator.createTable(document, firstHistoryRow, new String[]{
                 dto.getHeight() != null ? dto.getHeight().toString() : "",
                 dto.getWeight() != null ? dto.getWeight().toString() : "",
-                dto.getScanningTestValue() == null ? "NO" : dto.getScanningTestValue(),
+                ((dto.getScanningTestValue() == null)
+                        || dto.getScanningTestValue().isEmpty()) ? "No" : dto.getScanningTestValue(),
                 dto.getMetalImplantation() ? "Yes" : "No",
                 dto.getPacemaker() ? "Yes" : "No",
         }, 5);

@@ -8,6 +8,7 @@ import com.cob.salesforce.repositories.AgreementRepository;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
+import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -80,7 +81,7 @@ public class PatientAgreementPDFGenerator {
         tableData.setPaddingLeft(10);
         tableData.setBorder(Rectangle.NO_BORDER);
 
-        tableData.addElement(new Phrase(data, new Font(Font.FontFamily.HELVETICA, 12)));
+        tableData.addElement(new Phrase( Jsoup.parse(data).wholeText(), new Font(Font.FontFamily.HELVETICA, 12)));
         table.addCell(tableData);
 
         PdfPCell patientNameCell = new PdfPCell();
