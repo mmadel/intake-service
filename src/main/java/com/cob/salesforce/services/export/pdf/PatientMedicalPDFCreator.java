@@ -18,7 +18,9 @@ public class PatientMedicalPDFCreator {
 
     private static void createMedicalInfo(Document document, PatientMedical dto) throws DocumentException {
         PDFPageCreator.createHeader(document, "Physical Therapy Receiving");
-        if (dto.getPatientPhysicalTherapy() != null) {
+        if ((dto.getPatientPhysicalTherapy() != null) &&
+                (dto.getPatientPhysicalTherapy().getLocation() != null || dto.getPatientPhysicalTherapy().getNumberOfVisit() != null)
+        ) {
             String[] primaryDoctorRow = new String[]{"Location", "Number Of Visit"};
             PDFPageCreator.createTable(document, primaryDoctorRow, new String[]{
                     dto.getPatientPhysicalTherapy().getLocation(),
