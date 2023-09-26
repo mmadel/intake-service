@@ -1,5 +1,6 @@
 package com.cob.salesforce.models.intake.fields;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,14 +11,12 @@ import javax.persistence.Id;
 
 @Setter
 @Getter
+@Builder
 public class AddressInformation {
-    Boolean type;
-
-    Boolean first;
+    //Boolean type;
+    //Boolean first;
 
     Boolean second;
-
     Boolean country;
-
     Boolean zipCode;
 }

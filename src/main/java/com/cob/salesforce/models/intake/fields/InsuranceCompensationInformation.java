@@ -1,10 +1,12 @@
 package com.cob.salesforce.models.intake.fields;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
+@Builder
 public class InsuranceCompensationInformation {
     private Boolean relatedInjury;
     private Boolean accidentDate;
