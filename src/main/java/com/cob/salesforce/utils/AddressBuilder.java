@@ -1,5 +1,7 @@
 package com.cob.salesforce.utils;
 
+import com.cob.salesforce.models.intake.essentials.PatientAddress;
+
 public class AddressBuilder {
 
     public static String build(String address) {
@@ -25,5 +27,12 @@ public class AddressBuilder {
                 result.append(parts[1]);
         }
         return result.toString();
+    }
+    public static String build(PatientAddress patientAddress) {
+        StringBuilder addressBuilder = new StringBuilder();
+        addressBuilder.append(patientAddress.getFirst() +",");
+        addressBuilder.append(patientAddress.getState() +",");
+        addressBuilder.append(patientAddress.getZipCode());
+        return addressBuilder.toString();
     }
 }

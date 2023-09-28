@@ -1,6 +1,7 @@
 package com.cob.salesforce.services.export.pdf;
 
 import com.cob.salesforce.models.intake.Patient;
+import com.cob.salesforce.utils.AddressBuilder;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 
@@ -16,6 +17,9 @@ public class PatientPersonalInfoPDFCreator {
             {"Id Type", "Patient Id", "Effective-From", "Effective-To"};
     static final String[] emergencyRow = new String[]
             {"Emergency Name", "Emergency Phone"};
+
+    static final String[] patientAddress = new String[]
+            {"Patient Address"};
 
     public static void create(Document document, Patient source) throws DocumentException {
         PDFPageCreator.createHeader(document, "Personal Information");
@@ -37,6 +41,10 @@ public class PatientPersonalInfoPDFCreator {
         PDFPageCreator.createTable(document, emergencyRow, new String[]{
                 source.getPatientEssentialInformation().getPatientEmergencyContact().getEmergencyName(),
                 source.getPatientEssentialInformation().getPatientEmergencyContact().getEmergencyPhone(),
+        }, 2);
+        PDFPageCreator.createHeader(document, "");
+        PDFPageCreator.createTable(document, patientAddress, new String[]{
+                AddressBuilder.build(source.getPatientEssentialInformation().getPatientAddress()),
         }, 2);
     }
 }
