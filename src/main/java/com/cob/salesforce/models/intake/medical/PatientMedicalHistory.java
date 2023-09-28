@@ -12,7 +12,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PatientMedicalHistory implements Serializable {
 
-    private Double height;
+    private String height;
 
     private String heightUnit;
 
@@ -31,7 +31,7 @@ public class PatientMedicalHistory implements Serializable {
 
     private Boolean scanningTest;
 
-    private String scanningTestValue;
+    private List<String> scanningTestValue;
 
     private Boolean metalImplantation;
 

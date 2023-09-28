@@ -59,7 +59,7 @@ public class PatientMedicalPDFCreator {
                 dto.getHeight() != null ? dto.getHeight().toString() : "",
                 dto.getWeight() != null ? dto.getWeight().toString() : "",
                 ((dto.getScanningTestValue() == null)
-                        || dto.getScanningTestValue().isEmpty()) ? "No" : dto.getScanningTestValue(),
+                        || dto.getScanningTestValue().isEmpty()) ? "No" :String.join(",", dto.getScanningTestValue()),
                 dto.getMetalImplantation() ? "Yes" : "No",
                 dto.getPacemaker() ? "Yes" : "No",
         }, 5);
