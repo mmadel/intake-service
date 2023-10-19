@@ -5,17 +5,22 @@ import com.cob.salesforce.entity.admin.ClinicEntity;
 import com.cob.salesforce.entity.intake.*;
 import com.cob.salesforce.enums.InsuranceWorkerType;
 import com.cob.salesforce.enums.PatientSourceType;
+import com.cob.salesforce.messageQ.RabbitMQSender;
 import com.cob.salesforce.models.intake.Patient;
 import com.cob.salesforce.models.intake.grantor.PatientGrantor;
 import com.cob.salesforce.models.intake.insurance.PatientInsurance;
 import com.cob.salesforce.models.intake.medical.PatientMedical;
+import com.cob.salesforce.models.intake.source.DoctorSource;
 import com.cob.salesforce.models.intake.source.PatientSource;
 import com.cob.salesforce.models.intake.source.PatientSourceValue;
+import com.cob.salesforce.models.message.DoctorMessage;
 import com.cob.salesforce.repositories.admin.clinic.ClinicRepository;
 import com.cob.salesforce.repositories.intake.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 public class PatientService {
@@ -26,6 +31,9 @@ public class PatientService {
     @Autowired
     ModelMapper mapper;
 
+    @Autowired
+    RabbitMQSender rabbitMQSender;
+
     public Long create(Patient model) {
         PatientEntity toBeCreated = mapper.map(model, PatientEntity.class);
         toBeCreated.setClinic(getClinic(model.getClinicId()));
@@ -35,6 +43,8 @@ public class PatientService {
         createPatientInsurance(created, model.getPatientInsurance());
         if (model.getPatientGrantor() != null)
             createPatientGrantor(created, model.getPatientGrantor());
+        if (model.getPatientSource().getDoctorSource() != null)
+            pushDoctorData(model.getPatientSource().getDoctorSource(), toBeCreated.getClinic());
         return created.getId();
     }
 
@@ -70,7 +80,7 @@ public class PatientService {
         PatientInsuranceRepositoryNew repository = BeanFactory.getBean(PatientInsuranceRepositoryNew.class);
         PatientInsuranceEntity toBeCreated = mapper.map(patientInsurance, PatientInsuranceEntity.class);
         toBeCreated.setPatient(created);
-        toBeCreated.setPatientInsuranceType(patientInsurance.getPatientCommercialInsurance() != null? InsuranceWorkerType.Commercial:InsuranceWorkerType.Comp_NoFault);
+        toBeCreated.setPatientInsuranceType(patientInsurance.getPatientCommercialInsurance() != null ? InsuranceWorkerType.Commercial : InsuranceWorkerType.Comp_NoFault);
         repository.save(toBeCreated);
     }
 
@@ -80,7 +90,19 @@ public class PatientService {
         toBeCreated.setPatient(created);
         repository.save(toBeCreated);
     }
-    private ClinicEntity getClinic(Long id){
+
+    private ClinicEntity getClinic(Long id) {
         return clinicRepository.findById(id).get();
+    }
+
+    private void pushDoctorData(DoctorSource doctorSource, ClinicEntity clinic) {
+        rabbitMQSender.send(DoctorMessage.builder()
+                .name(doctorSource.getDoctorName())
+                .npi(doctorSource.getDoctorNPI())
+                .clinicName(clinic.getName())
+                .clinicId(clinic.getId().toString())
+                .createdDate(new Date().getTime())
+                .isPotential(doctorSource.getIsPotential() == null ? true : false)
+                .build());
     }
 }

@@ -15,4 +15,6 @@ public class DoctorSource  implements Serializable {
     private Long doctorFax;
 
     private String doctorAddress;
+
+    private Boolean isPotential;
 }
