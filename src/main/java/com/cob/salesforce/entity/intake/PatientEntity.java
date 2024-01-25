@@ -5,6 +5,7 @@ import com.cob.salesforce.enums.Gender;
 import com.cob.salesforce.enums.MaritalStatus;
 import com.cob.salesforce.models.intake.agreement.PatientAgreement;
 import com.cob.salesforce.models.intake.essentials.*;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +23,8 @@ import java.util.List;
 @Entity
 @Table(name = "new_patient")
 @TypeDefs({
-        @TypeDef(name = "json", typeClass = JsonStringType.class)
+        @TypeDef(name = "json", typeClass = JsonStringType.class),
+        @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 })
 @Getter
 @Setter
@@ -34,10 +36,10 @@ public class PatientEntity {
     @Column(name = "id")
     private Long id;
     @Column(name = "patient_essential_information", columnDefinition = "json")
-    @Type(type = "json")
+    @Type(type = "jsonb")
     PatientEssentialInformation patientEssentialInformation;
     @Column(name = "patient_agreements", columnDefinition = "json")
-    @Type(type = "json")
+    @Type(type = "jsonb")
     private PatientAgreement patientAgreement;
 
     @OneToOne(cascade = CascadeType.PERSIST)

@@ -8,7 +8,6 @@ import java.io.Serializable;
 
 @Setter
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PatientAgreement implements Serializable {
     Boolean acceptReleaseAgreements;
     Boolean  acceptFinancialResponsibilityAgreements;

@@ -3,6 +3,7 @@ package com.cob.salesforce.entity.intake;
 import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.models.intake.source.PatientSource;
 import com.cob.salesforce.models.intake.source.PatientSourceValue;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +17,8 @@ import java.util.Date;
 @Entity
 @Table(name = "new_patient_source")
 @TypeDefs({
-        @TypeDef(name = "json", typeClass = JsonStringType.class)
+        @TypeDef(name = "json", typeClass = JsonStringType.class),
+        @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 })
 @Getter
 @Setter
@@ -27,7 +29,7 @@ public class PatientSourceEntity {
     private Long id;
 
     @Column(name = "patient_source_data", columnDefinition = "json")
-    @Type(type = "json")
+    @Type(type = "jsonb")
     private PatientSourceValue patientSource;
 
     @OneToOne(cascade = CascadeType.ALL)

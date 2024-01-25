@@ -2,6 +2,7 @@ package com.cob.salesforce.entity.intake;
 
 import com.cob.salesforce.enums.InsuranceWorkerType;
 import com.cob.salesforce.models.intake.insurance.PatientInsurance;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +16,8 @@ import java.util.Date;
 @Entity
 @Table(name = "new_patient_insurance")
 @TypeDefs({
-        @TypeDef(name = "json", typeClass = JsonStringType.class)
+        @TypeDef(name = "json", typeClass = JsonStringType.class),
+        @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 })
 @Getter
 @Setter
@@ -26,7 +28,7 @@ public class PatientInsuranceEntity {
     private Long id;
 
     @Column(name = "patient_insurance_data", columnDefinition = "json")
-    @Type(type = "json")
+    @Type(type = "jsonb")
     private PatientInsurance patientInsurance;
 
     @ManyToOne(cascade = CascadeType.ALL)

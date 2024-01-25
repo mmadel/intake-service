@@ -13,8 +13,8 @@ public interface PatientSourceRepositoryNew extends CrudRepository<PatientSource
     Optional<PatientSourceEntity> findByPatient_Id(Long id);
 
     @Query("SELECT ds FROM PatientSourceEntity ds   WHERE (ds.patientSourceType  =:type)" +
-            "AND (:name is null or (JSON_EXTRACT(ds.patientSource, '$.doctorName') = :name))" +
-            "AND (:npi is null or (JSON_EXTRACT(ds.patientSource, '$.doctorNPI') = :npi))" +
+            "AND (:name is null or (FUNCTION('json_extract_path_text',ds.patientSource,'doctorName') = :name))" +
+            "AND (:npi is null or (FUNCTION('json_extract_path_text',ds.patientSource,'doctorNPI') = :npi))" +
             "AND ((:dateFrom is null or ds.createdAt >= :dateFrom) AND (:dateTo is null or ds.createdAt < :dateTo) )" +
             "AND ds.patient.clinic.id =:clinicId")
     List<PatientSourceEntity> findByDoctor(@Param("type") PatientSourceType type,
@@ -26,7 +26,7 @@ public interface PatientSourceRepositoryNew extends CrudRepository<PatientSource
 
 
     @Query("SELECT ds FROM PatientSourceEntity ds WHERE (ds.patientSourceType  =:type)  " +
-            "AND ((JSON_EXTRACT(ds.patientSource, '$.organizationName')) IN (:names))" +
+            "AND (FUNCTION('json_extract_path_text' ,ds.patientSource, 'organizationName') IN (:names))" +
             "AND ((:dateFrom is null or ds.createdAt >= :dateFrom) AND (:dateTo is null or ds.createdAt < :dateTo) )" +
             "AND ds.patient.clinic.id = :clinicId ")
     List<PatientSourceEntity> findByOrganization(@Param("type") PatientSourceType type,

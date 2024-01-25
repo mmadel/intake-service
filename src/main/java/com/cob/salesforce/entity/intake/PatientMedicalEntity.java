@@ -1,6 +1,7 @@
 package com.cob.salesforce.entity.intake;
 
 import com.cob.salesforce.models.intake.medical.PatientMedical;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,8 @@ import java.util.Date;
 @Entity
 @Table(name = "new_patient_medical")
 @TypeDefs({
-        @TypeDef(name = "json", typeClass = JsonStringType.class)
+        @TypeDef(name = "json", typeClass = JsonStringType.class),
+        @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 })
 @Getter
 @Setter
@@ -25,7 +27,7 @@ public class PatientMedicalEntity {
 
 
     @Column(name = "patient_medical_data", columnDefinition = "json")
-    @Type(type = "json")
+    @Type(type = "jsonb")
     private PatientMedical patientMedical;
 
     @ManyToOne(cascade = CascadeType.ALL)
