@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface UserFinderService {
     List<UserModel> getAll();
+
     UserModel getById(String Id);
 
     List<ClinicModel> findByUserId(String userId);

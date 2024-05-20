@@ -17,14 +17,14 @@ public class KeyCloakUsersFinderService {
     Keycloak keycloakService;
     @Value("${kc.realm}")
     private String realm;
-
+    @Value("${kc.intake.client}")
+    private String intakeResource;
 
     @Autowired
     Encryption encryption;
 
     public List<UserRepresentation> getAllUsers() {
-        return keycloakService.realm(realm)
-                .users().list();
+        return keycloakService.realm(realm).users().list();
     }
 
     public String getUserId(String userName) {
@@ -57,7 +57,7 @@ public class KeyCloakUsersFinderService {
     public String getUSerRole(String userName) {
         List result = keycloakService.realm(realm).users()
                 .get(getUserId(userName))
-                .roles().clientLevel(getClientId("intake-ui")).listAll();
+                .roles().clientLevel(getClientId(intakeResource)).listAll();
         return result.size() > 0 ? result.get(0).toString() : null;
     }
 }

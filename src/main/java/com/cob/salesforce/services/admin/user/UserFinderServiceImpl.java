@@ -1,25 +1,21 @@
 package com.cob.salesforce.services.admin.user;
 
+import com.cob.salesforce.entity.admin.ClinicEntity;
+import com.cob.salesforce.entity.admin.UserEntity;
 import com.cob.salesforce.models.admin.ClinicModel;
 import com.cob.salesforce.models.admin.user.UserModel;
 import com.cob.salesforce.repositories.admin.clinic.ClinicRepository;
 import com.cob.salesforce.repositories.admin.user.UserRepository;
 import com.cob.salesforce.services.security.KeyCloakUsersFinderService;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -35,7 +31,7 @@ public class UserFinderServiceImpl implements UserFinderService {
     KeyCloakUsersFinderService keyCloakUsersService;
 
     @Override
-    @Cacheable("users")
+
     public List<UserModel> getAll() {
         log.info("get all users");
         List<UserModel> userModels = new ArrayList<>();
@@ -45,6 +41,9 @@ public class UserFinderServiceImpl implements UserFinderService {
             UserModel userModel = new UserModel();
             userModel.setName(userRepresentation.getUsername());
             userModel.setUuid(userRepresentation.getId());
+            userModel.setFirstName(userRepresentation.getFirstName());
+            userModel.setLastName(userRepresentation.getLastName());
+            userModel.setEmail(userRepresentation.getEmail());
             String userRole = keyCloakUsersService.getUSerRole(userModel.getName());
             if (userRole != null) {
                 userModel.setUserRole(userRole);
@@ -52,43 +51,11 @@ public class UserFinderServiceImpl implements UserFinderService {
             userRepresentationIdList.add(userRepresentation.getId());
             userModels.add(userModel);
         });
-        List<Long> clinicIds = new ArrayList<>();
-        Map<String, List<ClinicModel>> userClinicMap = new HashMap<>();
-        userRepository.findByUsers(userRepresentationIdList).forEach(userClinicEntity -> {
-            clinicIds.add(userClinicEntity.getClinicId());
-            List<ClinicModel> clinics = userClinicMap.get(userClinicEntity.getUserId());
-            if (clinics == null) {
-                List<ClinicModel> list = new ArrayList<>();
-                ClinicModel clinicModel = new ClinicModel();
-                clinicModel.setId(userClinicEntity.getClinicId());
-                list.add(clinicModel);
-                userClinicMap.put(userClinicEntity.getUserId(), list);
-            } else {
-                ClinicModel clinicModel = new ClinicModel();
-                clinicModel.setId(userClinicEntity.getClinicId());
-                clinics.add(clinicModel);
-                userClinicMap.put(userClinicEntity.getUserId(), clinics);
-            }
-        });
-
-        clinicRepository.findAllById(clinicIds).forEach(clinicEntity -> {
-            userClinicMap.entrySet().stream().forEach(stringListEntry -> {
-                List<ClinicModel> list = stringListEntry.getValue();
-                list.forEach(model -> {
-                    if (model.getId().equals(clinicEntity.getId())) {
-                        model.setName(clinicEntity.getName());
-                        model.setAddress(clinicEntity.getAddress());
-                    }
-                });
-            });
-        });
-        userModels.forEach(model -> {
-            userClinicMap.entrySet().stream().forEach(stringListEntry -> {
-                if (stringListEntry.getKey().equals(model.getUuid()))
-                    model.setClinics(stringListEntry.getValue());
-            });
-        });
-        return userModels;
+        List<String> userModelsUUIDs = userModels.stream().map(UserModel::getUuid).collect(Collectors.toList());
+        List<String> userEntitiesUUIDs = userRepository.findByUsers(userModelsUUIDs).stream().map(userEntity -> userEntity.getUserId()).collect(Collectors.toList());
+        return userModels.stream()
+                .filter(userModel -> userEntitiesUUIDs.contains(userModel.getUuid()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -100,17 +67,9 @@ public class UserFinderServiceImpl implements UserFinderService {
 
     @Override
     public List<ClinicModel> findByUserId(String userId) {
-        List<Long> clinicIds = new ArrayList<>();
-        userRepository.findByUserId(userId).get()
-                .forEach(userClinicEntity -> {
-                    clinicIds.add(userClinicEntity.getClinicId());
-                });
-        List<ClinicModel> clinicModels = new ArrayList<>();
-        clinicRepository.findAllById(clinicIds)
-                .forEach(clinicEntity -> {
-                    clinicModels.add(mapper.map(clinicEntity, ClinicModel.class));
-                });
-        return clinicModels;
+        List<ClinicEntity> clinicEntities = userRepository.findByUserId(userId).get().getClinics();
+        return clinicEntities.stream().map(clinic -> mapper.map(clinic, ClinicModel.class))
+                .collect(Collectors.toList());
     }
 
 
@@ -118,8 +77,13 @@ public class UserFinderServiceImpl implements UserFinderService {
         UserModel userModel = new UserModel();
         userModel.setUuid(userRepresentation.getId());
         userModel.setName(userRepresentation.getUsername());
-        userModel.setAddress(userRepresentation.getAttributes().get("address").get(0));
-        userModel.setClinics(findByUserId(userRepresentation.getId()));
+        userModel.setFirstName(userRepresentation.getFirstName());
+        userModel.setLastName(userRepresentation.getLastName());
+        userModel.setEmail(userRepresentation.getEmail());
+        UserEntity user = userRepository.findByUserId(userRepresentation.getId()).get();
+        userModel.setAddress(user.getAddress());
+        List<ClinicModel> clinics = user.getClinics().stream().map(clinic -> mapper.map(clinic, ClinicModel.class)).collect(Collectors.toList());
+        userModel.setClinics(clinics);
         userModel.setUserRole(keyCloakUsersService.getUSerRole(userRepresentation.getUsername()));
         return userModel;
     }

@@ -30,11 +30,4 @@ public class KeyCloakUserController {
     public ResponseEntity getAll() throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         return new ResponseEntity(keyCloakUsersService.getAllUsers(), HttpStatus.OK);
     }
-
-    @PostMapping(path = "/create")
-    @ResponseBody
-    public ResponseEntity create(@RequestBody KeyCloakUser keyCloakUser) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, UserException, UserKeyCloakException {
-        return new ResponseEntity(keyCloakUsersCreatorService.create(keyCloakUser), HttpStatus.OK);
-    }
-
 }

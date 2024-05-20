@@ -7,6 +7,7 @@ import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
 import lombok.Builder;
 import lombok.Data;
+import org.keycloak.admin.client.resource.RealmResource;
 
 @Data
 @Builder
@@ -21,5 +22,6 @@ public class KeyCloakUser {
     private String email;
     private String address ;
     private List<String> roles;
+    RealmResource realmResource;
 
 }

@@ -7,6 +7,7 @@ import com.cob.salesforce.models.admin.user.UserModel;
 import com.cob.salesforce.services.admin.user.UserCreatorService;
 import com.cob.salesforce.services.admin.user.UserFinderService;
 import com.cob.salesforce.services.admin.user.UserRemoverService;
+import com.cob.salesforce.services.admin.user.UserUpdateService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,16 +37,20 @@ public class UserController {
 
     @Autowired
     ModelMapper mapper;
+    @Autowired
+    UserUpdateService userUpdateService;
 
     @PostMapping(path = "/create")
     public ResponseEntity create(@RequestBody UserModel model) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, UserException, UserKeyCloakException {
-        return new ResponseEntity(creator.create(model),HttpStatus.OK);
+        return new ResponseEntity(creator.create(model), HttpStatus.OK);
     }
 
     @PutMapping(path = "/update")
     public ResponseEntity update(@RequestBody UserModel model) throws UserException, NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        return new ResponseEntity(creator.update(model),HttpStatus.OK);
+        userUpdateService.update(model);
+        return new ResponseEntity(HttpStatus.OK);
     }
+
     @GetMapping(path = "/find")
     @ResponseBody
     public ResponseEntity getAll() {
@@ -57,6 +62,7 @@ public class UserController {
     public ResponseEntity getById(@PathVariable String userId) {
         return new ResponseEntity(finder.getById(userId), HttpStatus.OK);
     }
+
     @GetMapping(path = "/find/loggedIn/{userId}")
     @ResponseBody
     public ResponseEntity getLoggedIn(@PathVariable String userId) {

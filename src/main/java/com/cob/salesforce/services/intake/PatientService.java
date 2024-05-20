@@ -31,8 +31,8 @@ public class PatientService {
     @Autowired
     ModelMapper mapper;
 
-    @Autowired
-    RabbitMQSender rabbitMQSender;
+//    @Autowired
+//    RabbitMQSender rabbitMQSender;
 
     public Long create(Patient model) {
         PatientEntity toBeCreated = mapper.map(model, PatientEntity.class);
@@ -43,8 +43,8 @@ public class PatientService {
         createPatientInsurance(created, model.getPatientInsurance());
         if (model.getPatientGrantor() != null)
             createPatientGrantor(created, model.getPatientGrantor());
-        if (model.getPatientSource().getDoctorSource() != null)
-            pushDoctorData(model.getPatientSource().getDoctorSource(), toBeCreated.getClinic());
+//        if (model.getPatientSource().getDoctorSource() != null)
+//            pushDoctorData(model.getPatientSource().getDoctorSource(), toBeCreated.getClinic());
         return created.getId();
     }
 
@@ -95,14 +95,14 @@ public class PatientService {
         return clinicRepository.findById(id).get();
     }
 
-    private void pushDoctorData(DoctorSource doctorSource, ClinicEntity clinic) {
-        rabbitMQSender.send(DoctorMessage.builder()
-                .name(doctorSource.getDoctorName())
-                .npi(doctorSource.getDoctorNPI())
-                .clinicName(clinic.getName())
-                .clinicId(clinic.getId().toString())
-                .createdDate(new Date().getTime())
-                .isPotential(doctorSource.getIsPotential() == null ? true : false)
-                .build());
-    }
+//    private void pushDoctorData(DoctorSource doctorSource, ClinicEntity clinic) {
+//        rabbitMQSender.send(DoctorMessage.builder()
+//                .name(doctorSource.getDoctorName())
+//                .npi(doctorSource.getDoctorNPI())
+//                .clinicName(clinic.getName())
+//                .clinicId(clinic.getId().toString())
+//                .createdDate(new Date().getTime())
+//                .isPotential(doctorSource.getIsPotential() == null ? true : false)
+//                .build());
+//    }
 }
