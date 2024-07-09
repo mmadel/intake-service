@@ -34,7 +34,7 @@ public class SecurityConfiguration {
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.authorizeHttpRequests(authorize -> authorize
-                        .antMatchers("/authentication/tokens","/nppes/**").permitAll()
+                        .antMatchers("/authentication/tokens","/nppes/**","/agreement").permitAll()
                         .antMatchers("/requires/fields/retrieve/**","/patient/find/clinic/**","/insurance/company/find","/patient/create","/agreement","/reports/generator/pdf/patientId/**").hasAnyRole("administrator", "normal")
                         .antMatchers("/dashboard/**", "/clinic/**",
                                 "/insurance/company/**", "/reports/recommendation/**",

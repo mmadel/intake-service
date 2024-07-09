@@ -39,6 +39,7 @@ public class PatientControllers {
     @PostMapping("/create")
     @ResponseBody
     public ResponseEntity<Long> create(@RequestBody Patient model) throws PatientException {
+        model.setClinicId(11L);
         Long createdPatientId = patientService.create(model);
         return new ResponseEntity<>(createdPatientId, HttpStatus.OK);
     }

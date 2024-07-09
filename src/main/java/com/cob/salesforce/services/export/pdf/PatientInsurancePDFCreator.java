@@ -48,7 +48,7 @@ public class PatientInsurancePDFCreator {
                 patientInsuranceCompensationNoFault.getInjuryType(),
                 patientInsuranceCompensationNoFault.getAccidentDate().toString(),
                 patientInsuranceCompensationNoFault.getWorkerStatus(),
-                patientInsuranceCompensationNoFault.getAddress().getFirst() + "," + patientInsuranceCompensationNoFault.getAddress().getCountry()
+                patientInsuranceCompensationNoFault.getAddress().getFirst() + "," + patientInsuranceCompensationNoFault.getAddress().getCity()
         }, 4);
         PDFPageCreator.createHeader(document, "");
         String[] secondRow = new String[]{"insuranceName", "claimNumber"};
