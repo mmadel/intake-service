@@ -1,7 +1,7 @@
 package com.cob.salesforce.enums.admin.documents;
 
 public enum PatientDocumentType {
-    ID("id"),
+    ID("Id"),
     INSURANCE("insurance");
     public final String label;
 

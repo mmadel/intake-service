@@ -22,6 +22,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 
 @Service
@@ -37,7 +38,7 @@ public class PatientService {
 
 //    @Autowired
 //    RabbitMQSender rabbitMQSender;
-
+    @Transactional
     public Long create(Patient model) {
         PatientEntity toBeCreated = mapper.map(model, PatientEntity.class);
         toBeCreated.setClinic(getClinic(model.getClinicId()));
