@@ -6,6 +6,7 @@ import com.cob.salesforce.entity.intake.*;
 import com.cob.salesforce.enums.InsuranceWorkerType;
 import com.cob.salesforce.enums.PatientSourceType;
 import com.cob.salesforce.messageQ.RabbitMQSender;
+import com.cob.salesforce.models.PatientSignatureDTO;
 import com.cob.salesforce.models.intake.Patient;
 import com.cob.salesforce.models.intake.grantor.PatientGrantor;
 import com.cob.salesforce.models.intake.insurance.PatientInsurance;
@@ -16,6 +17,7 @@ import com.cob.salesforce.models.intake.source.PatientSourceValue;
 import com.cob.salesforce.models.message.DoctorMessage;
 import com.cob.salesforce.repositories.admin.clinic.ClinicRepository;
 import com.cob.salesforce.repositories.intake.*;
+import com.cob.salesforce.services.PatientSignatureService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,8 @@ public class PatientService {
     ClinicRepository clinicRepository;
     @Autowired
     ModelMapper mapper;
+    @Autowired
+    PatientSignatureService patientSignatureService;
 
 //    @Autowired
 //    RabbitMQSender rabbitMQSender;
@@ -45,6 +49,10 @@ public class PatientService {
             createPatientGrantor(created, model.getPatientGrantor());
 //        if (model.getPatientSource().getDoctorSource() != null)
 //            pushDoctorData(model.getPatientSource().getDoctorSource(), toBeCreated.getClinic());
+        PatientSignatureDTO patientSignature = new PatientSignatureDTO();
+        patientSignature.setPatientId(created.getId());
+        patientSignature.setSignature(model.getSignature());
+        patientSignatureService.upload(patientSignature);
         return created.getId();
     }
 

@@ -30,4 +30,5 @@ public class Patient {
 
     private Long clinicId;
     private Long createdAt;
+    private String signature;
 }
