@@ -41,7 +41,7 @@ public class PatientDocumentController {
     private void exportAsZipFiles(List<PatientPhotoImage> documents, HttpServletResponse response) throws IOException {
         ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream());
         for (int i = 0; i < documents.size(); i++) {
-            String documentName = i + "_" + documents.get(i).getName().split(":")[0];
+            String documentName = i + "_" + documents.get(i).getName().split(":")[0] +".jpg";
             ZipEntry zipEntry = new ZipEntry(documentName);
             zipEntry.setSize(documents.get(i).getImage().length);
             zipOut.putNextEntry(zipEntry);
