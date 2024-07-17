@@ -8,15 +8,15 @@ import java.util.ArrayList;
 @Setter
 @Getter
 public class Result {
-    public String created_epoch;
-    public String enumeration_type;
-    public String last_updated_epoch;
-    public String number;
-    public ArrayList<Address> addresses;
-    public ArrayList<Object> practiceLocations;
-    public Basic basic;
-    public ArrayList<Taxonomy> taxonomies;
-    public ArrayList<Object> identifiers;
-    public ArrayList<Object> endpoints;
-    public ArrayList<Object> other_names;
+    private String created_epoch;
+    private String enumeration_type;
+    private String last_updated_epoch;
+    private String number;
+    private ArrayList<Address> addresses;
+    private ArrayList<Object> practiceLocations;
+    private Basic basic;
+    private ArrayList<Taxonomy> taxonomies;
+    private ArrayList<Object> identifiers;
+    private ArrayList<Object> endpoints;
+    private ArrayList<Object> other_names;
 }

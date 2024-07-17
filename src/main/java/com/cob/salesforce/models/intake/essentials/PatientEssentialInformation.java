@@ -19,7 +19,6 @@ public class PatientEssentialInformation implements Serializable {
     private PatientPhone patientPhone;
 
     private String email;
-    private PatientAddress patientAddress;
 
     private MaritalStatus maritalStatus;
 

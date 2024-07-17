@@ -44,7 +44,7 @@ public class PatientPersonalInfoPDFCreator {
         }, 2);
         PDFPageCreator.createHeader(document, "");
         PDFPageCreator.createTable(document, patientAddress, new String[]{
-                AddressBuilder.build(source.getPatientEssentialInformation().getPatientAddress()),
+                AddressBuilder.build(source.getPatientAddress()),
         }, 2);
     }
 }

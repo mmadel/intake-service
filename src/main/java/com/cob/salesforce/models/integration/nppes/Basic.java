@@ -6,12 +6,12 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Basic {
-    public String first_name;
-    public String last_name;
-    public String sole_proprietor;
-    public String gender;
-    public String enumeration_date;
-    public String last_updated;
-    public String certification_date;
-    public String status;
+    private String first_name;
+    private String last_name;
+    private String sole_proprietor;
+    private String gender;
+    private String enumeration_date;
+    private String last_updated;
+    private String certification_date;
+    private String status;
 }

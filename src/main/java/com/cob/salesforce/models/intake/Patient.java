@@ -21,6 +21,7 @@ public class Patient {
 
     private Long id;
     private PatientEssentialInformation patientEssentialInformation;
+    private PatientAddress patientAddress;
     private PatientMedical patientMedical;
     private PatientInsurance patientInsurance;
     private PatientGrantor patientGrantor;

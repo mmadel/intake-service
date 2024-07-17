@@ -30,7 +30,7 @@ import java.util.List;
 @Setter
 @Audited
 @AuditTable(value = "AU_PATIENT")
-public class PatientEntity {
+public class  PatientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -38,6 +38,11 @@ public class PatientEntity {
     @Column(name = "patient_essential_information", columnDefinition = "json")
     @Type(type = "jsonb")
     PatientEssentialInformation patientEssentialInformation;
+
+    @Column(name = "patient_address", columnDefinition = "json")
+    @Type(type = "jsonb")
+    PatientAddress patientAddress;
+
     @Column(name = "patient_agreements", columnDefinition = "json")
     @Type(type = "jsonb")
     private PatientAgreement patientAgreement;
