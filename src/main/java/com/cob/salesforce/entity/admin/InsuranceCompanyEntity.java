@@ -28,4 +28,7 @@ public class InsuranceCompanyEntity {
     @ManyToMany
     @JoinTable(name = "clinic_insurance_company", joinColumns = @JoinColumn(name = "clinic_id"), inverseJoinColumns = @JoinColumn(name = "insurance_company_id"))
     private List<ClinicEntity> clinics = new ArrayList<>();
+
+    @Column(name = "insurance_company_status")
+    private Boolean status;
 }

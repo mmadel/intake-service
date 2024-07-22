@@ -1,6 +1,7 @@
 package com.cob.salesforce.entity.admin;
 
 import com.cob.salesforce.models.common.AddressModel;
+import com.cob.salesforce.models.common.BasicAddress;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Getter;
@@ -31,7 +32,7 @@ public class UserEntity {
     private String userName;
     @Column(name = "address", columnDefinition = "json")
     @Type(type = "jsonb")
-    private AddressModel address;
+    private BasicAddress address;
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,

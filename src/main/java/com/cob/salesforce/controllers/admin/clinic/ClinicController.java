@@ -31,6 +31,12 @@ public class ClinicController {
         return new ResponseEntity(clinicFinderService.getAll(), HttpStatus.OK);
     }
 
+    @GetMapping(path = "/find/active")
+    @ResponseBody
+    public ResponseEntity getActive() {
+        return new ResponseEntity(clinicFinderService.getActiveClinics(), HttpStatus.OK);
+    }
+
     @GetMapping(path = "/find/{clinicId}")
     @ResponseBody
     public ResponseEntity getById(@PathVariable Long clinicId) {

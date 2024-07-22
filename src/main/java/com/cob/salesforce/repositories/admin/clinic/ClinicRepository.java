@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface ClinicRepository extends PagingAndSortingRepository<ClinicEntity, Long> , RevisionRepository<ClinicEntity , Long,Long> {
     @Query("Select c.id  from ClinicEntity c")
     List<Long> getIds();
+    List<ClinicEntity> findByStatus(Boolean status);
 }

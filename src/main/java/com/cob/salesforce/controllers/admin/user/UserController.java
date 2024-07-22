@@ -8,6 +8,8 @@ import com.cob.salesforce.services.admin.user.UserCreatorService;
 import com.cob.salesforce.services.admin.user.UserFinderService;
 import com.cob.salesforce.services.admin.user.UserRemoverService;
 import com.cob.salesforce.services.admin.user.UserUpdateService;
+import com.cob.salesforce.usecase.user.checking.CheckEmailUseCase;
+import com.cob.salesforce.usecase.user.checking.CheckUserNameUseCase;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,6 +41,10 @@ public class UserController {
     ModelMapper mapper;
     @Autowired
     UserUpdateService userUpdateService;
+    @Autowired
+    CheckEmailUseCase checkEmailUseCase;
+    @Autowired
+    CheckUserNameUseCase checkUserNameUseCase;
 
     @PostMapping(path = "/create")
     public ResponseEntity create(@RequestBody UserModel model) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, UserException, UserKeyCloakException {
@@ -82,4 +88,13 @@ public class UserController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @GetMapping("/check/username/{username}")
+    public ResponseEntity checkUserName(@PathVariable String username) throws UserException {
+        return new ResponseEntity(checkUserNameUseCase.checkUserName(username), HttpStatus.OK);
+    }
+
+    @GetMapping("/check/email/{email}")
+    public ResponseEntity checkEmail(@PathVariable String email) throws UserException {
+        return new ResponseEntity(checkEmailUseCase.check(email), HttpStatus.OK);
+    }
 }

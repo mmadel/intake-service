@@ -1,5 +1,6 @@
 package com.cob.salesforce.models.admin;
 
+import com.cob.salesforce.models.common.BasicAddress;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,5 +14,7 @@ public class ClinicModel {
 
     private String address;
 
+    private BasicAddress clinicAddress;
     private Long createdAt;
+    private Boolean status;
 }

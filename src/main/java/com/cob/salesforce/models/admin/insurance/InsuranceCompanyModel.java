@@ -22,4 +22,5 @@ public class InsuranceCompanyModel {
 
 
     private List<ClinicModel> clinics;
+    private Boolean status;
 }

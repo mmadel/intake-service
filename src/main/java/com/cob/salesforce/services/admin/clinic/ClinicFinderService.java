@@ -7,4 +7,5 @@ import java.util.List;
 public interface ClinicFinderService {
     List<ClinicModel> getAll();
     ClinicModel getById(Long Id);
+    List<ClinicModel> getActiveClinics();
 }

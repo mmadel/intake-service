@@ -27,7 +27,8 @@ public class ClinicCreatorServiceImpl implements ClinicCreatorService {
     @Override
     public ClinicModel create(ClinicModel model) {
         ClinicEntity createdEntity = repository.save(mapper.map(model, ClinicEntity.class));
-        patientValidationFieldService.change(createPatientValidationFields(createdEntity.getId()));
+        //Remove set default validation for each clinic , all fields will set as mandatory
+//        patientValidationFieldService.change(createPatientValidationFields(createdEntity.getId()));
         model.setId(createdEntity.getId());
         return model;
     }

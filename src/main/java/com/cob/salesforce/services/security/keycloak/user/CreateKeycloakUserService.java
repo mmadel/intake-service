@@ -11,6 +11,7 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.BadPaddingException;
@@ -46,6 +47,12 @@ public class CreateKeycloakUserService {
         userModel.setUuid(createKCUserResourceUseCase.getUserUUID());
         createUserCredentialsUseCase.create(createKCUserResourceUseCase.getUserUUID(), keyCloakUser.getPassword());
         assignUserRolesUseCase.assign(createKCUserResourceUseCase.getUserUUID(), keyCloakUser.getRoles(), realmResource);
+    }
+    public void delete(UserModel model) throws UserException {
+        javax.ws.rs.core.Response response = keycloakService.realm(realm)
+                .users().delete(model.getUuid());
+        if (response.getStatus() == 404)
+            throw new UserException(HttpStatus.NOT_FOUND, UserException.USER_NOT_FOUND, new Object[]{model.getUuid()});
     }
 
     private KeyCloakUser convertToKeycloakUser(UserModel userModel) {

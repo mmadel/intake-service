@@ -18,6 +18,7 @@ public class ClinicFinderServiceImpl implements ClinicFinderService {
     @Autowired
     ModelMapper mapper;
 
+
     @Override
     public List<ClinicModel> getAll() {
         return StreamSupport
@@ -32,6 +33,13 @@ public class ClinicFinderServiceImpl implements ClinicFinderService {
     @Override
     public ClinicModel getById(Long Id) {
         return mapper.map(repository.findById(Id).get(), ClinicModel.class);
+    }
+
+    @Override
+    public List<ClinicModel> getActiveClinics() {
+        return repository.findByStatus(true).stream()
+                .map(clinic -> mapper.map(clinic, ClinicModel.class))
+                .collect(Collectors.toList());
     }
 
 

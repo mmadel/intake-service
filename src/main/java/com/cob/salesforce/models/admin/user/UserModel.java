@@ -3,6 +3,7 @@ package com.cob.salesforce.models.admin.user;
 import com.cob.salesforce.enums.admin.UserRole;
 import com.cob.salesforce.models.admin.ClinicModel;
 import com.cob.salesforce.models.common.AddressModel;
+import com.cob.salesforce.models.common.BasicAddress;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +19,7 @@ public class UserModel {
     private String lastName;
     private String email;
     private String password;
-    private AddressModel address;
+    private BasicAddress address;
     private String userRole;
     private List<ClinicModel> clinics;
     private Long createdAt;

@@ -60,7 +60,6 @@ public class UserCreatorServiceImpl implements UserCreatorService {
         log.info("update user ", userModel.getName());
         KeyCloakUser keyCloakUser = KeyCloakUser.builder()
                 .userId(userModel.getUuid())
-//                .address(userModel.getAddress())
                 .roles(Arrays.asList(userModel.getUserRole()))
                 .build();
         if (userModel.getPassword() != null) {
@@ -72,18 +71,22 @@ public class UserCreatorServiceImpl implements UserCreatorService {
         return null;
     }
 
-    private void saveUserModel(UserModel userModel) {
-        List<Long> clinics = userModel.getClinics().stream().map(ClinicModel::getId).collect(Collectors.toList());
-        List<UserEntity> userToClinics = new ArrayList<>();
-        List<ClinicEntity> userClinics = StreamSupport.stream(clinicRepository.findAllById(clinics).spliterator(), false)
-                .collect(Collectors.toList());
-        UserEntity entity = new UserEntity();
-        entity.setClinics(userClinics);
-        entity.setUserId(userModel.getUuid());
-        entity.setUserName(userModel.getName());
-        entity.setAddress(userModel.getAddress());
-        userToClinics.add(entity);
-        userRepository.saveAll(userToClinics);
+    private void saveUserModel(UserModel userModel) throws UserException {
+        try{
+            List<Long> clinics = userModel.getClinics().stream().map(ClinicModel::getId).collect(Collectors.toList());
+            List<UserEntity> userToClinics = new ArrayList<>();
+            List<ClinicEntity> userClinics = StreamSupport.stream(clinicRepository.findAllById(clinics).spliterator(), false)
+                    .collect(Collectors.toList());
+            UserEntity entity = new UserEntity();
+            entity.setClinics(userClinics);
+            entity.setUserId(userModel.getUuid());
+            entity.setUserName(userModel.getName());
+            entity.setAddress(userModel.getAddress());
+            userToClinics.add(entity);
+            userRepository.saveAll(userToClinics);
+        }catch(Exception exception){
+            createKeycloakUserService.delete(userModel);
+        }
     }
 
     private String generateRandom() {
