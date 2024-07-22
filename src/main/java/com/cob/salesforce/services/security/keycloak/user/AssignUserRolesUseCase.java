@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -20,11 +21,25 @@ public class AssignUserRolesUseCase {
     @Autowired
     FindRolesRepresentation findRolesRepresentation;
 
-    public void assign(String uuid, List<String> roles, RealmResource realmResource) {
+    public void assign(String uuid, List<String> roles, RealmResource realmResource , String mode) {
         ClientRepresentation clientRepresentation = realmResource.clients().findByClientId(intakeResource).get(0);
-        List<RoleRepresentation> roleRepresentations = findRolesRepresentation.getRolesRepresentation(roles, realmResource, clientRepresentation);
         UserResource userResource = getUserResource(uuid, realmResource);
-        userResource.roles().clientLevel(clientRepresentation.getId()).add(roleRepresentations);
+        if(mode =="edit"){
+            List<String> oldRoles=userResource.roles().clientLevel(clientRepresentation.getId()).listAll().stream()
+                    .map(roleRepresentation -> roleRepresentation.getName())
+                    .collect(Collectors.toList());
+            boolean allOldRolesIncluded = oldRoles.stream().allMatch(roles::contains);
+            if(!allOldRolesIncluded){
+                List<RoleRepresentation> roleRepresentations = findRolesRepresentation.getRolesRepresentation(roles, realmResource, clientRepresentation);
+                List<RoleRepresentation> oldRoleRepresentations = findRolesRepresentation.getRolesRepresentation(oldRoles, realmResource, clientRepresentation);
+                userResource.roles().clientLevel(clientRepresentation.getId()).add(roleRepresentations);
+                userResource.roles().clientLevel(clientRepresentation.getId()).remove(oldRoleRepresentations);
+            }
+        }
+        if(mode == "create"){
+            List<RoleRepresentation> roleRepresentations = findRolesRepresentation.getRolesRepresentation(roles, realmResource, clientRepresentation);
+            userResource.roles().clientLevel(clientRepresentation.getId()).add(roleRepresentations);
+        }
     }
 
     private UserResource getUserResource(String uuid, RealmResource realmResource) {

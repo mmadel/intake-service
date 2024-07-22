@@ -23,13 +23,13 @@ public class UpdateKeycloakUserService {
 
     public void update(UserModel userModel) {
         RealmResource realmResource = keycloakService.realm(realm);
-        if (userModel.getCurrentRole() != null) {
-            List unAssignRoles = new ArrayList();
-            unAssignRoles.add(userModel.getCurrentRole());
-            unAssignUserRoleUseCase.unAssign(userModel.getUuid(),unAssignRoles,realmResource);
+//        if (userModel.getCurrentRole() != null) {
             List assignRoles = new ArrayList();
             assignRoles.add(userModel.getUserRole());
-            assignUserRolesUseCase.assign(userModel.getUuid(),assignRoles,realmResource);
-        }
+            assignUserRolesUseCase.assign(userModel.getUuid(),assignRoles,realmResource,"edit");
+//            List unAssignRoles = new ArrayList();
+//            unAssignRoles.add(userModel.getCurrentRole());
+//            unAssignUserRoleUseCase.unAssign(userModel.getUuid(),unAssignRoles,realmResource);
+//        }
     }
 }

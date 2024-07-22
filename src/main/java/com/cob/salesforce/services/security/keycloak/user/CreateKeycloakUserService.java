@@ -46,7 +46,7 @@ public class CreateKeycloakUserService {
         createKCUserResourceUseCase.create(keyCloakUser, realmResource);
         userModel.setUuid(createKCUserResourceUseCase.getUserUUID());
         createUserCredentialsUseCase.create(createKCUserResourceUseCase.getUserUUID(), keyCloakUser.getPassword());
-        assignUserRolesUseCase.assign(createKCUserResourceUseCase.getUserUUID(), keyCloakUser.getRoles(), realmResource);
+        assignUserRolesUseCase.assign(createKCUserResourceUseCase.getUserUUID(), keyCloakUser.getRoles(), realmResource ,"create");
     }
     public void delete(UserModel model) throws UserException {
         javax.ws.rs.core.Response response = keycloakService.realm(realm)
