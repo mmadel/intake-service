@@ -21,16 +21,19 @@ public class FindProviderByName {
     @Autowired
     MapNPPESResponse nppesMapper;
 
-    public List<String> find(String name) {
+    public List<BasicProvider> find(String name) {
         String url = "";
         String[] fullName = name.split(" ");
         if (fullName.length == 1)
             url = nppesBaseUrl + "?version=2.1&first_name=" + fullName[0] + "&limit=200";
         if (fullName.length == 2)
             url = nppesBaseUrl + "?version=2.1&first_name=" + fullName[0] + "&last_name=" + fullName[1] + "&limit=200";
-        if(fullName.length >2)
+        if (fullName.length > 2)
             return new ArrayList<>();
         NPPESResponse response = restTemplate.getForObject(url, NPPESResponse.class);
-        return response.results.stream().map(res -> nppesMapper.string_map(res)).collect(Collectors.toList());
+        if (response.result_count == 0)
+            return null;
+        else
+            return response.results.stream().map(res -> nppesMapper.basic_map(res)).collect(Collectors.toList());
     }
 }
