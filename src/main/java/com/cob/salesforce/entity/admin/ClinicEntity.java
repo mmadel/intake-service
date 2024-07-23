@@ -23,8 +23,6 @@ public class ClinicEntity {
     private Long id;
     @Column(name = "clinic_name")
     private String name;
-    @Column(name = "address")
-    private String address;
 
     @Type(type = "jsonb")
     @Column(name = "clinic_address", columnDefinition = "json")
