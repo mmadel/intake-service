@@ -34,8 +34,6 @@ public class UserEntity {
     @Type(type = "jsonb")
     private BasicAddress address;
 
-    @Column(name = "user_role")
-    private String currentRole;
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
