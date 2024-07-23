@@ -21,7 +21,7 @@ public class FindProviderByName {
     @Autowired
     MapNPPESResponse nppesMapper;
 
-    public List<BasicProvider> find(String name) {
+    public List<String> find(String name) {
         String url = "";
         String[] fullName = name.split(" ");
         if (fullName.length == 1)
@@ -34,6 +34,6 @@ public class FindProviderByName {
         if (response.result_count == 0)
             return null;
         else
-            return response.results.stream().map(res -> nppesMapper.basic_map(res)).collect(Collectors.toList());
+            return response.results.stream().map(res -> nppesMapper.string_map(res)).collect(Collectors.toList());
     }
 }
