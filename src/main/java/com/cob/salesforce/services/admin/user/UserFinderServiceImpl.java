@@ -68,7 +68,9 @@ public class UserFinderServiceImpl implements UserFinderService {
     @Override
     public List<ClinicModel> findByUserId(String userId) {
         List<ClinicEntity> clinicEntities = userRepository.findByUserId(userId).get().getClinics();
-        return clinicEntities.stream().map(clinic -> mapper.map(clinic, ClinicModel.class))
+        return clinicEntities.stream()
+                .filter(clinic -> clinic.getStatus())
+                .map(clinic -> mapper.map(clinic, ClinicModel.class))
                 .collect(Collectors.toList());
     }
 
