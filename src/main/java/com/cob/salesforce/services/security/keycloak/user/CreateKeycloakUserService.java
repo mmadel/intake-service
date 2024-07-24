@@ -12,11 +12,13 @@ import org.keycloak.admin.client.resource.RealmResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.ws.rs.NotAuthorizedException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -42,11 +44,15 @@ public class CreateKeycloakUserService {
         RealmResource realmResource = keycloakService.realm(realm);
         KeyCloakUser keyCloakUser = convertToKeycloakUser(userModel);
         keyCloakUser.setRealmResource(realmResource);
-        validateUser(keyCloakUser);
-        createKCUserResourceUseCase.create(keyCloakUser, realmResource);
-        userModel.setUuid(createKCUserResourceUseCase.getUserUUID());
-        createUserCredentialsUseCase.create(createKCUserResourceUseCase.getUserUUID(), keyCloakUser.getPassword());
-        assignUserRolesUseCase.assign(createKCUserResourceUseCase.getUserUUID(), keyCloakUser.getRoles(), realmResource ,"create");
+        try{
+            validateUser(keyCloakUser);
+            createKCUserResourceUseCase.create(keyCloakUser, realmResource);
+            userModel.setUuid(createKCUserResourceUseCase.getUserUUID());
+            createUserCredentialsUseCase.create(createKCUserResourceUseCase.getUserUUID(), keyCloakUser.getPassword());
+            assignUserRolesUseCase.assign(createKCUserResourceUseCase.getUserUUID(), keyCloakUser.getRoles(), realmResource ,"create");
+        }catch(NotAuthorizedException ex){
+            throw new AccessDeniedException("backend token expired.");
+        }
     }
     public void delete(UserModel model) throws UserException {
         javax.ws.rs.core.Response response = keycloakService.realm(realm)
