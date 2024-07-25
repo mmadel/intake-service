@@ -12,9 +12,11 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +47,7 @@ public class UserFinderServiceImpl implements UserFinderService {
             userModel.setFirstName(userRepresentation.getFirstName());
             userModel.setLastName(userRepresentation.getLastName());
             userModel.setEmail(userRepresentation.getEmail());
+            userModel.setCreatedAt(userRepresentation.getCreatedTimestamp());
             String userRole = keyCloakUsersService.getUSerRole(userModel.getName());
             if (userRole != null) {
                 userModel.setUserRole(userRole);
@@ -53,9 +56,10 @@ public class UserFinderServiceImpl implements UserFinderService {
             userModels.add(userModel);
         });
         List<String> userModelsUUIDs = userModels.stream().map(UserModel::getUuid).collect(Collectors.toList());
-        List<String> userEntitiesUUIDs = userRepository.findByUsers(userModelsUUIDs).stream().map(userEntity -> userEntity.getUserId()).collect(Collectors.toList());
+        List<String> userEntitiesUUIDs = userRepository.findByUsers(userModelsUUIDs, Sort.by(Sort.Direction.DESC, "createdAt")).stream().map(userEntity -> userEntity.getUserId()).collect(Collectors.toList());
         return userModels.stream()
                 .filter(userModel -> userEntitiesUUIDs.contains(userModel.getUuid()))
+                .sorted(Comparator.comparingLong(UserModel::getCreatedAt))
                 .collect(Collectors.toList());
     }
 

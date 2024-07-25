@@ -11,6 +11,7 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,6 +34,8 @@ public class UserEntity {
     @Column(name = "address", columnDefinition = "json")
     @Type(type = "jsonb")
     private BasicAddress address;
+    @Column
+    private Long createdAt;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
@@ -55,5 +58,10 @@ public class UserEntity {
     @Override
     public int hashCode() {
         return Objects.hash(userId);
+    }
+
+    @PrePersist
+    private void beforeSaving() {
+        createdAt = new Date().getTime();
     }
 }

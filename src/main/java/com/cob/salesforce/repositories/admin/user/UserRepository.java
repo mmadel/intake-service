@@ -2,6 +2,7 @@ package com.cob.salesforce.repositories.admin.user;
 
 
 import com.cob.salesforce.entity.admin.UserEntity;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -18,5 +19,5 @@ public interface UserRepository extends PagingAndSortingRepository<UserEntity, L
     void deleteUser(@Param("userId") String userId);
 
     @Query("select uc from UserEntity uc where uc.userId in :ids")
-    List<UserEntity> findByUsers(@Param("ids") List<String> ids);
+    List<UserEntity> findByUsers(@Param("ids") List<String> ids, Sort sort);
 }
