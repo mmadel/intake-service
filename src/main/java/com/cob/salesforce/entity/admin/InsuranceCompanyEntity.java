@@ -8,6 +8,7 @@ import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -31,4 +32,12 @@ public class InsuranceCompanyEntity {
 
     @Column(name = "insurance_company_status")
     private Boolean status;
+
+    @Column
+    private Long createdAt;
+
+    @PrePersist
+    private void beforeSaving() {
+        createdAt = new Date().getTime();
+    }
 }

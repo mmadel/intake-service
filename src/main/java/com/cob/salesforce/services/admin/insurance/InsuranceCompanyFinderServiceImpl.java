@@ -4,6 +4,7 @@ import com.cob.salesforce.models.admin.insurance.InsuranceCompanyModel;
 import com.cob.salesforce.repositories.admin.clinic.InsuranceCompanyRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class InsuranceCompanyFinderServiceImpl implements InsuranceCompanyFinder
     public List<InsuranceCompanyModel> getAll() {
         return StreamSupport
                 .stream(Spliterators
-                        .spliteratorUnknownSize(repository.findAll().iterator(), 0), false)
+                        .spliteratorUnknownSize(repository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).iterator(), 0), false)
                 .map(insuranceCompanyEntity -> {
                     return mapper.map(insuranceCompanyEntity, InsuranceCompanyModel.class);
                 })
