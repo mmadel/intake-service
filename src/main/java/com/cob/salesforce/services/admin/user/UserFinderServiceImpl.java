@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class UserFinderServiceImpl implements UserFinderService {
     KeyCloakUsersFinderService keyCloakUsersService;
 
     @Override
-
+    @Cacheable("users")
     public List<UserModel> getAll() {
         log.info("get all users");
         List<UserModel> userModels = new ArrayList<>();
