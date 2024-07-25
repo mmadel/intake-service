@@ -39,4 +39,6 @@ public interface PatientRepositoryNew extends CrudRepository<PatientEntity, Long
             "AND (:dateTo is null or ps.createdAt <= :dateTo) ")
     List<PatientEntity> getByCreatedDateRange(@Param("dateFrom") Long dateFrom
             , @Param("dateTo") Long dateTo);
+
+    List<PatientEntity> findByClinic_Id(@Param("clinicId") Long clinicId);
 }

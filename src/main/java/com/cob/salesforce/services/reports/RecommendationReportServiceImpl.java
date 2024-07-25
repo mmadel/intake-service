@@ -12,6 +12,7 @@ import com.cob.salesforce.repositories.intake.PatientSourceRepositoryNew;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,10 +21,14 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
 
     @Override
     public PatientSearchResult getReportData(PatientSearchCriteria patientSearchCriteria) {
-        List<PatientReportRecord> patients =
-                patientSearchCriteria.getType() != null ?
-                        getDataByPatientSourceType(patientSearchCriteria) :
-                        getDataByDateRange(patientSearchCriteria.getStartDate(), patientSearchCriteria.getEndDate(), patientSearchCriteria.getClinicId());
+        List<PatientReportRecord> patients = new ArrayList<>();
+        if (patientSearchCriteria.getType() != null || (patientSearchCriteria.getStartDate() != null && patientSearchCriteria.getEndDate() != null))
+            patients =
+                    patientSearchCriteria.getType() != null ?
+                            getDataByPatientSourceType(patientSearchCriteria) :
+                            getDataByDateRange(patientSearchCriteria.getStartDate(), patientSearchCriteria.getEndDate(), patientSearchCriteria.getClinicId());
+        if (patientSearchCriteria.getType() == null && (patientSearchCriteria.getStartDate() == null && patientSearchCriteria.getEndDate() == null))
+            patients = findAll(patientSearchCriteria.getClinicId());
 
         return PatientSearchResult.builder()
                 .resultCount(patients.size())
@@ -50,6 +55,13 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
                         patientDoctorSourceRepository);
         }
         return list;
+    }
+
+    private List<PatientReportRecord> findAll(Long clinicId) {
+        PatientRepositoryNew patientRepository = BeanFactory.getBean(PatientRepositoryNew.class);
+        return patientRepository.findByClinic_Id(clinicId)
+                .stream()
+                .map(patient -> constructPatientReportRecordByDateOnly(patient)).collect(Collectors.toList());
     }
 
     private List<PatientReportRecord> getDataByDateRange(Long dateFrom, Long dateTo, Long clinicId) {
@@ -143,13 +155,13 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
                 .createdAt(patientEntity.getCreatedAt())
                 .patientSourceType(patientSourceType)
                 .patientId(patientEntity.getId())
-                .doctorName(sourceData!=null?sourceData[0]:null)
-                .doctorNPI(sourceData!=null?sourceData[1]:null)
-                .organizationName(sourceData!=null?sourceData[2]:null)
+                .doctorName(sourceData != null ? sourceData[0] : null)
+                .doctorNPI(sourceData != null ? sourceData[1] : null)
+                .organizationName(sourceData != null ? sourceData[2] : null)
                 .build();
     }
 
-    private PatientReportRecord constructPatientReportRecordByDateOnly(PatientEntity patientEntity){
+    private PatientReportRecord constructPatientReportRecordByDateOnly(PatientEntity patientEntity) {
         PatientSourceValue patientSourceValue = getPatientSource(patientEntity.getId());
         return PatientReportRecord.builder()
                 .firstName(patientEntity.getPatientEssentialInformation().getPatientName().getFirstName())
@@ -166,8 +178,9 @@ public class RecommendationReportServiceImpl implements RecommendationReportServ
                 .organizationName(patientSourceValue.getOrganizationName())
                 .build();
     }
-    private PatientSourceType getPatientSourceType(PatientSourceValue patientSourceValue){
-        if(patientSourceValue.getOrganizationName() != null)
+
+    private PatientSourceType getPatientSourceType(PatientSourceValue patientSourceValue) {
+        if (patientSourceValue.getOrganizationName() != null)
             return PatientSourceType.Entity;
         else
             return PatientSourceType.Doctor;
