@@ -14,4 +14,6 @@ public interface ClinicRepository extends PagingAndSortingRepository<ClinicEntit
     @Query("Select c.id  from ClinicEntity c")
     List<Long> getIds();
     List<ClinicEntity> findByStatus(Boolean status);
+
+    Optional<ClinicEntity> findByName(String name);
 }

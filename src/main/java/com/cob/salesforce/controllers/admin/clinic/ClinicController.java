@@ -24,7 +24,10 @@ public class ClinicController {
     public ResponseEntity create(@RequestBody ClinicModel model) {
         return new ResponseEntity(clinicCreatorService.create(model), HttpStatus.OK);
     }
-
+    @GetMapping(path = "/check/{name}")
+    public ResponseEntity checkName(@PathVariable String name) throws ClinicException {
+        return new ResponseEntity(clinicCreatorService.isNameExists(name), HttpStatus.OK);
+    }
     @GetMapping(path = "/find")
     @ResponseBody
     public ResponseEntity getAll() {

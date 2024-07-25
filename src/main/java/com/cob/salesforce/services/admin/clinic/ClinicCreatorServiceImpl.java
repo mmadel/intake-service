@@ -1,6 +1,7 @@
 package com.cob.salesforce.services.admin.clinic;
 
 import com.cob.salesforce.entity.admin.ClinicEntity;
+import com.cob.salesforce.exception.business.ClinicException;
 import com.cob.salesforce.models.admin.ClinicModel;
 import com.cob.salesforce.models.intake.fields.*;
 import com.cob.salesforce.repositories.admin.clinic.ClinicRepository;
@@ -8,6 +9,7 @@ import com.cob.salesforce.repositories.admin.user.UserRepository;
 import com.cob.salesforce.services.admin.validation.PatientValidationFieldService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -27,8 +29,6 @@ public class ClinicCreatorServiceImpl implements ClinicCreatorService {
     @Override
     public ClinicModel create(ClinicModel model) {
         ClinicEntity createdEntity = repository.save(mapper.map(model, ClinicEntity.class));
-        //Remove set default validation for each clinic , all fields will set as mandatory
-//        patientValidationFieldService.change(createPatientValidationFields(createdEntity.getId()));
         model.setId(createdEntity.getId());
         return model;
     }
@@ -93,5 +93,13 @@ public class ClinicCreatorServiceImpl implements ClinicCreatorService {
                 .caseStatus(false)
                 .build());
         return patientField;
+    }
+
+    @Override
+    public boolean isNameExists(String clinicName) throws ClinicException {
+        if (repository.findByName(clinicName).isEmpty())
+            return false;
+        else
+            return true;
     }
 }
