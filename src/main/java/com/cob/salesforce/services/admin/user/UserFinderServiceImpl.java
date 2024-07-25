@@ -59,7 +59,7 @@ public class UserFinderServiceImpl implements UserFinderService {
         List<String> userEntitiesUUIDs = userRepository.findByUsers(userModelsUUIDs, Sort.by(Sort.Direction.DESC, "createdAt")).stream().map(userEntity -> userEntity.getUserId()).collect(Collectors.toList());
         return userModels.stream()
                 .filter(userModel -> userEntitiesUUIDs.contains(userModel.getUuid()))
-                .sorted(Comparator.comparingLong(UserModel::getCreatedAt))
+                .sorted(Comparator.comparingLong(UserModel::getCreatedAt).reversed())
                 .collect(Collectors.toList());
     }
 
