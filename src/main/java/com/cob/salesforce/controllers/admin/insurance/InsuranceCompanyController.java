@@ -1,5 +1,6 @@
 package com.cob.salesforce.controllers.admin.insurance;
 
+import com.cob.salesforce.exception.business.ClinicException;
 import com.cob.salesforce.models.admin.insurance.InsuranceCompanyModel;
 import com.cob.salesforce.services.admin.insurance.InsuranceCompanyCreatorService;
 import com.cob.salesforce.services.admin.insurance.InsuranceCompanyFinderService;
@@ -22,6 +23,10 @@ public class InsuranceCompanyController {
     @ResponseBody
     public ResponseEntity create(@RequestBody InsuranceCompanyModel model) {
         return new ResponseEntity(insuranceCompanyCreatorService.create(model), HttpStatus.OK);
+    }
+    @GetMapping(path = "/check/{name}")
+    public ResponseEntity checkName(@PathVariable String name) {
+        return new ResponseEntity(insuranceCompanyFinderService.checkName(name), HttpStatus.OK);
     }
 
     @GetMapping(path = "/find")

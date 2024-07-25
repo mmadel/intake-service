@@ -96,7 +96,7 @@ public class ClinicCreatorServiceImpl implements ClinicCreatorService {
     }
 
     @Override
-    public boolean isNameExists(String clinicName) throws ClinicException {
+    public boolean isNameExists(String clinicName){
         if (repository.findByName(clinicName).isEmpty())
             return false;
         else

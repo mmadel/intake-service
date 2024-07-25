@@ -8,4 +8,5 @@ public interface InsuranceCompanyFinderService {
     List<InsuranceCompanyModel> getAll();
 
     InsuranceCompanyModel getById(Long Id);
+    Boolean checkName(String name);
 }

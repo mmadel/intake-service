@@ -34,4 +34,12 @@ public class InsuranceCompanyFinderServiceImpl implements InsuranceCompanyFinder
     public InsuranceCompanyModel getById(Long Id) {
         return mapper.map(repository.findById(Id).get(), InsuranceCompanyModel.class);
     }
+
+    @Override
+    public Boolean checkName(String name) {
+        if (repository.findByName(name).isEmpty())
+            return false;
+        else
+            return true;
+    }
 }
