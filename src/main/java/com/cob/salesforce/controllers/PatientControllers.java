@@ -10,6 +10,7 @@ import com.cob.salesforce.services.intake.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,7 @@ public class PatientControllers {
     public ResponseEntity list(@RequestParam(name = "offset") String offset,
                                                                           @RequestParam(name = "limit") String limit,
                                                                           @PathVariable(name = "clinicId") Long clinicId) {
-        Pageable paging = PageRequest.of(Integer.parseInt(offset), Integer.parseInt(limit));
+        Pageable paging = PageRequest.of(Integer.parseInt(offset), Integer.parseInt(limit), Sort.by("createdAt").descending());
         return new ResponseEntity<>(finder.getPatients(paging, clinicId), HttpStatus.OK);
     }
 
