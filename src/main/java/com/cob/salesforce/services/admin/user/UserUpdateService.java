@@ -11,6 +11,7 @@ import com.cob.salesforce.services.security.keycloak.user.UpdateKeycloakUserServ
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -33,6 +34,7 @@ public class UserUpdateService {
     UpdateKeycloakUserService updateKeycloakUserService;
 
     @Transactional
+    @CacheEvict(value = "users", allEntries = true)
     public void update(UserModel userModel) {
         UserEntity entity  = userRepository.findByUserId(userModel.getUuid()).get();
         UserEntity toBeUpdated = mapper.map(userModel, UserEntity.class);

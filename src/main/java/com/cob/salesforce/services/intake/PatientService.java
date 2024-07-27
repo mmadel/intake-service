@@ -48,8 +48,6 @@ public class PatientService {
         createPatientInsurance(created, model.getPatientInsurance());
         if (model.getPatientGrantor() != null)
             createPatientGrantor(created, model.getPatientGrantor());
-//        if (model.getPatientSource().getDoctorSource() != null)
-//            pushDoctorData(model.getPatientSource().getDoctorSource(), toBeCreated.getClinic());
         PatientSignatureDTO patientSignature = new PatientSignatureDTO();
         patientSignature.setPatientId(created.getId());
         patientSignature.setSignature(model.getSignature());
