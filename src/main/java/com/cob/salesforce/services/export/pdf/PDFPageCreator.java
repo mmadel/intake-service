@@ -31,23 +31,23 @@ public class PDFPageCreator {
         header.addCell(text);
         document.add(header);
     }
-    public static void createSubHeader(Document document, String title) throws DocumentException {
+    public static void createHeaderWithColor(Document document, String title , BaseColor color) throws DocumentException {
         //https://memorynotfound.com/adding-header-footer-pdf-using-itext-java/
-        PdfPTable subHeader = new PdfPTable(1);
-        subHeader.setTotalWidth(527);
-        subHeader.setLockedWidth(true);
-        subHeader.getDefaultCell().setFixedHeight(40);
-        subHeader.getDefaultCell().setBorder(Rectangle.BOTTOM);
-        subHeader.getDefaultCell().setBorderColor(BaseColor.LIGHT_GRAY);
+        PdfPTable header = new PdfPTable(1);
+        header.setTotalWidth(527);
+        header.setLockedWidth(true);
+        header.getDefaultCell().setFixedHeight(40);
+        header.getDefaultCell().setBorder(Rectangle.BOTTOM);
+        header.getDefaultCell().setBorderColor(BaseColor.LIGHT_GRAY);
 
         PdfPCell text = new PdfPCell();
         text.setPaddingBottom(15);
         text.setPaddingLeft(10);
         text.setBorder(Rectangle.BOTTOM);
         text.setBorderColor(BaseColor.LIGHT_GRAY);
-        text.addElement(new Phrase(title, new Font(Font.FontFamily.HELVETICA, 10)));
-        subHeader.addCell(text);
-        document.add(subHeader);
+        text.addElement(new Phrase(title, new Font(Font.FontFamily.HELVETICA, 16,1,color)));
+        header.addCell(text);
+        document.add(header);
     }
 
     public static PdfPTable createTable(Document document, String[] columns, String[] data ,int numberOfColumns) throws DocumentException {

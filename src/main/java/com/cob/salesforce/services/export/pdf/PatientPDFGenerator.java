@@ -26,7 +26,7 @@ public class PatientPDFGenerator {
         document.open();
         createRightCornerParagraph(document);
         PDFPageCreator.createTitle(document);
-        Chunk linebreak = new Chunk(new LineSeparator(10, 100, BaseColor.BLACK, 0, 0));
+        Chunk linebreak = new Chunk(new LineSeparator(5, 100, BaseColor.BLACK, 0, 0));
         document.add(linebreak);
         PatientPersonalInfoPDFCreator.create(document, source);
         PatientMedicalPDFCreator.create(document, source);

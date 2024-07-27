@@ -4,6 +4,7 @@ import com.cob.salesforce.models.intake.Patient;
 import com.cob.salesforce.models.intake.medical.PatientMedical;
 import com.cob.salesforce.models.intake.medical.PatientMedicalHistory;
 import com.cob.salesforce.models.intake.source.PatientSource;
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 
@@ -17,7 +18,7 @@ public class PatientMedicalPDFCreator {
     }
 
     private static void createMedicalInfo(Document document, PatientMedical dto) throws DocumentException {
-        PDFPageCreator.createHeader(document, "Physical Therapy Receiving");
+        PDFPageCreator.createHeaderWithColor(document, "Physical Therapy Receiving" , BaseColor.RED);
         if ((dto.getPatientPhysicalTherapy() != null) &&
                 (dto.getPatientPhysicalTherapy().getLocation() != null || dto.getPatientPhysicalTherapy().getNumberOfVisit() != null)
         ) {
@@ -26,10 +27,14 @@ public class PatientMedicalPDFCreator {
                     dto.getPatientPhysicalTherapy().getLocation(),
                     dto.getPatientPhysicalTherapy().getNumberOfVisit().toString(),
             }, 2);
+        }else{
+            String[] primaryDoctorRow = new String[]
+                    {"No Receiving Physical Therapy"};
+            PDFPageCreator.createTable(document, primaryDoctorRow, new String[]{}, 1);
         }
-        PDFPageCreator.createHeader(document, "");
+        PDFPageCreator.createHeader(document, "Primary Doctor");
         String[] primaryDoctorRow = new String[]
-                {"primaryDoctor"};
+                {""};
         PDFPageCreator.createTable(document, primaryDoctorRow, new String[]{
                 dto.getPrimaryDoctor()
         }, 1);
@@ -46,7 +51,7 @@ public class PatientMedicalPDFCreator {
         }
         PDFPageCreator.createHeader(document, "");
         if (dto.getEntitySource() != null) {
-            String[] recommendationEntityRow = new String[]{"Entity Name"};
+            String[] recommendationEntityRow = new String[]{""};
             PDFPageCreator.createTable(document, recommendationEntityRow, new String[]{
                     dto.getEntitySource().getOrganizationName()
             }, 1);
