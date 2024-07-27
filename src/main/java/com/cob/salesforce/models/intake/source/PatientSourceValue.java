@@ -13,6 +13,7 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PatientSourceValue implements Serializable {
     String organizationName;
+    String organizationOther;
     String doctorName;
     String doctorNPI;
 }

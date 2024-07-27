@@ -36,7 +36,7 @@ public class PatientService {
     @Autowired
     PatientSignatureService patientSignatureService;
 
-//    @Autowired
+    //    @Autowired
 //    RabbitMQSender rabbitMQSender;
     @Transactional
     public Long create(Patient model) {
@@ -78,6 +78,7 @@ public class PatientService {
             toBeCreated.setPatientSourceType(PatientSourceType.Entity);
             toBeCreated.setPatientSource(PatientSourceValue.builder()
                     .organizationName(patientSource.getEntitySource().getOrganizationName())
+                    .organizationOther(patientSource.getEntitySource().getOther())
                     .build());
         }
         repository.save(toBeCreated);
