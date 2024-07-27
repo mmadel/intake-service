@@ -18,16 +18,17 @@ public class PatientMedicalPDFCreator {
     }
 
     private static void createMedicalInfo(Document document, PatientMedical dto) throws DocumentException {
-        PDFPageCreator.createHeaderWithColor(document, "Physical Therapy Receiving" , BaseColor.RED);
         if ((dto.getPatientPhysicalTherapy() != null) &&
                 (dto.getPatientPhysicalTherapy().getLocation() != null || dto.getPatientPhysicalTherapy().getNumberOfVisit() != null)
         ) {
+            PDFPageCreator.createHeaderWithColor(document, "Physical Therapy Receiving" , BaseColor.RED);
             String[] primaryDoctorRow = new String[]{"Location", "Number Of Visit"};
             PDFPageCreator.createTable(document, primaryDoctorRow, new String[]{
                     dto.getPatientPhysicalTherapy().getLocation(),
                     dto.getPatientPhysicalTherapy().getNumberOfVisit().toString(),
             }, 2);
         }else{
+            PDFPageCreator.createHeader(document, "Physical Therapy Receiving");
             String[] primaryDoctorRow = new String[]
                     {"No Receiving Physical Therapy"};
             PDFPageCreator.createTable(document, primaryDoctorRow, new String[]{}, 1);
