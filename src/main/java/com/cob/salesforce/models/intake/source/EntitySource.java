@@ -9,4 +9,5 @@ import java.io.Serializable;
 @Getter
 public class EntitySource  implements Serializable {
      private String organizationName;
+     private String other;
 }
