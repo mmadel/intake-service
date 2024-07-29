@@ -1,6 +1,7 @@
 package com.cob.salesforce.repositories.intake;
 
 import com.cob.salesforce.entity.intake.PatientEntity;
+import com.cob.salesforce.models.dashboard.PatientChartContainer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -41,4 +42,26 @@ public interface PatientRepositoryNew extends CrudRepository<PatientEntity, Long
             , @Param("dateTo") Long dateTo);
 
     List<PatientEntity> findByClinic_Id(@Param("clinicId") Long clinicId);
+
+    @Query("SELECT " +
+            "EXTRACT(MONTH FROM TO_TIMESTAMP(p.createdAt / 1000)) as month," +
+            " COUNT(p) as count " +
+            "FROM PatientEntity p " +
+            "WHERE EXTRACT(YEAR FROM TO_TIMESTAMP(p.createdAt / 1000)) =:select_year " +
+            "GROUP BY " +
+            "EXTRACT(YEAR FROM TO_TIMESTAMP(p.createdAt / 1000)) ," +
+            "EXTRACT(MONTH FROM TO_TIMESTAMP(p.createdAt / 1000)) " )
+    List<Object[]> countPatientsPerMonth(@Param("select_year") Integer select_year);
+
+    @Query("SELECT new com.cob.salesforce.models.dashboard.PatientChartContainer(" +
+            "p.clinic.name ," +
+            "p.clinic.id ," +
+            "EXTRACT(MONTH FROM TO_TIMESTAMP(p.createdAt / 1000)), " +
+            "COUNT(p)) " +
+            "FROM PatientEntity p " +
+            "WHERE EXTRACT(YEAR FROM TO_TIMESTAMP(p.createdAt / 1000)) =:select_year " +
+            "AND p.clinic.id in :clinics " +
+            "GROUP BY   p.clinic.name,p.clinic.id,EXTRACT(MONTH FROM TO_TIMESTAMP(p.createdAt / 1000)) " +
+            "ORDER BY  EXTRACT(MONTH FROM TO_TIMESTAMP(p.createdAt / 1000))")
+    List<PatientChartContainer> countPatientsPerMonthGroupedByClinic(@Param("select_year") Integer select_year , @Param("clinics") Long[] clinics );
 }
