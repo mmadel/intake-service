@@ -1,5 +1,6 @@
 package com.cob.salesforce.models.intake;
 
+import com.cob.salesforce.models.common.BasicAddress;
 import com.cob.salesforce.models.intake.agreement.PatientAgreement;
 import com.cob.salesforce.models.intake.essentials.*;
 import com.cob.salesforce.models.intake.grantor.PatientGrantor;
@@ -21,7 +22,7 @@ public class Patient {
 
     private Long id;
     private PatientEssentialInformation patientEssentialInformation;
-    private PatientAddress patientAddress;
+    private BasicAddress patientAddress;
     private PatientMedical patientMedical;
     private PatientInsurance patientInsurance;
     private PatientGrantor patientGrantor;

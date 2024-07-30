@@ -3,6 +3,7 @@ package com.cob.salesforce.entity.intake;
 import com.cob.salesforce.entity.admin.ClinicEntity;
 import com.cob.salesforce.enums.Gender;
 import com.cob.salesforce.enums.MaritalStatus;
+import com.cob.salesforce.models.common.BasicAddress;
 import com.cob.salesforce.models.intake.agreement.PatientAgreement;
 import com.cob.salesforce.models.intake.essentials.*;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
@@ -41,7 +42,7 @@ public class  PatientEntity {
 
     @Column(name = "patient_address", columnDefinition = "json")
     @Type(type = "jsonb")
-    PatientAddress patientAddress;
+    BasicAddress patientAddress;
 
     @Column(name = "patient_agreements", columnDefinition = "json")
     @Type(type = "jsonb")
