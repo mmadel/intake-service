@@ -35,9 +35,16 @@ public class InsuranceCompanyEntity {
 
     @Column
     private Long createdAt;
+    @Column
+    private Long updatedAt;
 
     @PrePersist
     private void beforeSaving() {
         createdAt = new Date().getTime();
+    }
+
+    @PreUpdate
+    private void beforeUpdate() {
+        updatedAt = new Date().getTime();
     }
 }
