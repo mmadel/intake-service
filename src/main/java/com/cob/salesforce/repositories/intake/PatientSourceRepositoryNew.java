@@ -58,10 +58,11 @@ public interface PatientSourceRepositoryNew extends CrudRepository<PatientSource
     @Query("SELECT  EXTRACT(MONTH FROM TO_TIMESTAMP(ps.patient.createdAt / 1000)) AS month, COUNT(ps.patient) " +
             "FROM PatientSourceEntity ps " +
             "WHERE ps.patientSourceType = :sourceType " +
+            "AND ps.patient.clinic.id in :clinics " +
             "AND EXTRACT(YEAR FROM TO_TIMESTAMP(ps.patient.createdAt / 1000)) =:select_year " +
             "GROUP BY EXTRACT(MONTH FROM TO_TIMESTAMP(ps.patient.createdAt / 1000)) " +
             "ORDER BY  month")
     List<Object[]> countPatientsPerMonthBySource(@Param("sourceType") PatientSourceType sourceType
-    ,@Param("select_year") Integer select_year);
+    ,@Param("select_year") Integer select_year, @Param("clinics") Long[] clinics );
 
 }

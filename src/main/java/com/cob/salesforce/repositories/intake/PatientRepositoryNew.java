@@ -48,10 +48,11 @@ public interface PatientRepositoryNew extends CrudRepository<PatientEntity, Long
             " COUNT(p) as count " +
             "FROM PatientEntity p " +
             "WHERE EXTRACT(YEAR FROM TO_TIMESTAMP(p.createdAt / 1000)) =:select_year " +
+            "AND p.clinic.id in :clinics " +
             "GROUP BY " +
             "EXTRACT(YEAR FROM TO_TIMESTAMP(p.createdAt / 1000)) ," +
             "EXTRACT(MONTH FROM TO_TIMESTAMP(p.createdAt / 1000)) " )
-    List<Object[]> countPatientsPerMonth(@Param("select_year") Integer select_year);
+    List<Object[]> countPatientsPerMonth(@Param("select_year") Integer select_year, @Param("clinics") Long[] clinics );
 
     @Query("SELECT new com.cob.salesforce.models.dashboard.PatientChartContainer(" +
             "p.clinic.name ," +

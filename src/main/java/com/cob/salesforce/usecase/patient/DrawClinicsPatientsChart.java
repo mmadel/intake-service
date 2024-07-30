@@ -31,7 +31,7 @@ public class DrawClinicsPatientsChart {
         List<Long> clinics= finder.findByUserId(uuid).stream()
                 .map(clinicModel -> clinicModel.getId())
                 .collect(Collectors.toList());
-        //Long[] clinics = new Long[]{11L, 31L, 13L, 32L};
+
         List<PatientChartContainer> result = patientRepositoryNew.countPatientsPerMonthGroupedByClinic(selectedYear, clinics.toArray(Long[]::new));
         Set<Long> clinicIdSet = result.stream()
                 .map(PatientChartContainer::getClinicId)
