@@ -19,4 +19,5 @@ public class PatientRecord {
     InsuranceWorkerType insuranceType;
     Boolean hasGuarantor;
     Long patientId;
+    Long createdAt;
 }

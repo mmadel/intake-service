@@ -89,6 +89,7 @@ public class UserFinderServiceImpl implements UserFinderService {
         userModel.setEmail(userRepresentation.getEmail());
         UserEntity user = userRepository.findByUserId(userRepresentation.getId()).get();
         userModel.setAddress(user.getAddress());
+        userModel.setCreatedAt(user.getCreatedAt());
         List<ClinicModel> clinics = user.getClinics().stream().map(clinic -> mapper.map(clinic, ClinicModel.class)).collect(Collectors.toList());
         userModel.setClinics(clinics);
         userModel.setUserRole(keyCloakUsersService.getUSerRole(userRepresentation.getUsername()));

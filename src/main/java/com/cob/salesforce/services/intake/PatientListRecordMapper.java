@@ -17,6 +17,7 @@ public class PatientListRecordMapper {
                 .insuranceType(PatientDependenciesMapper.mapToInsuranceType(patient.getId()))
                 .hasGuarantor(PatientDependenciesMapper.mapToHasGuarantor(patient.getId()))
                 .patientId(patient.getId())
+                .createdAt(patient.getCreatedAt())
                 .build();
     }
 }
