@@ -14,6 +14,13 @@ public class PatientAgreement implements Serializable {
     Boolean acceptFinancialAgreementAgreements;
     Boolean acceptInsuranceAgreement;
     Boolean acceptHIPAAAgreements;
+    Boolean cancellationPolicyAgreements;
+    Boolean communicationAttestationAgreements;
+    Boolean authorizationToReleaseObtainInformationAgreements;
+    Boolean consentToTreatmentAgreements;
+    Boolean noticeOfPrivacyPracticesAgreements;
+    Boolean insuranceEligibilityAgreements;
+    Boolean assignmentReleaseOfBenefitsAgreements;
     Boolean acceptCuppingAgreements;
     Boolean acceptPelvicAgreements;
     Boolean acceptPhotoVideoAgreements;

@@ -42,6 +42,18 @@ public class PatientAgreementPDFGenerator {
         List<String> optionalAgreements = new ArrayList<>();
         if (patientAgreements.getAcceptHIPAAAgreements() != null && patientAgreements.getAcceptHIPAAAgreements())
             optionalAgreements.add("HIPAAAcknowledgement");
+        if (patientAgreements.getCancellationPolicyAgreements() != null && patientAgreements.getCancellationPolicyAgreements())
+            optionalAgreements.add("CancellationPolicy");
+        if (patientAgreements.getCommunicationAttestationAgreements() != null && patientAgreements.getCommunicationAttestationAgreements())
+            optionalAgreements.add("CommunicationAttestation");
+        if (patientAgreements.getAuthorizationToReleaseObtainInformationAgreements() != null && patientAgreements.getAuthorizationToReleaseObtainInformationAgreements())
+            optionalAgreements.add("Authorization-To-Release-Obtain-Information");
+        if (patientAgreements.getConsentToTreatmentAgreements() != null && patientAgreements.getConsentToTreatmentAgreements())
+            optionalAgreements.add("Consent-To-Treatment");
+        if (patientAgreements.getNoticeOfPrivacyPracticesAgreements() != null && patientAgreements.getNoticeOfPrivacyPracticesAgreements())
+            optionalAgreements.add("Notice-Of-Privacy-Practices");
+        if (patientAgreements.getAssignmentReleaseOfBenefitsAgreements() != null && patientAgreements.getAssignmentReleaseOfBenefitsAgreements())
+            optionalAgreements.add("Assignment-Release-Of-Benefits");
         if (patientAgreements.getAcceptCuppingAgreements() != null && patientAgreements.getAcceptCuppingAgreements())
             optionalAgreements.add("Cupping");
         if (patientAgreements.getAcceptPelvicAgreements() != null && patientAgreements.getAcceptPelvicAgreements())
