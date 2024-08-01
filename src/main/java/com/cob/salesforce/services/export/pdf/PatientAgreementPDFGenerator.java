@@ -34,7 +34,7 @@ public class PatientAgreementPDFGenerator {
         AgreementRepository agreementRepository = BeanFactory.getBean(AgreementRepository.class);
         for (int i = 0; i < mandatoryAgreements.length; i++) {
             Agreement agreement = agreementRepository.findByAgreementName(mandatoryAgreements[i]).get();
-            createAgreement(document, agreement.getAgreementName(), agreement.getAgreementText(), createdDate, signature);
+            createAgreement(document, agreement.getAgreementTitle(), agreement.getAgreementText(), createdDate, signature);
         }
     }
 
@@ -64,7 +64,7 @@ public class PatientAgreementPDFGenerator {
         optionalAgreements.forEach(name -> {
             Agreement agreement = agreementRepository.findByAgreementName(name).get();
             try {
-                createAgreement(document, agreement.getAgreementName(), agreement.getAgreementText(), createdDate, signature);
+                createAgreement(document, agreement.getAgreementTitle(), agreement.getAgreementText(), createdDate, signature);
             } catch (DocumentException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {

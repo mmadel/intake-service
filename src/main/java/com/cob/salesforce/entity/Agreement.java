@@ -17,6 +17,9 @@ public class Agreement {
     @Column(name = "agreement_name")
     private String agreementName;
 
+    @Column(name = "agreement_title")
+    private String agreementTitle;
+
 
     @Column(name = "agreement_text" , length = 1024)
     private String agreementText;
