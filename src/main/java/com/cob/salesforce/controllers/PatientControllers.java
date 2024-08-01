@@ -37,6 +37,17 @@ public class PatientControllers {
     @Autowired
     PatientSignatureService patientSignatureService;
 
+    @PostMapping("/create-new")
+    @ResponseBody
+    public ResponseEntity<Long> createNew(
+            @RequestPart("patient") Patient model,
+            @RequestPart("files")  MultipartFile[] files
+    ) throws PatientException {
+        Long createdPatientId = patientService.create(model);
+        patientPhotoUploaderService.upload(files, createdPatientId);
+        return new ResponseEntity<>(createdPatientId, HttpStatus.OK);
+    }
+
     @PostMapping("/create")
     @ResponseBody
     public ResponseEntity<Long> create(@RequestBody Patient model) throws PatientException {
