@@ -27,7 +27,7 @@ public class PatientMedicalHistory implements Serializable {
     private String medicationPrescription;
 
 
-    private List<String> patientCondition;
+    private List<PatientCondition> patientCondition;
 
     private Boolean scanningTest;
 
