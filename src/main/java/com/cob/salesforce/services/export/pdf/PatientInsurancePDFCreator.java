@@ -1,8 +1,12 @@
 package com.cob.salesforce.services.export.pdf;
 
+import com.cob.salesforce.BeanFactory;
+import com.cob.salesforce.models.admin.insurance.InsuranceCompanyModel;
 import com.cob.salesforce.models.intake.Patient;
 import com.cob.salesforce.models.intake.insurance.commercial.PatientCommercialInsurance;
 import com.cob.salesforce.models.intake.insurance.compensation.PatientInsuranceCompensationNoFault;
+import com.cob.salesforce.services.admin.insurance.InsuranceCompanyFinderService;
+import com.cob.salesforce.services.admin.insurance.InsuranceCompanyFinderServiceImpl;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 
@@ -24,7 +28,7 @@ public class PatientInsurancePDFCreator {
         PDFPageCreator.createHeader(document, "");
         String[] firstRow = new String[]{"Insurance Company", "MemberId", "PolicyId", "Relationship"};
         PDFPageCreator.createTable(document, firstRow, new String[]{
-                patientCommercialInsurance.getInsuranceCompanyId().toString(),
+                getInsuranceCompanyNameById(patientCommercialInsurance.getInsuranceCompanyId()),
                 patientCommercialInsurance.getMemberId().toString(),
                 patientCommercialInsurance.getPolicyId().toString(),
                 patientCommercialInsurance.getRelationship()
@@ -68,5 +72,10 @@ public class PatientInsurancePDFCreator {
                 patientInsuranceCompensationNoFault.getAttorneyInfoName(),
                 patientInsuranceCompensationNoFault.getAttorneyInfoPhone()
         }, 2);
+    }
+    private static String getInsuranceCompanyNameById(Long id){
+        InsuranceCompanyFinderService insuranceCompanyFinderService = BeanFactory.getBean(InsuranceCompanyFinderServiceImpl.class);
+        InsuranceCompanyModel model = insuranceCompanyFinderService.getById(id);
+        return model.getName();
     }
 }
