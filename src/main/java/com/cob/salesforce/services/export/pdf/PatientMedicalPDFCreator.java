@@ -8,6 +8,8 @@ import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 
+import java.text.DecimalFormat;
+
 public class PatientMedicalPDFCreator {
 
     public static void create(Document document, Patient model) throws DocumentException {
@@ -21,13 +23,13 @@ public class PatientMedicalPDFCreator {
         if ((dto.getPatientPhysicalTherapy() != null) &&
                 (dto.getPatientPhysicalTherapy().getLocation() != null || dto.getPatientPhysicalTherapy().getNumberOfVisit() != null)
         ) {
-            PDFPageCreator.createHeaderWithColor(document, "Physical Therapy Receiving" , BaseColor.RED);
+            PDFPageCreator.createHeaderWithColor(document, "Physical Therapy Receiving", BaseColor.RED);
             String[] primaryDoctorRow = new String[]{"Location", "Number Of Visit"};
             PDFPageCreator.createTable(document, primaryDoctorRow, new String[]{
                     dto.getPatientPhysicalTherapy().getLocation(),
                     dto.getPatientPhysicalTherapy().getNumberOfVisit().toString(),
             }, 2);
-        }else{
+        } else {
             PDFPageCreator.createHeader(document, "Physical Therapy Receiving");
             String[] primaryDoctorRow = new String[]
                     {"No Receiving Physical Therapy"};
@@ -61,13 +63,47 @@ public class PatientMedicalPDFCreator {
 
     private static void createMedicalHistoryInfo(Document document, PatientMedicalHistory dto) throws DocumentException {
         String[] firstHistoryRow = new String[]{"Height", "Weight", "Scanning test", "Metal Implantation", "Pacemaker"};
+        String[] height =calculateHeight(dto.getHeightUnit() , dto.getHeight());
+        String[] weight = calculateWeight(dto.getWeightUnit(),dto.getWeight().toString());
         PDFPageCreator.createTable(document, firstHistoryRow, new String[]{
-                dto.getHeight() != null ? dto.getHeight().toString() : "",
-                dto.getWeight() != null ? dto.getWeight().toString() : "",
+                height[0] + " CM , " + height[1] + " FT",
+                weight[0] +" KG , " + weight[1] + " LB",
                 ((dto.getScanningTestValue() == null)
-                        || dto.getScanningTestValue().isEmpty()) ? "No" :String.join(",", dto.getScanningTestValue()),
+                        || dto.getScanningTestValue().isEmpty()) ? "No" : String.join(",", dto.getScanningTestValue()),
                 dto.getMetalImplantation() ? "Yes" : "No",
                 dto.getPacemaker() ? "Yes" : "No",
         }, 5);
+    }
+
+    private static String[] calculateHeight(String unit, String value) {
+        DecimalFormat decimalFormat = new DecimalFormat("0.#");
+        String[] heightValue = new String[2];
+        switch (unit) {
+            case "cm":
+                heightValue[0] = value;
+                heightValue[1] = String.valueOf(decimalFormat.format(Integer.parseInt(value) * 0.032808));
+                break;
+            case "Inch":
+                heightValue[0] = String.valueOf(Math.round(Integer.parseInt(value) / 0.032808));
+                heightValue[1] = value;
+                break;
+        }
+        return heightValue;
+    }
+
+    private static String[] calculateWeight(String unit, String value) {
+        DecimalFormat decimalFormat = new DecimalFormat("0.#");
+        String[] weightValue = new String[2];
+        switch (unit){
+            case "kg":
+                weightValue[0]= value;
+                weightValue[1]= String.valueOf(decimalFormat.format(Integer.parseInt(value) * 2.20462));;
+            break;
+            case "pound":
+                weightValue[0]= String.valueOf(Math.round(Double.parseDouble(value) / 2.20462));
+                weightValue[1]= value;
+                break;
+        }
+        return weightValue;
     }
 }
