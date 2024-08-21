@@ -24,7 +24,7 @@ public class InsuranceCompanyFinderServiceImpl implements InsuranceCompanyFinder
     public List<InsuranceCompanyModel> getAll() {
         return StreamSupport
                 .stream(Spliterators
-                        .spliteratorUnknownSize(repository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).iterator(), 0), false)
+                        .spliteratorUnknownSize(repository.findAll(Sort.by(Sort.Direction.ASC, "name")).iterator(), 0), false)
                 .map(insuranceCompanyEntity -> {
                     return mapper.map(insuranceCompanyEntity, InsuranceCompanyModel.class);
                 })
