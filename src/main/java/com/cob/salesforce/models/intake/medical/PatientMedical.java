@@ -10,7 +10,6 @@ import java.io.Serializable;
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PatientMedical implements Serializable {
-    private Boolean familyResultSubmission;
     private String appointmentBooking;
     private String primaryDoctor;
 
