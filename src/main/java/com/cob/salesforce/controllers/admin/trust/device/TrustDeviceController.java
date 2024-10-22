@@ -1,6 +1,9 @@
 package com.cob.salesforce.controllers.admin.trust.device;
 
+import com.cob.salesforce.exception.business.TrustDeviceTokenException;
+import com.cob.salesforce.models.admin.trust.device.DeviceTokenRequest;
 import com.cob.salesforce.usecase.trust.device.GenerateTokenUseCase;
+import com.cob.salesforce.usecase.trust.device.RegisterNewDeviceUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class TrustDeviceController {
     @Autowired
     GenerateTokenUseCase generateTokenUseCase;
+    @Autowired
+    RegisterNewDeviceUseCase registerNewDeviceUseCase;
     @PostMapping(path = "/generate-token")
     public ResponseEntity generateUniqueToken(@RequestBody Integer clinicId) {
         generateTokenUseCase.generate(clinicId);
@@ -18,7 +23,8 @@ public class TrustDeviceController {
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity register() {
+    public ResponseEntity register(@RequestBody DeviceTokenRequest tokenRequest) throws TrustDeviceTokenException {
+        registerNewDeviceUseCase.register(tokenRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -7,5 +7,7 @@ import lombok.Setter;
 @Getter
 public class DeviceTokenRequest {
     private String token;
+    private Long expiryDate;
+    private Boolean isInUsed;
     private DeviceInformation deviceInformation;
 }
