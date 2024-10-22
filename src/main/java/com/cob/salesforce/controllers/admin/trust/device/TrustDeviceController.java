@@ -1,4 +1,4 @@
-package com.cob.salesforce.controllers.admin.trust;
+package com.cob.salesforce.controllers.admin.trust.device;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
