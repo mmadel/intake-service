@@ -16,7 +16,7 @@ public class DeviceRegistrationRequest {
     @Column(name = "token")
     private String token;
     @Column(name = "clinic_id")
-    private String clinicId;
+    private Integer clinicId;
     @Column(name = "created_at")
     private Long createdAt;
     @Column(name = "expires_at")
