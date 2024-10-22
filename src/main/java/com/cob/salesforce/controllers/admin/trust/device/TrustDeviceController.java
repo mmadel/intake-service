@@ -1,18 +1,19 @@
 package com.cob.salesforce.controllers.admin.trust.device;
 
+import com.cob.salesforce.usecase.trust.device.GenerateTokenUseCase;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/trusted-device")
 public class TrustDeviceController {
-
+    @Autowired
+    GenerateTokenUseCase generateTokenUseCase;
     @PostMapping(path = "/generate-token")
-    public ResponseEntity generateUniqueToken() {
+    public ResponseEntity generateUniqueToken(@RequestBody Integer clinicId) {
+        generateTokenUseCase.generate(clinicId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -23,6 +23,7 @@ public class GenerateTokenUseCase {
         entity.setClinicId(clinicId);
         entity.setCreatedAt(createdAt);
         entity.setExpiresAt(expiresAt);
+        entity.setIsUsed(false);
         deviceRegistrationRequestRepository.save(entity);
         return TrustDeviceToken.builder()
                 .token(token)

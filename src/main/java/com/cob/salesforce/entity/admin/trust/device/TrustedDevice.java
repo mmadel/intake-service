@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Setter
 @Getter
-public class TrustedDeviceEntity {
+public class TrustedDevice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
