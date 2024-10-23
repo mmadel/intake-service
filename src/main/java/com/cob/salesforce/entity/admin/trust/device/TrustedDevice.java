@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Setter
@@ -19,10 +20,14 @@ public class TrustedDevice {
     @Column(name = "token")
     private String token;
     @Column(name = "clinic_id")
-    private String clinicId;
+    private Integer clinicId;
     @Column(name = "created_at")
     private Long createdAt;
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private TrustDeviceStatus status;
+    @PrePersist
+    private void setCreatedDate() {
+        createdAt = new Date().getTime();
+    }
 }
