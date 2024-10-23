@@ -6,6 +6,7 @@ public class TrustDeviceTokenException extends IntakeException{
     public static final String TOKEN_IS_NO_EXISTS = Category.Business.value() + getPrefix() + "_00";
     public static final String TOKEN_IS_EXPIRED = Category.Business.value() + getPrefix() + "_01";
     public static final String TOKEN_IS_UNUSED = Category.Business.value() + getPrefix() + "_02";
+    public static final String NO_TRUST_DEVICES = Category.Business.value() + getPrefix() + "_03";
     public TrustDeviceTokenException(String code) {
         super(code);
     }

@@ -47,6 +47,8 @@ public class RegisterNewDeviceUseCase {
         trustedDevice.setToken(tokenRequest.getToken());
         trustedDevice.setDeviceId(deviceId);
         trustedDevice.setStatus(TrustDeviceStatus.trusted);
+        trustedDevice.setDeviceName(tokenRequest.getDeviceInformation().getDeviceName());
+        trustedDevice.setMacAddress(tokenRequest.getDeviceInformation().getMacAddress());
         trustedDeviceRepository.save(trustedDevice);
     }
 }

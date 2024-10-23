@@ -3,6 +3,7 @@ package com.cob.salesforce.controllers.admin.trust.device;
 import com.cob.salesforce.exception.business.TrustDeviceTokenException;
 import com.cob.salesforce.models.admin.trust.device.DeviceTokenRequest;
 import com.cob.salesforce.usecase.trust.device.GenerateTokenUseCase;
+import com.cob.salesforce.usecase.trust.device.ListTrustedDevicesUseCase;
 import com.cob.salesforce.usecase.trust.device.RegisterNewDeviceUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,9 @@ public class TrustDeviceController {
     GenerateTokenUseCase generateTokenUseCase;
     @Autowired
     RegisterNewDeviceUseCase registerNewDeviceUseCase;
+    @Autowired
+    ListTrustedDevicesUseCase listTrustedDevicesUseCase;
+
     @PostMapping(path = "/generate-token")
     public ResponseEntity generateUniqueToken(@RequestBody Integer clinicId) {
         generateTokenUseCase.generate(clinicId);
@@ -33,9 +37,10 @@ public class TrustDeviceController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(path = "/list")
-    public ResponseEntity listTrustedDevices() {
-        return new ResponseEntity<>(HttpStatus.OK);
+    @GetMapping(path = "/list/clinic-id/{clinicId}")
+    public ResponseEntity listTrustedDevices(@PathVariable Integer clinicId) throws TrustDeviceTokenException {
+
+        return new ResponseEntity<>(listTrustedDevicesUseCase.list(clinicId), HttpStatus.OK);
     }
 
     @PostMapping(path = "/revoke")

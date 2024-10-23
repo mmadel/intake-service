@@ -26,6 +26,11 @@ public class TrustedDevice {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private TrustDeviceStatus status;
+    @Column(name = "mac_address")
+    private String macAddress;
+    @Column(name = "device_name")
+    private String deviceName;
+
     @PrePersist
     private void setCreatedDate() {
         createdAt = new Date().getTime();
