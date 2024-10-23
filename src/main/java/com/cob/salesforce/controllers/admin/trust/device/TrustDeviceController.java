@@ -2,10 +2,7 @@ package com.cob.salesforce.controllers.admin.trust.device;
 
 import com.cob.salesforce.exception.business.TrustDeviceTokenException;
 import com.cob.salesforce.models.admin.trust.device.DeviceTokenRequest;
-import com.cob.salesforce.usecase.trust.device.GenerateTokenUseCase;
-import com.cob.salesforce.usecase.trust.device.ListTrustedDevicesUseCase;
-import com.cob.salesforce.usecase.trust.device.RegisterNewDeviceUseCase;
-import com.cob.salesforce.usecase.trust.device.RevokeDeviceUseCase;
+import com.cob.salesforce.usecase.trust.device.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +19,8 @@ public class TrustDeviceController {
     ListTrustedDevicesUseCase listTrustedDevicesUseCase;
     @Autowired
     RevokeDeviceUseCase revokeDeviceUseCase;
+    @Autowired
+    CheckDeviceStatusUseCase checkDeviceStatusUseCase;
 
     @PostMapping(path = "/generate-token")
     public ResponseEntity generateUniqueToken(@RequestBody Integer clinicId) {
@@ -51,8 +50,8 @@ public class TrustDeviceController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(path = "/status")
-    public ResponseEntity getDeviceStatus() {
-        return new ResponseEntity<>(HttpStatus.OK);
+    @GetMapping(path = "/status/clinic-id/{clinicId}/mac-address/{macAddress}")
+    public ResponseEntity getDeviceStatus(@PathVariable Integer clinicId , @PathVariable String macAddress) throws TrustDeviceTokenException {
+        return new ResponseEntity<>(checkDeviceStatusUseCase.checkStatus(clinicId,macAddress),HttpStatus.OK);
     }
 }

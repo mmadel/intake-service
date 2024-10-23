@@ -14,6 +14,8 @@ public interface TrustedDeviceRepository extends CrudRepository<TrustedDevice, L
 
     Optional<TrustedDevice> findByDeviceId(String deviceId);
 
+    Optional<TrustedDevice> findByClinicIdAndMacAddress(Integer clinicId, String macAddress);
+
     @Modifying
     @Query("delete from TrustedDevice td where td.deviceId =:deviceId")
     void deleteByDeviceId(@Param("deviceId") String deviceId);
